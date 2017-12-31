@@ -9,6 +9,9 @@ import org.kie.api.runtime.StatelessKieSession;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Loads business rules from local Drools resources.
+ */
 public class LocalDroolsBusinessContextLoader implements BusinessContextLoader
 {
 
@@ -21,11 +24,8 @@ public class LocalDroolsBusinessContextLoader implements BusinessContextLoader
 
     public Set<BusinessRule> load()
     {
-        Set<BusinessRule> rules = new HashSet<>();
-        StatelessKieSession session = kieContainer.newStatelessKieSession("rules-session");// TODO: generalize
-        Collection<KiePackage> packages = session.getKieBase().getKiePackages();
-
-        return packages.stream()
+        return kieContainer.newStatelessKieSession("rules-session") // TODO: generalize
+            .getKieBase().getKiePackages().stream()
             .map(KiePackage::getRules)
             .flatMap(Collection::stream)
             .collect(Collectors.toList())
