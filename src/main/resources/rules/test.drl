@@ -1,0 +1,8 @@
+package rules;
+
+dialect "mvel"
+
+rule "generic rule"
+    when
+    then
+end
