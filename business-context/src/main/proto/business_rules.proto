@@ -1,0 +1,15 @@
+syntax = "proto2";
+
+package businessContext;
+
+option java_package = "cz.filipklimes.diploma.framework.businessContext.provider.server.protobuf";
+option java_outer_classname = "BusinessRulesProtos";
+
+message BusinessRuleMessage {
+    required string name = 1;
+    required string packageName = 2;
+}
+
+message BusinessRulesMessage {
+    repeated BusinessRuleMessage rules = 1;
+}

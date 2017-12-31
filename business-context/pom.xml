@@ -12,6 +12,7 @@
     <artifactId>business-context</artifactId>
 
     <dependencies>
+        <!-- Drools -->
         <dependency>
             <groupId>org.kie</groupId>
             <artifactId>kie-ci</artifactId>
@@ -33,11 +34,20 @@
             <artifactId>drools-compiler</artifactId>
             <version>${drools.version}</version>
         </dependency>
+
+        <!-- Testing -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
+        </dependency>
+
+        <!-- Protobuffer -->
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>${protobuf-java.version}</version>
         </dependency>
     </dependencies>
 
