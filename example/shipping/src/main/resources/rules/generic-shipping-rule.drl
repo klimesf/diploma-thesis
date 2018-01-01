@@ -1,0 +1,8 @@
+package rules;
+
+dialect "mvel"
+
+rule "generic shipping rule"
+    when
+    then
+end
