@@ -2,6 +2,7 @@ package cz.filipklimes.diploma.framework.businessContext.expression.logical;
 
 import cz.filipklimes.diploma.framework.businessContext.expression.Constant;
 import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
+import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionType;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,7 +39,7 @@ public class AndTest
     @Test
     public void test()
     {
-        Expression<Boolean> expression = new And(new Constant<>(left), new Constant<>(right));
+        Expression<Boolean> expression = new And(new Constant<>(left, ExpressionType.BOOL), new Constant<>(right, ExpressionType.BOOL));
         Assert.assertEquals(result, expression.interpret(null));
     }
 

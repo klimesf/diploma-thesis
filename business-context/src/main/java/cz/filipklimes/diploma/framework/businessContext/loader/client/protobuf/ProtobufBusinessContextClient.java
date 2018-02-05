@@ -102,7 +102,8 @@ public class ProtobufBusinessContextClient
             case "numeric-subtract":
                 return (Expression<T>) new Subtract(buildExpression(message.getArguments(0)), buildExpression(message.getArguments(1)));
             case "constant":
-                return (Expression<T>) new Constant<>(message.getPropertiesMap().get("value"));
+                ExpressionType type = ExpressionType.of(message.getPropertiesMap().get("type"));
+                return (Expression<T>) new Constant<>(type.deserialize(message.getPropertiesMap().get("value")), type);
             case "function-call":
                 return (Expression<T>) new FunctionCall<>(
                     message.getPropertiesMap().get("methodName"),

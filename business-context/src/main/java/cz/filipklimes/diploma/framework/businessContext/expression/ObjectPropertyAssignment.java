@@ -27,7 +27,7 @@ public class ObjectPropertyAssignment<T> extends UnaryOperator<Void, T>
         Object object = context.getVariable(objectName);
 
         Method setter = Arrays.stream(object.getClass().getDeclaredMethods())
-            .filter(method -> method.getName().toLowerCase().equals("set" + propertyName))
+            .filter(method -> method.getName().toLowerCase().equals("set" + propertyName.toLowerCase()))
             .findAny()
             .orElseThrow(() -> new UndefinedObjectPropertyException(objectName, propertyName));
 

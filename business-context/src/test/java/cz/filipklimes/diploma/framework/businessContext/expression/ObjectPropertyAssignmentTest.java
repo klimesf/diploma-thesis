@@ -17,7 +17,7 @@ public class ObjectPropertyAssignmentTest
         MockObject object = new MockObject();
         context.setVariable("object", object);
 
-        Expression<Void> expression = new ObjectPropertyAssignment<>("object", "property", new Constant<>("new value"));
+        Expression<Void> expression = new ObjectPropertyAssignment<>("object", "property", new Constant<>("new value", ExpressionType.STRING));
         expression.interpret(context);
 
         Assert.assertEquals("new value", ((MockObject) context.getVariable("object")).getProperty());
@@ -30,7 +30,7 @@ public class ObjectPropertyAssignmentTest
         MockObject object = new MockObject();
         context.setVariable("object", object);
 
-        Expression<Void> expression = new ObjectPropertyAssignment<>("object", "hiddenProperty", new Constant<>("new value"));
+        Expression<Void> expression = new ObjectPropertyAssignment<>("object", "hiddenProperty", new Constant<>("new value", ExpressionType.STRING));
         expression.interpret(context);
     }
 
@@ -41,7 +41,7 @@ public class ObjectPropertyAssignmentTest
         MockObject object = new MockObject();
         context.setVariable("object", object);
 
-        Expression<Void> expression = new ObjectPropertyAssignment<>("object", "property", new Constant<>(123));
+        Expression<Void> expression = new ObjectPropertyAssignment<>("object", "property", new Constant<>(123, ExpressionType.NUMBER));
         expression.interpret(context);
     }
 
@@ -52,7 +52,7 @@ public class ObjectPropertyAssignmentTest
         MockObject object = new MockObject();
         context.setVariable("object", object);
 
-        Expression<Void> expression = new ObjectPropertyAssignment<>("invalid", "property", new Constant<>("new value"));
+        Expression<Void> expression = new ObjectPropertyAssignment<>("invalid", "property", new Constant<>("new value", ExpressionType.STRING));
         expression.interpret(context);
     }
 

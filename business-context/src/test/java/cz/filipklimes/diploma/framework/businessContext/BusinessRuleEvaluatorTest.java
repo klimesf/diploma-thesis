@@ -1,7 +1,6 @@
 package cz.filipklimes.diploma.framework.businessContext;
 
 import cz.filipklimes.diploma.framework.businessContext.expression.Constant;
-import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionType;
 import cz.filipklimes.diploma.framework.businessContext.expression.ObjectPropertyAssignment;
 import cz.filipklimes.diploma.framework.businessContext.expression.ObjectPropertyReference;
 import cz.filipklimes.diploma.framework.businessContext.expression.numeric.GreaterOrEqualTo;
@@ -13,6 +12,8 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.util.*;
+
+import static cz.filipklimes.diploma.framework.businessContext.expression.ExpressionType.*;
 
 public class BusinessRuleEvaluatorTest
 {
@@ -26,11 +27,11 @@ public class BusinessRuleEvaluatorTest
             "discount for elders",
             "order.create",
             // if user.age >= 70
-            new GreaterOrEqualTo(new ObjectPropertyReference<>("user", "age", ExpressionType.NUMBER), new Constant<>(new BigDecimal(70))),
+            new GreaterOrEqualTo(new ObjectPropertyReference<>("user", "age", NUMBER), new Constant<>(new BigDecimal(70), NUMBER)),
             // then order.sum = order.sum * 80 %
             new ObjectPropertyAssignment<>("order", "sum", new Multiply(
-                new ObjectPropertyReference<>("order", "sum", ExpressionType.NUMBER),
-                new Constant<>(new BigDecimal("0.8"))
+                new ObjectPropertyReference<>("order", "sum", NUMBER),
+                new Constant<>(new BigDecimal("0.8"), NUMBER)
             ))
         );
         ruleSet.add(discountForElders);
@@ -59,9 +60,9 @@ public class BusinessRuleEvaluatorTest
             "nasty rule",
             "invalid",
             // if true
-            new Constant<>(true),
+            new Constant<>(true, BOOL),
             // then order.sum = 500
-            new ObjectPropertyAssignment<>("order", "sum", new Constant<>(500))
+            new ObjectPropertyAssignment<>("order", "sum", new Constant<>(500, NUMBER))
         );
         ruleSet.add(discountForElders);
 
@@ -88,9 +89,9 @@ public class BusinessRuleEvaluatorTest
             "unsatisfiable rule",
             "order.create",
             // if false
-            new Constant<>(false),
+            new Constant<>(false, BOOL),
             // then order.sum = 500
-            new ObjectPropertyAssignment<>("order", "sum", new Constant<>(500))
+            new ObjectPropertyAssignment<>("order", "sum", new Constant<>(500, NUMBER))
         );
         ruleSet.add(discountForElders);
 

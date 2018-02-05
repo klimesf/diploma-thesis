@@ -2,6 +2,7 @@ package cz.filipklimes.diploma.framework.businessContext.expression.numeric;
 
 import cz.filipklimes.diploma.framework.businessContext.expression.Constant;
 import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
+import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionType;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -13,7 +14,7 @@ public class DivideTest
     @Test
     public void test()
     {
-        Expression<BigDecimal> expression = new Divide(new Constant<>(BigDecimal.valueOf(100)), new Constant<>(BigDecimal.valueOf(2)));
+        Expression<BigDecimal> expression = new Divide(new Constant<>(BigDecimal.valueOf(100), ExpressionType.NUMBER), new Constant<>(BigDecimal.valueOf(2), ExpressionType.NUMBER));
         BigDecimal result = expression.interpret(null);
         Assert.assertEquals(
             0,

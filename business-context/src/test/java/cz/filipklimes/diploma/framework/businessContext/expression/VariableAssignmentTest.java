@@ -12,7 +12,7 @@ public class VariableAssignmentTest
     {
         BusinessContext context = new BusinessContext("test");
 
-        Expression<Void> expression = new VariableAssignment<>("number", new Constant<>(123));
+        Expression<Void> expression = new VariableAssignment<>("number", new Constant<>(123, ExpressionType.NUMBER));
         expression.interpret(context);
 
         Assert.assertEquals(123, context.getVariable("number"));
@@ -24,7 +24,7 @@ public class VariableAssignmentTest
         BusinessContext context = new BusinessContext("test");
         context.setVariable("number", "prev val");
 
-        Expression<Void> expression = new VariableAssignment<>("number", new Constant<>(123));
+        Expression<Void> expression = new VariableAssignment<>("number", new Constant<>(123, ExpressionType.NUMBER));
         expression.interpret(context);
 
         Assert.assertEquals(123, context.getVariable("number"));

@@ -2,6 +2,7 @@ package cz.filipklimes.diploma.framework.businessContext.expression.numeric;
 
 import cz.filipklimes.diploma.framework.businessContext.expression.Constant;
 import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
+import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionType;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -13,7 +14,7 @@ public class LessOrEqualToTest
     @Test
     public void testGreater()
     {
-        Expression<Boolean> expression = new LessOrEqualTo(new Constant<>(BigDecimal.ONE), new Constant<>(BigDecimal.ZERO));
+        Expression<Boolean> expression = new LessOrEqualTo(new Constant<>(BigDecimal.ONE, ExpressionType.NUMBER), new Constant<>(BigDecimal.ZERO, ExpressionType.NUMBER));
         Boolean result = expression.interpret(null);
         Assert.assertFalse(result);
     }
@@ -21,7 +22,7 @@ public class LessOrEqualToTest
     @Test
     public void testEqual()
     {
-        Expression<Boolean> expression = new LessOrEqualTo(new Constant<>(BigDecimal.ONE), new Constant<>(BigDecimal.ONE));
+        Expression<Boolean> expression = new LessOrEqualTo(new Constant<>(BigDecimal.ONE, ExpressionType.NUMBER), new Constant<>(BigDecimal.ONE, ExpressionType.NUMBER));
         Boolean result = expression.interpret(null);
         Assert.assertTrue(result);
     }
@@ -29,7 +30,7 @@ public class LessOrEqualToTest
     @Test
     public void testLess()
     {
-        Expression<Boolean> expression = new LessOrEqualTo(new Constant<>(BigDecimal.ZERO), new Constant<>(BigDecimal.ONE));
+        Expression<Boolean> expression = new LessOrEqualTo(new Constant<>(BigDecimal.ZERO, ExpressionType.NUMBER), new Constant<>(BigDecimal.ONE, ExpressionType.NUMBER));
         Boolean result = expression.interpret(null);
         Assert.assertTrue(result);
     }

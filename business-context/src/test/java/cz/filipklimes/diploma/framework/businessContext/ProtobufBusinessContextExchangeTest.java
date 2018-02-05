@@ -28,11 +28,11 @@ public class ProtobufBusinessContextExchangeTest
                 "discount for elders",
                 "order.create",
                 // if user.age >= 70
-                new GreaterOrEqualTo(new ObjectPropertyReference<>("user", "age", ExpressionType.NUMBER), new Constant<>(new BigDecimal(70))),
+                new GreaterOrEqualTo(new ObjectPropertyReference<>("user", "age", ExpressionType.NUMBER), new Constant<>(new BigDecimal(70), ExpressionType.NUMBER)),
                 // then order.sum = order.sum * 80 %
                 new ObjectPropertyAssignment<>("order", "sum", new Multiply(
                     new ObjectPropertyReference<>("order", "sum", ExpressionType.NUMBER),
-                    new Constant<>(new BigDecimal("0.8"))
+                    new Constant<>(new BigDecimal("0.8"), ExpressionType.NUMBER)
                 ))
             );
             rules.add(discountForElders);

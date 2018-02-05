@@ -8,10 +8,12 @@ public class Constant<T> implements Terminal<T>
 {
 
     private final T value;
+    private final ExpressionType type;
 
-    public Constant(final T value)
+    public Constant(final T value, final ExpressionType type)
     {
-        this.value = value;
+        this.value = Objects.requireNonNull(value);
+        this.type = Objects.requireNonNull(type);
     }
 
     @Override
@@ -23,7 +25,10 @@ public class Constant<T> implements Terminal<T>
     @Override
     public Map<String, String> getProperties()
     {
-        return Collections.singletonMap("value", value.toString());
+        Map<String, String> properties = new HashMap<>();
+        properties.put("value", type.serialize(value));
+        properties.put("type", type.getName());
+        return properties;
     }
 
     @Override

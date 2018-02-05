@@ -9,9 +9,30 @@ import java.util.function.Function;
 public enum ExpressionType
 {
 
-    STRING("string", String.class, Object::toString),
-    NUMBER("number", BigDecimal.class, value -> ((BigDecimal) value).toPlainString()),
-    BOOL("bool", Boolean.class, Object::toString);
+    STRING(
+        "string",
+        String.class,
+        Object::toString,
+        value -> value
+    ),
+    NUMBER(
+        "number",
+        BigDecimal.class,
+        value -> ((BigDecimal) value).toPlainString(),
+        BigDecimal::new
+        ),
+    BOOL(
+        "bool",
+        Boolean.class,
+        Object::toString,
+        Boolean::new
+        ),
+    VOID(
+        "void",
+        Void.class,
+        Object::toString,
+        value -> null
+    );
 
     private static final Map<String, ExpressionType> nameMap = new HashMap<>();
 
@@ -22,18 +43,38 @@ public enum ExpressionType
     private final Class<?> underlyingClass;
 
     @Getter
-    private final Function<?, String> toString;
+    private final Function<Object, String> toString;
+
+    @Getter
+    private final Function<String, Object> fromString;
 
     static {
         Arrays.stream(ExpressionType.values())
             .forEach(value -> nameMap.put(value.getName(), value));
     }
 
-    ExpressionType(final String name, final Class<?> underlyingClass, final Function<?, String> toString)
+    ExpressionType(
+        final String name,
+        final Class<?> underlyingClass,
+        final Function<Object, String> toString,
+        final Function<String, Object> fromString
+    )
     {
         this.name = name;
         this.underlyingClass = underlyingClass;
         this.toString = toString;
+        this.fromString = fromString;
+    }
+
+    public String serialize(final Object value)
+    {
+        return getToString().apply(value);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T deserialize(final String value)
+    {
+        return (T) fromString.apply(value);
     }
 
     public static ExpressionType of(final String name)

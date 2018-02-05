@@ -16,7 +16,7 @@ public class FunctionCallTest
         BusinessContext context = new BusinessContext("test");
         context.addFunction("add", (args) -> ((BigDecimal) args[0]).add((BigDecimal) args[1]));
 
-        Expression<BigDecimal> expression = new FunctionCall<>("add", ExpressionType.NUMBER, new Constant<>(BigDecimal.valueOf(1)), new Constant<>(BigDecimal.valueOf(2)));
+        Expression<BigDecimal> expression = new FunctionCall<>("add", ExpressionType.NUMBER, new Constant<>(BigDecimal.valueOf(1), ExpressionType.NUMBER), new Constant<>(BigDecimal.valueOf(2), ExpressionType.NUMBER));
         BigDecimal result = expression.interpret(context);
 
         Assert.assertEquals(BigDecimal.valueOf(3), result);
@@ -27,7 +27,7 @@ public class FunctionCallTest
     {
         BusinessContext context = new BusinessContext("test");
 
-        Expression<BigDecimal> expression = new FunctionCall<>("add", ExpressionType.NUMBER, new Constant<>(BigDecimal.valueOf(1)), new Constant<>(BigDecimal.valueOf(2)));
+        Expression<BigDecimal> expression = new FunctionCall<>("add", ExpressionType.NUMBER, new Constant<>(BigDecimal.valueOf(1), ExpressionType.NUMBER), new Constant<>(BigDecimal.valueOf(2), ExpressionType.NUMBER));
         expression.interpret(context);
     }
 
