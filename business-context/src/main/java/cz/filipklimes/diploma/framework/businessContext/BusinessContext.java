@@ -1,7 +1,7 @@
 package cz.filipklimes.diploma.framework.businessContext;
 
-import cz.filipklimes.diploma.framework.businessContext.exception.MethodAlreadyDefinedException;
-import cz.filipklimes.diploma.framework.businessContext.exception.UndefinedMethodException;
+import cz.filipklimes.diploma.framework.businessContext.exception.FunctionAlreadyDefinedException;
+import cz.filipklimes.diploma.framework.businessContext.exception.UndefinedFunctionException;
 import cz.filipklimes.diploma.framework.businessContext.exception.UndefinedVariableException;
 import lombok.Getter;
 
@@ -19,15 +19,15 @@ public class BusinessContext
     private final Map<String, Object> variables;
 
     /**
-     * Methods defined within the business context.
+     * functions defined within the business context.
      */
-    private final Map<String, Method> methods;
+    private final Map<String, Function> functions;
 
     public BusinessContext(final String name)
     {
         this.name = name;
         this.variables = new HashMap<>();
-        this.methods = new HashMap<>();
+        this.functions = new HashMap<>();
     }
 
     /**
@@ -57,34 +57,34 @@ public class BusinessContext
     }
 
     /**
-     * Returns method with the given name.
+     * Returns function with the given name.
      *
-     * @param name Name of the method.
-     * @return Method with the name.
-     * @throws UndefinedMethodException When method with such name was not defined within the context;
+     * @param name Name of the function.
+     * @return Function with the name.
+     * @throws UndefinedFunctionException When function with such name was not defined within the context;
      */
-    public Method getMethod(final String name)
+    public Function getFunction(final String name)
     {
-        if (!methods.containsKey(name)) {
-            throw new UndefinedMethodException(name);
+        if (!functions.containsKey(name)) {
+            throw new UndefinedFunctionException(name);
         }
 
-        return methods.get(name);
+        return functions.get(name);
     }
 
     /**
-     * Adds named method to the business context.
+     * Adds named function to the business context.
      *
-     * @param name Name of the method.
-     * @param method The method body.
-     * @throws MethodAlreadyDefinedException When method with such name was already defined within the context.
+     * @param name Name of the function.
+     * @param function The function body.
+     * @throws FunctionAlreadyDefinedException When function with such name was already defined within the context.
      */
-    public void addMethod(final String name, final Method method)
+    public void addFunction(final String name, final Function function)
     {
-        if (methods.containsKey(name)) {
-            throw new MethodAlreadyDefinedException(name);
+        if (functions.containsKey(name)) {
+            throw new FunctionAlreadyDefinedException(name);
         }
-        methods.put(name, method);
+        functions.put(name, function);
     }
 
 }

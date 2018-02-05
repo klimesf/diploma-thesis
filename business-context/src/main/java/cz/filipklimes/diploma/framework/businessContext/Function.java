@@ -1,9 +1,9 @@
 package cz.filipklimes.diploma.framework.businessContext;
 
 @FunctionalInterface
-public interface Method
+public interface Function<T>
 {
 
-    void execute(Object... args);
+    T execute(Object... args);
 
 }
