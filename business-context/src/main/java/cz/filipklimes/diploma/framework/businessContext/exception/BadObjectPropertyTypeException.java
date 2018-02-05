@@ -16,7 +16,12 @@ public class BadObjectPropertyTypeException extends RuntimeException
 
     public BadObjectPropertyTypeException(final String objectName, final String propertyName, final Class<?> type)
     {
-        super(String.format("Property %s of object %s is not of type: %s", propertyName, objectName, type.getName()));
+        this(objectName, propertyName, type, null);
+    }
+
+    public BadObjectPropertyTypeException(final String objectName, final String propertyName, final Class<?> type, final Exception cause)
+    {
+        super(String.format("Property %s of object %s is not of type: %s", propertyName, objectName, type.getName()), cause);
         this.objectName = objectName;
         this.propertyName = propertyName;
         this.type = type;
