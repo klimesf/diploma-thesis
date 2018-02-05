@@ -46,7 +46,7 @@ public final class ProtobufBusinessContextConnection implements Runnable
     {
         return BusinessRuleMessage.newBuilder()
             .setName(rule.getName())
-            .setPackageName(rule.getPackageName())
+            .setPackageName(rule.getBusinessContextName())
             .build();
     }
 

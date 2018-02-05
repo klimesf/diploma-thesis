@@ -2,7 +2,7 @@ package rules;
 
 dialect "mvel"
 
-rule "generic order rule"
+rule "generic order expression"
     when
     then
 end

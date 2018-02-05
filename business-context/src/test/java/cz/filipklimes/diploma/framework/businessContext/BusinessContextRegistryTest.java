@@ -12,7 +12,7 @@ public class BusinessContextRegistryTest
     @Test
     public void test()
     {
-        BusinessRule testRule = new BusinessRule("test rule", "rules");
+        BusinessRule testRule = new BusinessRule("test expression", "rules", null, null);
         BusinessContextRegistry registry = BusinessContextRegistry.builder()
             .addLoader(new LocalDroolsBusinessContextLoader())
             .addLoader(() -> Collections.singleton(testRule))

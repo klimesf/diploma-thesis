@@ -1,10 +1,11 @@
 package cz.filipklimes.diploma.framework.businessContext.loader;
 
 import cz.filipklimes.diploma.framework.businessContext.BusinessRule;
+import org.drools.core.definitions.rule.impl.RuleImpl;
 import org.kie.api.KieServices;
 import org.kie.api.definition.KiePackage;
+import org.kie.api.definition.rule.Rule;
 import org.kie.api.runtime.KieContainer;
-import org.kie.api.runtime.StatelessKieSession;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -30,8 +31,23 @@ public class LocalDroolsBusinessContextLoader implements BusinessContextLoader
             .flatMap(Collection::stream)
             .collect(Collectors.toList())
             .stream()
-            .map(rule -> new BusinessRule(rule.getName(), rule.getPackageName()))
+            .map(LocalDroolsBusinessContextLoader::buildBusinessRule)
             .collect(Collectors.toSet());
+    }
+
+    private static BusinessRule buildBusinessRule(final Rule rule)
+    {
+        RuleImpl ruleImpl = RuleImpl.class.cast(rule);
+
+        BusinessRule.Builder builder = BusinessRule.builder();
+        builder.setName(ruleImpl.getName())
+            .setBusinessContextName(ruleImpl.getPackageName());
+
+//        ruleImpl.getDeclarations().entrySet().stream()
+//            .map(declaration -> new BusinessRuleVariable(declaration.getKey(), declaration.getValue()));
+
+
+        return builder.build();
     }
 
 }

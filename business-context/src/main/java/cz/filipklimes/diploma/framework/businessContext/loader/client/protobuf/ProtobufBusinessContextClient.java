@@ -33,7 +33,7 @@ public class ProtobufBusinessContextClient
         ) {
             return BusinessRulesProtos.BusinessRulesMessage.parseFrom(in)
                 .getRulesList().stream()
-                .map(ruleMessage -> new BusinessRule(ruleMessage.getName(), ruleMessage.getPackageName()))
+                .map(ruleMessage -> new BusinessRule(ruleMessage.getName(), ruleMessage.getPackageName(), null, null))
                 .collect(Collectors.toSet());
 
         } catch (IOException e) {

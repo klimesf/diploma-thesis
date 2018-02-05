@@ -2,7 +2,7 @@ package rules;
 
 dialect "mvel"
 
-rule "generic rule"
+rule "generic expression"
     when
     then
 end

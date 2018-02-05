@@ -18,8 +18,8 @@ public class LocalDroolsBusinessContextLoaderTest
 
         Assert.assertEquals(1, rules.size());
         BusinessRule rule = rules.iterator().next();
-        Assert.assertEquals("generic rule", rule.getName());
-        Assert.assertEquals("rules", rule.getPackageName());
+        Assert.assertEquals("generic expression", rule.getName());
+        Assert.assertEquals("rules", rule.getBusinessContextName());
     }
 
 }
