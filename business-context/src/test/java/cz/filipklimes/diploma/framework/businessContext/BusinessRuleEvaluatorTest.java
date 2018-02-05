@@ -1,6 +1,7 @@
 package cz.filipklimes.diploma.framework.businessContext;
 
 import cz.filipklimes.diploma.framework.businessContext.expression.Constant;
+import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionType;
 import cz.filipklimes.diploma.framework.businessContext.expression.ObjectPropertyAssignment;
 import cz.filipklimes.diploma.framework.businessContext.expression.ObjectPropertyReference;
 import cz.filipklimes.diploma.framework.businessContext.expression.numeric.GreaterOrEqualTo;
@@ -25,10 +26,10 @@ public class BusinessRuleEvaluatorTest
             "discount for elders",
             "order.create",
             // if user.age >= 70
-            new GreaterOrEqualTo(new ObjectPropertyReference<>("user", "age", BigDecimal.class), new Constant<>(new BigDecimal(70))),
+            new GreaterOrEqualTo(new ObjectPropertyReference<>("user", "age", ExpressionType.NUMBER), new Constant<>(new BigDecimal(70))),
             // then order.sum = order.sum * 80 %
             new ObjectPropertyAssignment<>("order", "sum", new Multiply(
-                new ObjectPropertyReference<>("order", "sum", BigDecimal.class),
+                new ObjectPropertyReference<>("order", "sum", ExpressionType.NUMBER),
                 new Constant<>(new BigDecimal("0.8"))
             ))
         );

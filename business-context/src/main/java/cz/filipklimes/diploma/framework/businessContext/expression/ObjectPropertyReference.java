@@ -13,9 +13,9 @@ public class ObjectPropertyReference<T> implements Terminal<T>
 
     private final String objectName;
     private final String propertyName;
-    private final Class<T> type;
+    private final ExpressionType type;
 
-    public ObjectPropertyReference(final String objectName, final String propertyName, final Class<T> type)
+    public ObjectPropertyReference(final String objectName, final String propertyName, final ExpressionType type)
     {
         this.objectName = Objects.requireNonNull(objectName);
         this.propertyName = Objects.requireNonNull(propertyName);
@@ -23,6 +23,7 @@ public class ObjectPropertyReference<T> implements Terminal<T>
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T interpret(final BusinessContext context)
     {
         Object object = context.getVariable(objectName);
@@ -32,16 +33,32 @@ public class ObjectPropertyReference<T> implements Terminal<T>
             .findAny()
             .orElseThrow(() -> new UndefinedObjectPropertyException(objectName, propertyName));
 
-        if (!getter.getReturnType().equals(type)) {
-            throw new BadObjectPropertyTypeException(objectName, propertyName, type);
+        if (!getter.getReturnType().equals(type.getUnderlyingClass())) {
+            throw new BadObjectPropertyTypeException(objectName, propertyName, type.getUnderlyingClass());
         }
 
         try {
-            return type.cast(getter.invoke(object));
+            return (T) type.getUnderlyingClass().cast(getter.invoke(object));
 
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException("Could not access object property", e);
         }
+    }
+
+    @Override
+    public Map<String, String> getProperties()
+    {
+        Map<String, String> propertyMap = new HashMap<>();
+        propertyMap.put("objectName", objectName);
+        propertyMap.put("propertyName", propertyName);
+        propertyMap.put("type", type.getName());
+        return propertyMap;
+    }
+
+    @Override
+    public String getName()
+    {
+        return "object-property-reference";
     }
 
 }

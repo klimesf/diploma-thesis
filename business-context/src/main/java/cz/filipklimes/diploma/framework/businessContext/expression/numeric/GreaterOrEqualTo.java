@@ -5,6 +5,7 @@ import cz.filipklimes.diploma.framework.businessContext.expression.BinaryOperato
 import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
 
 import java.math.BigDecimal;
+import java.util.*;
 
 public class GreaterOrEqualTo extends BinaryOperator<Boolean, BigDecimal, BigDecimal>
 {
@@ -19,6 +20,18 @@ public class GreaterOrEqualTo extends BinaryOperator<Boolean, BigDecimal, BigDec
     {
         boolean result = getLeft().interpret(context).compareTo(getRight().interpret(context)) >= 0;
         return result;
+    }
+
+    @Override
+    public Map<String, String> getProperties()
+    {
+        return Collections.emptyMap();
+    }
+
+    @Override
+    public String getName()
+    {
+        return "numeric-gte";
     }
 
 }

@@ -4,6 +4,8 @@ import cz.filipklimes.diploma.framework.businessContext.BusinessContext;
 import cz.filipklimes.diploma.framework.businessContext.expression.BinaryOperator;
 import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
 
+import java.util.*;
+
 public final class Or extends BinaryOperator<Boolean, Boolean, Boolean>
 {
 
@@ -16,6 +18,18 @@ public final class Or extends BinaryOperator<Boolean, Boolean, Boolean>
     public Boolean interpret(final BusinessContext context)
     {
         return getLeft().interpret(context) || getRight().interpret(context);
+    }
+
+    @Override
+    public Map<String, String> getProperties()
+    {
+        return Collections.emptyMap();
+    }
+
+    @Override
+    public String getName()
+    {
+        return "logical-or";
     }
 
 }

@@ -5,9 +5,17 @@ package businessContext;
 option java_package = "cz.filipklimes.diploma.framework.businessContext.provider.server.protobuf";
 option java_outer_classname = "BusinessRulesProtos";
 
+message Expression {
+    required string name = 1;
+    map<string, string> properties = 2;
+    repeated Expression arguments = 3;
+}
+
 message BusinessRuleMessage {
     required string name = 1;
-    required string packageName = 2;
+    required string businessContextName = 2;
+    required Expression leftHandSide = 3;
+    required Expression rightHandSide = 4;
 }
 
 message BusinessRulesMessage {

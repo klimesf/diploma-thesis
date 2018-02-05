@@ -7,6 +7,8 @@ import cz.filipklimes.diploma.framework.businessContext.exception.UndefinedVaria
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+
 public class ObjectPropertyReferenceTest
 {
 
@@ -17,7 +19,7 @@ public class ObjectPropertyReferenceTest
         MockObject object = new MockObject();
         context.setVariable("object", object);
 
-        Expression<String> expression = new ObjectPropertyReference<>("object", "property", String.class);
+        Expression<String> expression = new ObjectPropertyReference<>("object", "property", ExpressionType.STRING);
         String result = expression.interpret(context);
 
         Assert.assertEquals(object.getProperty(), result);
@@ -30,7 +32,7 @@ public class ObjectPropertyReferenceTest
         MockObject object = new MockObject();
         context.setVariable("object", object);
 
-        Expression<String> expression = new ObjectPropertyReference<>("object", "hiddenProperty", String.class);
+        Expression<String> expression = new ObjectPropertyReference<>("object", "hiddenProperty", ExpressionType.STRING);
         expression.interpret(context);
     }
 
@@ -41,7 +43,7 @@ public class ObjectPropertyReferenceTest
         MockObject object = new MockObject();
         context.setVariable("object", object);
 
-        Expression<Integer> expression = new ObjectPropertyReference<>("object", "property", Integer.class);
+        Expression<BigDecimal> expression = new ObjectPropertyReference<>("object", "property", ExpressionType.NUMBER);
         expression.interpret(context);
     }
 
@@ -52,7 +54,7 @@ public class ObjectPropertyReferenceTest
         MockObject object = new MockObject();
         context.setVariable("object", object);
 
-        Expression<Integer> expression = new ObjectPropertyReference<>("invalid", "property", Integer.class);
+        Expression<BigDecimal> expression = new ObjectPropertyReference<>("invalid", "property", ExpressionType.NUMBER);
         expression.interpret(context);
     }
 

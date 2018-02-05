@@ -5,6 +5,8 @@ import cz.filipklimes.diploma.framework.businessContext.exception.UndefinedFunct
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+
 public class FunctionCallTest
 {
 
@@ -12,12 +14,12 @@ public class FunctionCallTest
     public void testAddition()
     {
         BusinessContext context = new BusinessContext("test");
-        context.addFunction("add", (args) -> (int) args[0] + (int) args[1]);
+        context.addFunction("add", (args) -> ((BigDecimal) args[0]).add((BigDecimal) args[1]));
 
-        Expression<Integer> expression = new FunctionCall<>("add", Integer.class, new Constant<>(1), new Constant<>(2));
-        Integer result = expression.interpret(context);
+        Expression<BigDecimal> expression = new FunctionCall<>("add", ExpressionType.NUMBER, new Constant<>(BigDecimal.valueOf(1)), new Constant<>(BigDecimal.valueOf(2)));
+        BigDecimal result = expression.interpret(context);
 
-        Assert.assertEquals(Integer.valueOf(3), result);
+        Assert.assertEquals(BigDecimal.valueOf(3), result);
     }
 
     @Test(expected = UndefinedFunctionException.class)
@@ -25,7 +27,7 @@ public class FunctionCallTest
     {
         BusinessContext context = new BusinessContext("test");
 
-        Expression<Integer> expression = new FunctionCall<>("add", Integer.class, new Constant<>(1), new Constant<>(2));
+        Expression<BigDecimal> expression = new FunctionCall<>("add", ExpressionType.NUMBER, new Constant<>(BigDecimal.valueOf(1)), new Constant<>(BigDecimal.valueOf(2)));
         expression.interpret(context);
     }
 

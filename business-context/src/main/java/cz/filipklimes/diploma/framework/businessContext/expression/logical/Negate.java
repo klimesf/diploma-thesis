@@ -4,6 +4,8 @@ import cz.filipklimes.diploma.framework.businessContext.BusinessContext;
 import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
 import cz.filipklimes.diploma.framework.businessContext.expression.UnaryOperator;
 
+import java.util.*;
+
 public class Negate extends UnaryOperator<Boolean, Boolean>
 {
 
@@ -16,6 +18,18 @@ public class Negate extends UnaryOperator<Boolean, Boolean>
     public Boolean interpret(final BusinessContext context)
     {
         return !getArgument().interpret(context);
+    }
+
+    @Override
+    public Map<String, String> getProperties()
+    {
+        return Collections.emptyMap();
+    }
+
+    @Override
+    public String getName()
+    {
+        return "logical-negate";
     }
 
 }

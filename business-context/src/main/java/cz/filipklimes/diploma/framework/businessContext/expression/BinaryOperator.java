@@ -2,6 +2,8 @@ package cz.filipklimes.diploma.framework.businessContext.expression;
 
 import lombok.Getter;
 
+import java.util.*;
+
 public abstract class BinaryOperator<T, L, R> implements Expression<T>
 {
 
@@ -15,6 +17,12 @@ public abstract class BinaryOperator<T, L, R> implements Expression<T>
     {
         this.left = left;
         this.right = right;
+    }
+
+    @Override
+    public Collection<Expression<?>> getArguments()
+    {
+        return Arrays.asList(left, right);
     }
 
 }

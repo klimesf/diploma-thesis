@@ -8,18 +8,17 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class ObjectPropertyAssignment<T> implements Expression<Void>
+public class ObjectPropertyAssignment<T> extends UnaryOperator<Void, T>
 {
 
     private final String objectName;
     private final String propertyName;
-    private final Expression<T> argument;
 
     public ObjectPropertyAssignment(final String objectName, final String propertyName, final Expression<T> argument)
     {
+        super(argument);
         this.objectName = Objects.requireNonNull(objectName);
         this.propertyName = Objects.requireNonNull(propertyName);
-        this.argument = Objects.requireNonNull(argument);
     }
 
     @Override
@@ -32,7 +31,7 @@ public class ObjectPropertyAssignment<T> implements Expression<Void>
             .findAny()
             .orElseThrow(() -> new UndefinedObjectPropertyException(objectName, propertyName));
 
-        T value = argument.interpret(context);
+        T value = getArgument().interpret(context);
 
         try {
             setter.invoke(object, value);
@@ -43,6 +42,21 @@ public class ObjectPropertyAssignment<T> implements Expression<Void>
         } catch (IllegalArgumentException e) {
             throw new BadObjectPropertyTypeException(objectName, propertyName, value.getClass(), e);
         }
+    }
+
+    @Override
+    public Map<String, String> getProperties()
+    {
+        Map<String, String> propertyMap = new HashMap<>();
+        propertyMap.put("objectName", objectName);
+        propertyMap.put("propertyName", propertyName);
+        return propertyMap;
+    }
+
+    @Override
+    public String getName()
+    {
+        return "object-property-assignment";
     }
 
 }

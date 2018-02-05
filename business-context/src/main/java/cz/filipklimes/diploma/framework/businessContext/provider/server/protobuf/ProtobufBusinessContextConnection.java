@@ -1,6 +1,7 @@
 package cz.filipklimes.diploma.framework.businessContext.provider.server.protobuf;
 
 import cz.filipklimes.diploma.framework.businessContext.BusinessRule;
+import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
 import cz.filipklimes.diploma.framework.businessContext.provider.BusinessContextProvider;
 import cz.filipklimes.diploma.framework.businessContext.provider.server.protobuf.BusinessRulesProtos.BusinessRuleMessage;
 import cz.filipklimes.diploma.framework.businessContext.provider.server.protobuf.BusinessRulesProtos.BusinessRulesMessage;
@@ -46,8 +47,24 @@ public final class ProtobufBusinessContextConnection implements Runnable
     {
         return BusinessRuleMessage.newBuilder()
             .setName(rule.getName())
-            .setPackageName(rule.getBusinessContextName())
+            .setBusinessContextName(rule.getBusinessContextName())
+            .setLeftHandSide(buildExpression(rule.getLeftHandSide()))
+            .setRightHandSide(buildExpression(rule.getRightHandSide()))
             .build();
+    }
+
+    private BusinessRulesProtos.Expression buildExpression(final Expression<?> expression)
+    {
+        BusinessRulesProtos.Expression.Builder builder = BusinessRulesProtos.Expression.newBuilder();
+        builder.setName(expression.getName());
+
+        expression.getProperties().forEach(builder::putProperties);
+
+        expression.getArguments().stream()
+            .map(this::buildExpression)
+            .forEach(builder::addArguments);
+
+        return builder.build();
     }
 
 }

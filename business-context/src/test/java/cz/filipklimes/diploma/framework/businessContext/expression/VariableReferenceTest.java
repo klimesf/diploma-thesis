@@ -5,6 +5,8 @@ import cz.filipklimes.diploma.framework.businessContext.exception.UndefinedVaria
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+
 public class VariableReferenceTest
 {
 
@@ -14,10 +16,10 @@ public class VariableReferenceTest
         BusinessContext context = new BusinessContext("test");
         context.setVariable("number", 123);
 
-        Expression<Integer> expression = new VariableReference<>("number", Integer.class);
-        Integer result = expression.interpret(context);
+        Expression<BigDecimal> expression = new VariableReference<>("number", ExpressionType.NUMBER);
+        BigDecimal result = expression.interpret(context);
 
-        Assert.assertEquals(Integer.valueOf(123), result);
+        Assert.assertEquals(BigDecimal.valueOf(123), result);
     }
 
     @Test(expected = UndefinedVariableException.class)
@@ -26,7 +28,7 @@ public class VariableReferenceTest
         BusinessContext context = new BusinessContext("test");
         context.setVariable("number", 123);
 
-        Expression<Integer> expression = new VariableReference<>("invalid", Integer.class);
+        Expression<BigDecimal> expression = new VariableReference<>("invalid", ExpressionType.NUMBER);
         expression.interpret(context);
     }
 

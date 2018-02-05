@@ -9,10 +9,10 @@ public class FunctionCall<T> implements Expression<T>
 {
 
     private final String methodName;
-    private final Class<T> type;
+    private final ExpressionType type;
     private final Expression<?>[] arguments;
 
-    public FunctionCall(final String methodName, final Class<T> type, final Expression<?>... arguments)
+    public FunctionCall(final String methodName, final ExpressionType type, final Expression<?>... arguments)
     {
         this.methodName = methodName;
         this.type = type;
@@ -20,6 +20,7 @@ public class FunctionCall<T> implements Expression<T>
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T interpret(final BusinessContext context)
     {
         Function function = context.getFunction(methodName);
@@ -28,7 +29,28 @@ public class FunctionCall<T> implements Expression<T>
             .map(argument -> argument.interpret(context))
             .toArray();
 
-        return type.cast(function.execute(calculatedArguments));
+        return (T) type.getUnderlyingClass().cast(function.execute(calculatedArguments));
+    }
+
+    @Override
+    public Collection<Expression<?>> getArguments()
+    {
+        return Arrays.asList(arguments);
+    }
+
+    @Override
+    public Map<String, String> getProperties()
+    {
+        Map<String, String> propertyMap = new HashMap<>();
+        propertyMap.put("methodName", methodName);
+        propertyMap.put("type", type.getName());
+        return propertyMap;
+    }
+
+    @Override
+    public String getName()
+    {
+        return "function-call";
     }
 
 }

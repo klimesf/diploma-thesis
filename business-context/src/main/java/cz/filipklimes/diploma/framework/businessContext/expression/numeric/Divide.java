@@ -6,6 +6,7 @@ import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.util.*;
 
 public class Divide extends BinaryOperator<BigDecimal, BigDecimal, BigDecimal>
 {
@@ -19,6 +20,18 @@ public class Divide extends BinaryOperator<BigDecimal, BigDecimal, BigDecimal>
     public BigDecimal interpret(final BusinessContext context)
     {
         return getLeft().interpret(context).divide(getRight().interpret(context), MathContext.DECIMAL128);
+    }
+
+    @Override
+    public Map<String, String> getProperties()
+    {
+        return Collections.emptyMap();
+    }
+
+    @Override
+    public String getName()
+    {
+        return "numeric-divide";
     }
 
 }
