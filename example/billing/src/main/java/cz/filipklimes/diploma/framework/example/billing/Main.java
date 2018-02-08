@@ -21,6 +21,7 @@ public class Main
     {
         BusinessRule orderHasPositiveSum = BusinessRule.builder()
             .setName("orderHasPositiveSum")
+            .addApplicableContext("order.create")
             .addApplicableContext("order.update")
             .setType(BusinessRuleType.POST_CONDITION)
             .setCondition(new GreaterThan(
