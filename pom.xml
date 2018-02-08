@@ -63,9 +63,6 @@
                 <groupId>org.xolstice.maven.plugins</groupId>
                 <artifactId>protobuf-maven-plugin</artifactId>
                 <version>0.5.1</version>
-                <configuration>
-                    <protocExecutable>/usr/local/bin/protoc</protocExecutable>
-                </configuration>
                 <executions>
                     <execution>
                         <goals>

@@ -74,7 +74,9 @@ public final class ProtobufBusinessRulesConnection implements Runnable
         BusinessRulesProtos.Expression.Builder builder = BusinessRulesProtos.Expression.newBuilder();
         builder.setName(expression.getName());
 
-        expression.getProperties().forEach(builder::putProperties);
+        expression.getProperties().forEach((key, value) ->
+            builder.addProperties(BusinessRulesProtos.ExpressionProperty.newBuilder().setKey(key).setValue(value).build())
+        );
 
         expression.getArguments().stream()
             .map(this::buildExpression)

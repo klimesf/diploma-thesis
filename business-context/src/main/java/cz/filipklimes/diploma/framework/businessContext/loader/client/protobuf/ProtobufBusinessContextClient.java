@@ -116,41 +116,51 @@ public class ProtobufBusinessContextClient
             case "numeric-subtract":
                 return (Expression<T>) new Subtract(buildExpression(message.getArguments(0)), buildExpression(message.getArguments(1)));
             case "constant":
-                ExpressionType type = ExpressionType.of(message.getPropertiesMap().get("type"));
-                return (Expression<T>) new Constant<>(type.deserialize(message.getPropertiesMap().get("value")), type);
+                ExpressionType type = ExpressionType.of(findPropertyByName("type", message));
+                return (Expression<T>) new Constant<>(type.deserialize(findPropertyByName("value", message)), type);
             case "function-call":
                 return (Expression<T>) new FunctionCall<>(
-                    message.getPropertiesMap().get("methodName"),
-                    ExpressionType.of(message.getPropertiesMap().get("type")),
+                    findPropertyByName("methodName", message),
+                    ExpressionType.of(findPropertyByName("type", message)),
                     (Expression<?>[]) message.getArgumentsList().stream().map(this::buildExpression).toArray()
                 );
             case "is-not-null":
                 return (Expression<T>) new IsNotNull<>(buildExpression(message.getArguments(0)));
             case "object-property-assignment":
                 return (Expression<T>) new ObjectPropertyAssignment<>(
-                    message.getPropertiesMap().get("objectName"),
-                    message.getPropertiesMap().get("propertyName"),
+                    findPropertyByName("objectName", message),
+                    findPropertyByName("propertyName", message),
                     buildExpression(message.getArguments(0))
                 );
             case "object-property-reference":
                 return (Expression<T>) new ObjectPropertyReference<>(
-                    message.getPropertiesMap().get("objectName"),
-                    message.getPropertiesMap().get("propertyName"),
-                    ExpressionType.of(message.getPropertiesMap().get("type"))
+                    findPropertyByName("objectName", message),
+                    findPropertyByName("propertyName", message),
+                    ExpressionType.of(findPropertyByName("type", message))
                 );
             case "variable-assignment":
                 return (Expression<T>) new VariableAssignment<>(
-                    message.getPropertiesMap().get("name"),
+                    findPropertyByName("name", message),
                     buildExpression(message.getArguments(0))
                 );
             case "variable-reference":
                 return (Expression<T>) new VariableReference<>(
-                    message.getPropertiesMap().get("name"),
-                    ExpressionType.of(message.getPropertiesMap().get("type"))
+                    findPropertyByName("name", message),
+                    ExpressionType.of(findPropertyByName("type", message))
                 );
             default:
                 throw new RuntimeException(String.format("Unknown expression: %s", message.getName()));
         }
+    }
+    
+    private String findPropertyByName(final String name, final BusinessRulesProtos.Expression message)
+    {
+        for (BusinessRulesProtos.ExpressionProperty expressionProperty : message.getPropertiesList()) {
+            if (expressionProperty.getKey().equals(name)) {
+                return expressionProperty.getValue();
+            }
+        }
+        return null;
     }
 
 }
