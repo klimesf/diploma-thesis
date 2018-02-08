@@ -28,9 +28,11 @@ public class ProtobufBusinessRulesServer implements Runnable
         try (ServerSocket socket = new ServerSocket(port)) {
             while (true) {
                 Runnable connection = new ProtobufBusinessRulesConnection(socket.accept(), registry);
+                System.out.println("Received a connection");
                 executor.submit(connection);
             }
         } catch (IOException e) {
+            System.err.println(e.getMessage());
             throw new RuntimeException(e);
         }
     }

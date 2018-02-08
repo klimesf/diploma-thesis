@@ -5,7 +5,7 @@ import lombok.Getter;
 
 import java.util.*;
 
-public class BusinessRulesCheckFailedException extends Exception
+public class BusinessRulesCheckFailedException extends RuntimeException
 {
 
     @Getter

@@ -1,8 +1,0 @@
-package rules;
-
-dialect "mvel"
-
-rule "generic shipping expression"
-    when
-    then
-end

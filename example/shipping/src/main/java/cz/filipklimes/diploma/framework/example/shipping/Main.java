@@ -1,15 +1,13 @@
 package cz.filipklimes.diploma.framework.example.shipping;
 
+import cz.filipklimes.diploma.framework.businessContext.BusinessContextRegistry;
 import cz.filipklimes.diploma.framework.businessContext.BusinessRule;
-import cz.filipklimes.diploma.framework.businessContext.expression.Constant;
+import cz.filipklimes.diploma.framework.businessContext.BusinessRuleType;
 import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionType;
-import cz.filipklimes.diploma.framework.businessContext.expression.ObjectPropertyAssignment;
-import cz.filipklimes.diploma.framework.businessContext.expression.ObjectPropertyReference;
-import cz.filipklimes.diploma.framework.businessContext.expression.logical.Equals;
-import cz.filipklimes.diploma.framework.businessContext.expression.numeric.Add;
-import cz.filipklimes.diploma.framework.businessContext.provider.server.protobuf.ProtobufBusinessContextServer;
+import cz.filipklimes.diploma.framework.businessContext.expression.IsNotNull;
+import cz.filipklimes.diploma.framework.businessContext.expression.VariableReference;
+import cz.filipklimes.diploma.framework.businessContext.provider.server.protobuf.ProtobufBusinessRulesServer;
 
-import java.math.BigDecimal;
 import java.util.*;
 
 public class Main
@@ -19,41 +17,23 @@ public class Main
 
     public static void main(String[] args) throws InterruptedException
     {
-        ProtobufBusinessContextServer server = new ProtobufBusinessContextServer(
-            () -> {
-                Set<BusinessRule> rules = new HashSet<>();
+        BusinessRule addressIsNotNull = BusinessRule.builder()
+            .setName("addressIsNotNull")
+            .addApplicableContext("order.create")
+            .setType(BusinessRuleType.PRECONDITION)
+            .setCondition(new IsNotNull<>(new VariableReference<>("address", ExpressionType.STRING)))
+            .build();
 
-                // Shipping to countries
-                BusinessRule usShipping = new BusinessRule(
-                    "usShipping",
-                    "order.create",
-                    // user.country = "US"
-                    new Equals<>(new ObjectPropertyReference<>("user", "country", ExpressionType.STRING), new Constant<>("US", ExpressionType.STRING)),
-                    // order.sum = order.sum + 100
-                    new ObjectPropertyAssignment<>("order", "sum", new Add(
-                        new ObjectPropertyReference<>("order", "sum", ExpressionType.NUMBER),
-                        new Constant<>(BigDecimal.valueOf(100), ExpressionType.NUMBER)
-                    ))
-                );
-                rules.add(usShipping);
+        BusinessContextRegistry registry = BusinessContextRegistry.builder()
+            .setLocalLoader(() -> new HashSet<>(Collections.singletonList(addressIsNotNull)))
+            .build();
 
-                BusinessRule gbShipping = new BusinessRule(
-                    "gbShipping",
-                    "order.create",
-                    // user.country = "GB"
-                    new Equals<>(new ObjectPropertyReference<>("user", "country", ExpressionType.STRING), new Constant<>("GB", ExpressionType.STRING)),
-                    // order.sum = order.sum + 200
-                    new ObjectPropertyAssignment<>("order", "sum", new Add(
-                        new ObjectPropertyReference<>("order", "sum", ExpressionType.NUMBER),
-                        new Constant<>(BigDecimal.valueOf(200), ExpressionType.NUMBER)
-                    ))
-                );
-                rules.add(gbShipping);
-
-                return rules;
-            },
+        ProtobufBusinessRulesServer server = new ProtobufBusinessRulesServer(
+            registry,
             PORT
         );
+
+        registry.initialize();
 
         Thread t = new Thread(server);
         t.start();

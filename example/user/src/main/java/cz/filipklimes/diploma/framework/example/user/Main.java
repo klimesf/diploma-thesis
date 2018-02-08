@@ -1,15 +1,13 @@
 package cz.filipklimes.diploma.framework.example.user;
 
+import cz.filipklimes.diploma.framework.businessContext.BusinessContextRegistry;
 import cz.filipklimes.diploma.framework.businessContext.BusinessRule;
-import cz.filipklimes.diploma.framework.businessContext.expression.Constant;
+import cz.filipklimes.diploma.framework.businessContext.BusinessRuleType;
 import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionType;
-import cz.filipklimes.diploma.framework.businessContext.expression.ObjectPropertyAssignment;
-import cz.filipklimes.diploma.framework.businessContext.expression.ObjectPropertyReference;
-import cz.filipklimes.diploma.framework.businessContext.expression.numeric.Add;
-import cz.filipklimes.diploma.framework.businessContext.expression.numeric.GreaterOrEqualTo;
-import cz.filipklimes.diploma.framework.businessContext.provider.server.protobuf.ProtobufBusinessContextServer;
+import cz.filipklimes.diploma.framework.businessContext.expression.IsNotNull;
+import cz.filipklimes.diploma.framework.businessContext.expression.VariableReference;
+import cz.filipklimes.diploma.framework.businessContext.provider.server.protobuf.ProtobufBusinessRulesServer;
 
-import java.math.BigDecimal;
 import java.util.*;
 
 public class Main
@@ -19,28 +17,23 @@ public class Main
 
     public static void main(String[] args) throws InterruptedException
     {
-        ProtobufBusinessContextServer server = new ProtobufBusinessContextServer(
-            () -> {
-                Set<BusinessRule> rules = new HashSet<>();
+        BusinessRule userIsNotNull = BusinessRule.builder()
+            .setName("userIsNotNull")
+            .addApplicableContext("order.create")
+            .setType(BusinessRuleType.PRECONDITION)
+            .setCondition(new IsNotNull<>(new VariableReference<>("user", ExpressionType.VOID)))
+            .build();
 
-                // Discounts
-                BusinessRule elderDiscount = new BusinessRule(
-                    "elderDiscount",
-                    "order.create",
-                    // user.age >= 70
-                    new GreaterOrEqualTo(new ObjectPropertyReference<>("user", "age", ExpressionType.NUMBER), new Constant<>(BigDecimal.valueOf(70), ExpressionType.NUMBER)),
-                    // order.discountPercent = order.discountPercent + 20
-                    new ObjectPropertyAssignment<>("order", "discountPercent", new Add(
-                        new ObjectPropertyReference<>("order", "discountPercent", ExpressionType.NUMBER),
-                        new Constant<>(BigDecimal.valueOf(200), ExpressionType.NUMBER)
-                    ))
-                );
-                rules.add(elderDiscount);
+        BusinessContextRegistry registry = BusinessContextRegistry.builder()
+            .setLocalLoader(() -> new HashSet<>(Collections.singletonList(userIsNotNull)))
+            .build();
 
-                return rules;
-            },
+        ProtobufBusinessRulesServer server = new ProtobufBusinessRulesServer(
+            registry,
             PORT
         );
+
+        registry.initialize();
 
         Thread t = new Thread(server);
         t.start();

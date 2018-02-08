@@ -28,9 +28,9 @@ public final class ProtobufBusinessRulesConnection implements Runnable
     public void run()
     {
         try (OutputStream out = connection.getOutputStream()) {
-            List<BusinessRuleMessage> ruleMessages = registry.getLocalRules().stream()
+            Set<BusinessRuleMessage> ruleMessages = registry.getLocalRules().stream()
                 .map(this::buildBusinessRuleMessage)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
 
             BusinessRulesMessage.newBuilder()
                 .addAllRules(ruleMessages)
@@ -39,7 +39,10 @@ public final class ProtobufBusinessRulesConnection implements Runnable
 
             out.flush();
 
-        } catch (IOException e) {
+            System.out.println(String.format("Send %d rule messages", ruleMessages.size()));
+
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
             throw new RuntimeException(e);
         }
     }

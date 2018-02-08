@@ -6,6 +6,7 @@ import cz.filipklimes.diploma.framework.businessContext.expression.Constant;
 import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
 import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionType;
 import cz.filipklimes.diploma.framework.businessContext.expression.FunctionCall;
+import cz.filipklimes.diploma.framework.businessContext.expression.IsNotNull;
 import cz.filipklimes.diploma.framework.businessContext.expression.ObjectPropertyAssignment;
 import cz.filipklimes.diploma.framework.businessContext.expression.ObjectPropertyReference;
 import cz.filipklimes.diploma.framework.businessContext.expression.VariableAssignment;
@@ -123,6 +124,8 @@ public class ProtobufBusinessContextClient
                     ExpressionType.of(message.getPropertiesMap().get("type")),
                     (Expression<?>[]) message.getArgumentsList().stream().map(this::buildExpression).toArray()
                 );
+            case "is-not-null":
+                return (Expression<T>) new IsNotNull<>(buildExpression(message.getArguments(0)));
             case "object-property-assignment":
                 return (Expression<T>) new ObjectPropertyAssignment<>(
                     message.getPropertiesMap().get("objectName"),

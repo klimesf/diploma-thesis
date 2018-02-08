@@ -1,12 +1,16 @@
-package cz.filipklimes.diploma.framework.example.order;
+package cz.filipklimes.diploma.framework.example.order.model;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.*;
 
 public class User
 {
+
+    @Getter @Setter
+    private int id;
 
     @Getter
     private final String name;

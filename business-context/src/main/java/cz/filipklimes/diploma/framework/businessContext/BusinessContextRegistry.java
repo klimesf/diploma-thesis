@@ -103,6 +103,19 @@ public final class BusinessContextRegistry
         return rulesCache.get(LOCAL_ORIGIN).getAllRules();
     }
 
+    public Set<BusinessRule> getAllRules()
+    {
+        if (!initialized) {
+            throw new IllegalStateException("Registry must be initialized first");
+        }
+        return rulesCache.entrySet().stream()
+            .peek(this::refreshInvalidSector)
+            .map(Map.Entry::getValue)
+            .map(OriginServiceSector::getAllRules)
+            .flatMap(Set::stream)
+            .collect(Collectors.toSet());
+    }
+
     private void refreshInvalidSector(final Map.Entry<String, OriginServiceSector> sector)
     {
         if (!initialized) {
