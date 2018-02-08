@@ -30,4 +30,10 @@ public class IsNotNull<T> extends UnaryOperator<Boolean, T>
         return "is-not-null";
     }
 
+    @Override
+    public String toString()
+    {
+        return String.format("%s is not null", getArgument());
+    }
+
 }

@@ -11,12 +11,24 @@
 <div class="container">
     <h1>Available business rules</h1>
     <table class="table table-bordered">
+        <thead>
+        <tr>
+            <td>Origin</td>
+            <td>Name</td>
+            <td>Applicable Contexts</td>
+            <td>Type</td>
+            <td>Condition</td>
+        </tr>
+        </thead>
+        <tbody>
         <tr th:each="rule : ${rules}">
-            <td><span th:text="${rule.getName()}"></span></td>
+            <td><span th:text="${rule.getOrigin()}"></span></td>
+            <td><span th:text="${rule.getBusinessRuleName()}"></span></td>
             <td><span th:text="${rule.getApplicableContexts()}"></span></td>
-            <td><span th:text="${rule.getType()}"></span></td>
+            <td><span th:text="${rule.getBusinessRuleType()}"></span></td>
             <td><span th:text="${rule.getCondition()}"></span></td>
         </tr>
+        </tbody>
     </table>
 </div>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"

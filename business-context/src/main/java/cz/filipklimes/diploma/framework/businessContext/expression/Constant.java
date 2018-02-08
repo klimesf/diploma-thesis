@@ -37,4 +37,10 @@ public class Constant<T> implements Terminal<T>
         return "constant";
     }
 
+    @Override
+    public String toString()
+    {
+        return String.format("%s", value);
+    }
+
 }

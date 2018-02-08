@@ -32,4 +32,10 @@ public class Negate extends UnaryOperator<Boolean, Boolean>
         return "logical-negate";
     }
 
+    @Override
+    public String toString()
+    {
+        return String.format("not %s", getArgument());
+    }
+
 }

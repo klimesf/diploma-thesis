@@ -34,4 +34,10 @@ public class Multiply extends BinaryOperator<BigDecimal, BigDecimal, BigDecimal>
         return "numeric-multiply";
     }
 
+    @Override
+    public String toString()
+    {
+        return String.format("(%s * %s)", getLeft(), getRight());
+    }
+
 }

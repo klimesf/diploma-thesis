@@ -34,4 +34,10 @@ public class GreaterOrEqualTo extends BinaryOperator<Boolean, BigDecimal, BigDec
         return "numeric-gte";
     }
 
+    @Override
+    public String toString()
+    {
+        return String.format("%s >= %s", getLeft(), getRight());
+    }
+
 }

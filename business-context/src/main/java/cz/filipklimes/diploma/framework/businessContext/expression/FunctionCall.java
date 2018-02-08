@@ -53,4 +53,10 @@ public class FunctionCall<T> implements Expression<T>
         return "function-call";
     }
 
+    @Override
+    public String toString()
+    {
+        return String.format("call %s()", methodName);
+    }
+
 }

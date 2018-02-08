@@ -34,4 +34,10 @@ public class Divide extends BinaryOperator<BigDecimal, BigDecimal, BigDecimal>
         return "numeric-divide";
     }
 
+    @Override
+    public String toString()
+    {
+        return String.format("(%s / %s)", getLeft(), getRight());
+    }
+
 }

@@ -32,4 +32,10 @@ public final class Or extends BinaryOperator<Boolean, Boolean, Boolean>
         return "logical-or";
     }
 
+    @Override
+    public String toString()
+    {
+        return String.format("%s or %s", getLeft(), getRight());
+    }
+
 }

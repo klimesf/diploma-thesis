@@ -34,4 +34,10 @@ public class Equals<L, R> extends BinaryOperator<Boolean, L, R>
         return "logical-equals";
     }
 
+    @Override
+    public String toString()
+    {
+        return String.format("%s equals %s", getLeft(), getRight());
+    }
+
 }

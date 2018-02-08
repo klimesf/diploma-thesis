@@ -32,4 +32,10 @@ public final class And extends BinaryOperator<Boolean, Boolean, Boolean>
         return "logical-and";
     }
 
+    @Override
+    public String toString()
+    {
+        return String.format("%s and %s", getLeft(), getRight());
+    }
+
 }

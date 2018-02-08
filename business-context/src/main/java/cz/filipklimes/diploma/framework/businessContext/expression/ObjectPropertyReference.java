@@ -61,4 +61,10 @@ public class ObjectPropertyReference<T> implements Terminal<T>
         return "object-property-reference";
     }
 
+    @Override
+    public String toString()
+    {
+        return String.format("$%s.%s", objectName, propertyName);
+    }
+
 }

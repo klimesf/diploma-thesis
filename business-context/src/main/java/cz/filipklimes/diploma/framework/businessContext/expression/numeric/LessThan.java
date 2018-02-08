@@ -33,4 +33,10 @@ public class LessThan extends BinaryOperator<Boolean, BigDecimal, BigDecimal>
         return "numeric-lt";
     }
 
+    @Override
+    public String toString()
+    {
+        return String.format("%s < %s", getLeft(), getRight());
+    }
+
 }

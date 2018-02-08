@@ -38,4 +38,10 @@ public class VariableReference<T> implements Terminal<T>
         return "variable-reference";
     }
 
+    @Override
+    public String toString()
+    {
+        return String.format("$%s", name);
+    }
+
 }

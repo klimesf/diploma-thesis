@@ -33,4 +33,10 @@ public class GreaterThan extends BinaryOperator<Boolean, BigDecimal, BigDecimal>
         return "numeric-gt";
     }
 
+    @Override
+    public String toString()
+    {
+        return String.format("%s > %s", getLeft(), getRight());
+    }
+
 }

@@ -37,4 +37,10 @@ public class VariableAssignment<T> extends UnaryOperator<Void, T>
         return "variable-assignment";
     }
 
+    @Override
+    public String toString()
+    {
+        return String.format("$%s := %s", name, getArgument());
+    }
+
 }

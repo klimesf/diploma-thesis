@@ -34,4 +34,10 @@ public class Add extends BinaryOperator<BigDecimal, BigDecimal, BigDecimal>
         return "numeric-add";
     }
 
+    @Override
+    public String toString()
+    {
+        return String.format("(%s + %s)", getLeft(), getRight());
+    }
+
 }

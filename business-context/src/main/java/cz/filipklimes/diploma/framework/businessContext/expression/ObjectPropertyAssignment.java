@@ -59,4 +59,10 @@ public class ObjectPropertyAssignment<T> extends UnaryOperator<Void, T>
         return "object-property-assignment";
     }
 
+    @Override
+    public String toString()
+    {
+        return String.format("$%s.%s := %s", objectName, propertyName, getArgument());
+    }
+
 }

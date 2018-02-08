@@ -33,4 +33,10 @@ public class LessOrEqualTo extends BinaryOperator<Boolean, BigDecimal, BigDecima
         return "numeric-lte";
     }
 
+    @Override
+    public String toString()
+    {
+        return String.format("%s <= %s", getLeft(), getRight());
+    }
+
 }

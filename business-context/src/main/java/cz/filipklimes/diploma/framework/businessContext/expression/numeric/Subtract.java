@@ -34,4 +34,10 @@ public class Subtract extends BinaryOperator<BigDecimal, BigDecimal, BigDecimal>
         return "numeric-subtract";
     }
 
+    @Override
+    public String toString()
+    {
+        return String.format("(%s - %s)", getLeft(), getRight());
+    }
+
 }
