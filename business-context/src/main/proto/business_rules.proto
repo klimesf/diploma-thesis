@@ -11,11 +11,17 @@ message Expression {
     repeated Expression arguments = 3;
 }
 
+enum BusinessRuleType {
+    UNKNOWN = 0;
+    PRECONDITION = 1;
+    POST_CONDITION = 2;
+}
+
 message BusinessRuleMessage {
     required string name = 1;
-    required string businessContextName = 2;
-    required Expression leftHandSide = 3;
-    required Expression rightHandSide = 4;
+    repeated string applicableContexts = 2;
+    required BusinessRuleType type = 3;
+    required Expression condition = 4;
 }
 
 message BusinessRulesMessage {

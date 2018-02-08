@@ -5,7 +5,7 @@ import cz.filipklimes.diploma.framework.businessContext.BusinessRule;
 import java.util.*;
 
 @FunctionalInterface
-public interface BusinessContextLoader
+public interface BusinessRulesLoader
 {
 
     /**

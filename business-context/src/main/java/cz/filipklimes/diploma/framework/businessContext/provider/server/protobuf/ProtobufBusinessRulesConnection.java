@@ -1,8 +1,9 @@
 package cz.filipklimes.diploma.framework.businessContext.provider.server.protobuf;
 
+import cz.filipklimes.diploma.framework.businessContext.BusinessContextRegistry;
 import cz.filipklimes.diploma.framework.businessContext.BusinessRule;
+import cz.filipklimes.diploma.framework.businessContext.BusinessRuleType;
 import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
-import cz.filipklimes.diploma.framework.businessContext.provider.BusinessContextProvider;
 import cz.filipklimes.diploma.framework.businessContext.provider.server.protobuf.BusinessRulesProtos.BusinessRuleMessage;
 import cz.filipklimes.diploma.framework.businessContext.provider.server.protobuf.BusinessRulesProtos.BusinessRulesMessage;
 
@@ -11,23 +12,23 @@ import java.net.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public final class ProtobufBusinessContextConnection implements Runnable
+public final class ProtobufBusinessRulesConnection implements Runnable
 {
 
     private final Socket connection;
-    private final BusinessContextProvider provider;
+    private final BusinessContextRegistry registry;
 
-    ProtobufBusinessContextConnection(final Socket connection, final BusinessContextProvider provider)
+    ProtobufBusinessRulesConnection(final Socket connection, final BusinessContextRegistry registry)
     {
         this.connection = Objects.requireNonNull(connection);
-        this.provider = Objects.requireNonNull(provider);
+        this.registry = Objects.requireNonNull(registry);
     }
 
     @Override
     public void run()
     {
         try (OutputStream out = connection.getOutputStream()) {
-            List<BusinessRuleMessage> ruleMessages = provider.getLocalRules().stream()
+            List<BusinessRuleMessage> ruleMessages = registry.getLocalRules().stream()
                 .map(this::buildBusinessRuleMessage)
                 .collect(Collectors.toList());
 
@@ -47,10 +48,22 @@ public final class ProtobufBusinessContextConnection implements Runnable
     {
         return BusinessRuleMessage.newBuilder()
             .setName(rule.getName())
-            .setBusinessContextName(rule.getBusinessContextName())
-            .setLeftHandSide(buildExpression(rule.getLeftHandSide()))
-            .setRightHandSide(buildExpression(rule.getRightHandSide()))
+            .setType(convertType(rule.getType()))
+            .addAllApplicableContexts(rule.getApplicableContexts())
+            .setCondition(buildExpression(rule.getCondition()))
             .build();
+    }
+
+    private BusinessRulesProtos.BusinessRuleType convertType(final BusinessRuleType type)
+    {
+        switch (type) {
+            case PRECONDITION:
+                return BusinessRulesProtos.BusinessRuleType.PRECONDITION;
+            case POST_CONDITION:
+                return BusinessRulesProtos.BusinessRuleType.POST_CONDITION;
+            default:
+                return BusinessRulesProtos.BusinessRuleType.UNKNOWN;
+        }
     }
 
     private BusinessRulesProtos.Expression buildExpression(final Expression<?> expression)

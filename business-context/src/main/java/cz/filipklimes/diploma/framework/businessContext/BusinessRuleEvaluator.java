@@ -1,26 +1,78 @@
 package cz.filipklimes.diploma.framework.businessContext;
 
+import cz.filipklimes.diploma.framework.businessContext.exception.BusinessRulesCheckFailedException;
+import lombok.Getter;
+
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class BusinessRuleEvaluator
 {
 
-    private final Set<BusinessRule> ruleSet;
+    private final BusinessContextRegistry registry;
 
-    public BusinessRuleEvaluator(final Set<BusinessRule> ruleSet)
+    public BusinessRuleEvaluator(final BusinessContextRegistry registry)
     {
-        this.ruleSet = Collections.unmodifiableSet(ruleSet);
+        this.registry = registry;
     }
 
-    public void evaluate(final BusinessContext context)
+    /**
+     * Evaluates preconditions applicable to the business context and throws BusinessRulesCheckFailedException
+     * if any rule was not satisfied.
+     *
+     * @param context The business context.
+     * @throws BusinessRulesCheckFailedException When any Business Rule was not satisfied.
+     */
+    public void evaluatePreconditions(final BusinessContext context) throws BusinessRulesCheckFailedException
     {
-        ruleSet.stream()
-            // Filter the expressions not applicable within the context
-            .filter(rule -> rule.getBusinessContextName().equals(context.getName()))
-            // Filter the expressions where left hand side criteria is not met
-            .filter(rule -> rule.getLeftHandSide().interpret(context))
-            // Apply right hand side expressions
-            .forEach(rule -> rule.getRightHandSide().interpret(context));
+        Set<EvaluationResult> failedRules = registry.findPreconditions(context.getName()).stream()
+            .map(rule -> new EvaluationResult(rule.getCondition().interpret(context), rule))
+            .filter(EvaluationResult::hasNotPassed)
+            .collect(Collectors.toSet());
+
+        if (!failedRules.isEmpty()) {
+            throw new BusinessRulesCheckFailedException(failedRules.stream().map(EvaluationResult::getRule).collect(Collectors.toSet()));
+        }
+    }
+
+    /**
+     * Evaluates postconditions applicable to the business context and throws BusinessRulesCheckFailedException
+     * if any rule was not satisfied.
+     *
+     * @param context The business context.
+     * @throws BusinessRulesCheckFailedException When any Business Rule was not satisfied.
+     */
+    public void evaluatePostConditions(final BusinessContext context) throws BusinessRulesCheckFailedException
+    {
+        Set<EvaluationResult> failedRules = registry.findPostConditions(context.getName()).stream()
+            .map(rule -> new EvaluationResult(rule.getCondition().interpret(context), rule))
+            .filter(EvaluationResult::hasNotPassed)
+            .collect(Collectors.toSet());
+
+        if (!failedRules.isEmpty()) {
+            throw new BusinessRulesCheckFailedException(failedRules.stream().map(EvaluationResult::getRule).collect(Collectors.toSet()));
+        }
+    }
+
+    private static final class EvaluationResult
+    {
+
+        private final boolean passed;
+
+        @Getter
+        private final BusinessRule rule;
+
+        private EvaluationResult(final boolean passed, final BusinessRule rule)
+        {
+            this.passed = passed;
+            this.rule = rule;
+        }
+
+        private boolean hasNotPassed()
+        {
+            return !passed;
+        }
+
     }
 
 }

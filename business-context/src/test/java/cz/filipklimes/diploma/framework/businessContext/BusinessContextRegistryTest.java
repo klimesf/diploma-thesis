@@ -1,6 +1,7 @@
 package cz.filipklimes.diploma.framework.businessContext;
 
-import cz.filipklimes.diploma.framework.businessContext.loader.LocalDroolsBusinessContextLoader;
+import cz.filipklimes.diploma.framework.businessContext.expression.Constant;
+import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionType;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -12,16 +13,62 @@ public class BusinessContextRegistryTest
     @Test
     public void test()
     {
-        BusinessRule testRule = new BusinessRule("test expression", "rules", null, null);
-        BusinessContextRegistry registry = BusinessContextRegistry.builder()
-            .addLoader(new LocalDroolsBusinessContextLoader())
-            .addLoader(() -> Collections.singleton(testRule))
+        BusinessRule localPrecondition = BusinessRule.builder()
+            .setName("local pre")
+            .setType(BusinessRuleType.PRECONDITION)
+            .addApplicableContext("context1")
+            .setCondition(new Constant<>(true, ExpressionType.BOOL))
             .build();
 
-        Set<BusinessRule> rules = registry.getAllRules();
+        BusinessRule localPostCondition = BusinessRule.builder()
+            .setName("local post")
+            .setType(BusinessRuleType.POST_CONDITION)
+            .addApplicableContext("context1")
+            .setCondition(new Constant<>(true, ExpressionType.BOOL))
+            .build();
 
-        Assert.assertEquals(2, rules.size());
-        Assert.assertTrue(rules.contains(testRule));
+        BusinessRule remotePrecondition = BusinessRule.builder()
+            .setName("remote pre")
+            .setType(BusinessRuleType.PRECONDITION)
+            .addApplicableContext("context2")
+            .setCondition(new Constant<>(true, ExpressionType.BOOL))
+            .build();
+
+        BusinessRule remotePostCondition = BusinessRule.builder()
+            .setName("remote post")
+            .setType(BusinessRuleType.POST_CONDITION)
+            .addApplicableContext("context1")
+            .setCondition(new Constant<>(true, ExpressionType.BOOL))
+            .build();
+
+        BusinessContextRegistry registry = BusinessContextRegistry.builder()
+            .setLocalLoader(() -> new HashSet<>(Arrays.asList(localPrecondition, localPostCondition)))
+            .addRemoteLoader("remote", () -> new HashSet<>(Arrays.asList(remotePrecondition, remotePostCondition)))
+            .build();
+
+        registry.initialize();
+
+        Set<BusinessRule> localRules = registry.getLocalRules();
+
+        Assert.assertEquals(2, localRules.size());
+        Assert.assertTrue(localRules.contains(localPrecondition));
+        Assert.assertTrue(localRules.contains(localPostCondition));
+
+        Set<BusinessRule> context1Preconditions = registry.findPreconditions("context1");
+        Assert.assertEquals(1, context1Preconditions.size());
+        Assert.assertTrue(context1Preconditions.contains(localPrecondition));
+
+        Set<BusinessRule> context1PostConditions = registry.findPostConditions("context1");
+        Assert.assertEquals(2, context1PostConditions.size());
+        Assert.assertTrue(context1PostConditions.contains(localPostCondition));
+        Assert.assertTrue(context1PostConditions.contains(remotePostCondition));
+
+        Set<BusinessRule> context2Preconditions = registry.findPreconditions("context2");
+        Assert.assertEquals(1, context2Preconditions.size());
+        Assert.assertTrue(context2Preconditions.contains(remotePrecondition));
+
+        Set<BusinessRule> context2PostConditions = registry.findPostConditions("context2");
+        Assert.assertTrue(context2PostConditions.isEmpty());
     }
 
 }

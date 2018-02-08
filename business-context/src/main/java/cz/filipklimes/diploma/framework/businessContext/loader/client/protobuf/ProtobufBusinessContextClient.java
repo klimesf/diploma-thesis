@@ -1,6 +1,7 @@
 package cz.filipklimes.diploma.framework.businessContext.loader.client.protobuf;
 
 import cz.filipklimes.diploma.framework.businessContext.BusinessRule;
+import cz.filipklimes.diploma.framework.businessContext.BusinessRuleType;
 import cz.filipklimes.diploma.framework.businessContext.expression.Constant;
 import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
 import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionType;
@@ -64,13 +65,25 @@ public class ProtobufBusinessContextClient
     private BusinessRule buildBusinessRule(final BusinessRulesProtos.BusinessRuleMessage message)
     {
         BusinessRule.Builder builder = BusinessRule.builder();
-        builder.setName(message.getName())
-            .setBusinessContextName(message.getBusinessContextName());
 
-        builder.setLeftHandSide(buildExpression(message.getLeftHandSide()));
-        builder.setRightHandSide(buildExpression(message.getRightHandSide()));
+        builder.setName(message.getName());
+        builder.setType(convertType(message.getType()));
+        message.getApplicableContextsList().forEach(builder::addApplicableContext);
+        builder.setCondition(buildExpression(message.getCondition()));
 
         return builder.build();
+    }
+
+    private BusinessRuleType convertType(final BusinessRulesProtos.BusinessRuleType type)
+    {
+        switch (type) {
+            case PRECONDITION:
+                return BusinessRuleType.PRECONDITION;
+            case POST_CONDITION:
+                return BusinessRuleType.POST_CONDITION;
+            default:
+                throw new RuntimeException("Unknown business rule type");
+        }
     }
 
     @SuppressWarnings("unchecked")

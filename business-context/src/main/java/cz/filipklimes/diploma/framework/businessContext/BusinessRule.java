@@ -23,28 +23,31 @@ public class BusinessRule implements Serializable
     private final String name;
 
     /**
-     * Name of the business context to which the expression applies.
+     * Names of business contexts to which the expression applies.
      */
     @Getter
-    private final String businessContextName;
+    private final Set<String> applicableContexts;
 
     @Getter
-    private final Expression<Boolean> leftHandSide;
+    private final BusinessRuleType type;
 
     @Getter
-    private final Expression<Void> rightHandSide;
+    private final Expression<Boolean> condition;
 
     public BusinessRule(
         final String name,
-        final String businessContextName,
-        final Expression<Boolean> leftHandSide,
-        final Expression<Void> rightHandSide
+        final Set<String> applicableContexts,
+        final BusinessRuleType type,
+        final Expression<Boolean> condition
     )
     {
+        if (Objects.requireNonNull(applicableContexts).isEmpty()) {
+            throw new IllegalArgumentException("BusinessRule must have at least one applicable context");
+        }
         this.name = Objects.requireNonNull(name);
-        this.businessContextName = Objects.requireNonNull(businessContextName);
-        this.leftHandSide = leftHandSide;
-        this.rightHandSide = rightHandSide;
+        this.applicableContexts = Objects.requireNonNull(applicableContexts);
+        this.type = Objects.requireNonNull(type);
+        this.condition = Objects.requireNonNull(condition);
     }
 
     public static Builder builder()
@@ -57,12 +60,13 @@ public class BusinessRule implements Serializable
     {
 
         private String name;
-        private String businessContextName;
-        private Expression<Boolean> leftHandSide;
-        private Expression<Void> rightHandSide;
+        private Set<String> applicableContexts;
+        private BusinessRuleType type;
+        private Expression<Boolean> condition;
 
         private Builder()
         {
+            this.applicableContexts = new HashSet<>();
         }
 
         public Builder setName(final String name)
@@ -71,21 +75,21 @@ public class BusinessRule implements Serializable
             return this;
         }
 
-        public Builder setBusinessContextName(final String businessContextName)
+        public Builder addApplicableContext(final String contextName)
         {
-            this.businessContextName = businessContextName;
+            this.applicableContexts.add(contextName);
             return this;
         }
 
-        public Builder setLeftHandSide(final Expression<Boolean> leftHandSide)
+        public Builder setType(final BusinessRuleType type)
         {
-            this.leftHandSide = leftHandSide;
+            this.type = Objects.requireNonNull(type);
             return this;
         }
 
-        public Builder setRightHandSide(final Expression<Void> rightHandSide)
+        public Builder setCondition(final Expression<Boolean> condition)
         {
-            this.rightHandSide = rightHandSide;
+            this.condition = Objects.requireNonNull(condition);
             return this;
         }
 
@@ -93,9 +97,9 @@ public class BusinessRule implements Serializable
         {
             return new BusinessRule(
                 name,
-                businessContextName,
-                leftHandSide,
-                rightHandSide
+                applicableContexts,
+                type,
+                condition
             );
         }
 
