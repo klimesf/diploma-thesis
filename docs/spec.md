@@ -97,7 +97,7 @@ atd., myslím že se tam toho dá vymyslet spoustu.
 
 ![Join-points](https://github.com/klimesf/diploma-thesis-images/blob/master/activity-diagrams/join-points.png?raw=true)
 
-# Aspect weaving
+# Aspect weaving
 
 ![Weaving](https://github.com/klimesf/diploma-thesis-images/blob/master/activity-diagrams/business-rules-weaver.png?raw=true)
 
