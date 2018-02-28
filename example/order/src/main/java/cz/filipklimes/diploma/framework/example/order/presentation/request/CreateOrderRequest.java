@@ -9,7 +9,4 @@ public class CreateOrderRequest
     @Getter @Setter
     public int userId;
 
-    @Getter @Setter
-    public String address;
-
 }

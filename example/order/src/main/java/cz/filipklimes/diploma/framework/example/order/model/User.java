@@ -3,51 +3,37 @@ package cz.filipklimes.diploma.framework.example.order.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.util.*;
 
-public class User
+public class User implements Entity
 {
 
-    @Getter @Setter
-    private int id;
+    @Getter
+    @Setter
+    private Long id;
 
     @Getter
-    private final String name;
+    private String name;
 
     @Getter
-    private final String email;
+    private String email;
 
     @Getter
-    private final String country;
+    private UserRole role;
 
-    @Getter
-    private final BigDecimal age;
+    private Set<Order> orders;
 
-    private final Set<Order> orders;
-
-    public User(final String name, final String email, final String country, final BigDecimal age)
+    public User(final String name, final String email, final UserRole role)
     {
-        this(name, email, country, age, new HashSet<>());
-    }
-
-    public User(final String name, final String email, final String country, final BigDecimal age, final Set<Order> orders)
-    {
-        this.name = Objects.requireNonNull(name);
-        this.email = Objects.requireNonNull(email);
-        this.country = Objects.requireNonNull(country);
-        this.age = Objects.requireNonNull(age);
-        this.orders = Objects.requireNonNull(orders);
+        this.name = name;
+        this.email = email;
+        this.orders = new HashSet<>();
+        this.role = role;
     }
 
     public Set<Order> getOrders()
     {
         return Collections.unmodifiableSet(orders);
-    }
-
-    public void addOrder(final Order order)
-    {
-        orders.add(Objects.requireNonNull(order));
     }
 
 }

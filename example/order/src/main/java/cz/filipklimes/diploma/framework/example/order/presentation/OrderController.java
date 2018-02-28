@@ -26,7 +26,7 @@ public class OrderController
     @PostMapping("/create-order")
     public String formSubmit(@ModelAttribute CreateOrderRequest createOrderRequest)
     {
-        orderFacade.createOrder(createOrderRequest.getUserId(), createOrderRequest.getAddress());
+        orderFacade.createOrder(createOrderRequest.getUserId());
         return "create-order";
     }
 

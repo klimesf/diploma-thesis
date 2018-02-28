@@ -2,17 +2,18 @@ package cz.filipklimes.diploma.framework.example.order.model;
 
 import lombok.Getter;
 
-import java.math.BigDecimal;
-
 public class OrderItem
 {
 
     @Getter
-    private final BigDecimal price;
+    private Integer count;
 
-    public OrderItem(final BigDecimal price)
+    @Getter
+    private Product product;
+
+    public OrderItem(final Integer count)
     {
-        this.price = price;
+        this.count = count;
     }
 
 }

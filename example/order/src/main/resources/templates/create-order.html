@@ -13,7 +13,6 @@
 
     <form action="#" th:action="@{/create-order}" th:object="${createOrderRequest}" method="post">
         <p>User id: <input type="number" th:field="*{userId}" /></p>
-        <p>Address: <input type="text" th:field="*{address}" /></p>
         <p><input type="submit" value="Submit" /></p>
     </form>
 

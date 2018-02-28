@@ -3,30 +3,32 @@ package cz.filipklimes.diploma.framework.example.order.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.util.*;
 
-public class Order
+public class Order implements Entity
 {
 
-    @Getter @Setter
-    private Integer id;
+    @Getter
+    @Setter
+    private Long id;
 
-    @Getter @Setter
-    private BigDecimal sum;
+    @Getter
+    private User user;
+
+    @Getter
+    private Address billingAddress;
+
+    @Getter
+    private Address shippingAddress;
 
     private Set<OrderItem> items;
 
-    public Order()
+    public Order(final User user, final Address billingAddress, final Address shippingAddress)
     {
+        this.user = user;
+        this.billingAddress = billingAddress;
+        this.shippingAddress = shippingAddress;
         this.items = new HashSet<>();
-    }
-
-    public void addItem(final OrderItem item)
-    {
-        Objects.requireNonNull(item);
-        items.add(item);
-        sum = sum.add(item.getPrice());
     }
 
     public Set<OrderItem> getItems()
