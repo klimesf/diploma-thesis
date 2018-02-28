@@ -12,8 +12,6 @@
     <modules>
         <module>example</module>
         <module>business-context</module>
-        <module>model-structure</module>
-        <module>business-domain-configuration</module>
     </modules>
 
     <properties>
