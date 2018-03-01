@@ -1,6 +1,6 @@
 package cz.filipklimes.diploma.framework.businessContext.expression.logical;
 
-import cz.filipklimes.diploma.framework.businessContext.BusinessContext;
+import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
 import cz.filipklimes.diploma.framework.businessContext.expression.UnaryOperator;
 
@@ -15,7 +15,7 @@ public class Negate extends UnaryOperator<Boolean, Boolean>
     }
 
     @Override
-    public Boolean interpret(final BusinessContext context)
+    public Boolean interpret(final BusinessOperationContext context)
     {
         return !getArgument().interpret(context);
     }

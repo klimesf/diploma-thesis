@@ -1,6 +1,6 @@
 package cz.filipklimes.diploma.framework.businessContext.expression;
 
-import cz.filipklimes.diploma.framework.businessContext.BusinessContext;
+import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 import cz.filipklimes.diploma.framework.businessContext.exception.UndefinedVariableException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -13,7 +13,7 @@ public class VariableReferenceTest
     @Test
     public void testOk()
     {
-        BusinessContext context = new BusinessContext("test");
+        BusinessOperationContext context = new BusinessOperationContext("test");
         context.setVariable("number", BigDecimal.valueOf(123));
 
         Expression<BigDecimal> expression = new VariableReference<>("number", ExpressionType.NUMBER);
@@ -25,7 +25,7 @@ public class VariableReferenceTest
     @Test(expected = UndefinedVariableException.class)
     public void testNoVariableWithSuchName()
     {
-        BusinessContext context = new BusinessContext("test");
+        BusinessOperationContext context = new BusinessOperationContext("test");
         context.setVariable("number", 123);
 
         Expression<BigDecimal> expression = new VariableReference<>("invalid", ExpressionType.NUMBER);

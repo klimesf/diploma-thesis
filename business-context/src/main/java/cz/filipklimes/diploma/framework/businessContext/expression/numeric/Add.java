@@ -1,6 +1,6 @@
 package cz.filipklimes.diploma.framework.businessContext.expression.numeric;
 
-import cz.filipklimes.diploma.framework.businessContext.BusinessContext;
+import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 import cz.filipklimes.diploma.framework.businessContext.expression.BinaryOperator;
 import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
 
@@ -17,7 +17,7 @@ public class Add extends BinaryOperator<BigDecimal, BigDecimal, BigDecimal>
     }
 
     @Override
-    public BigDecimal interpret(final BusinessContext context)
+    public BigDecimal interpret(final BusinessOperationContext context)
     {
         return getLeft().interpret(context).add(getRight().interpret(context), MathContext.DECIMAL128);
     }

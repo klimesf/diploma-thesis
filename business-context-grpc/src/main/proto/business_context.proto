@@ -1,0 +1,50 @@
+syntax = "proto2";
+
+package businessContext;
+
+option java_package = "cz.filipklimes.diploma.framework.businessContext.provider.server.grpc";
+option java_outer_classname = "BusinessContextProtos";
+
+service BusinessContextServer {
+    rpc FetchContexts (BusinessContextRequestMessage) returns (BusinessContextsResponseMessage) {}
+}
+
+message ExpressionProperty {
+    required string key = 1;
+    required string value = 2;
+}
+
+message Expression {
+    required string name = 1;
+    repeated ExpressionProperty properties = 2;
+    repeated Expression arguments = 3;
+}
+
+enum BusinessRuleType {
+    UNKNOWN = 0;
+    PRECONDITION = 1;
+    POST_CONDITION = 2;
+}
+
+message BusinessRuleMessage {
+    required string name = 1;
+    repeated string applicableContexts = 2;
+    required BusinessRuleType type = 3;
+    required Expression condition = 4;
+}
+
+message BusinessContextMessage {
+    required string prefix = 1;
+    required string name = 2;
+    repeated string includedContexts = 3;
+    repeated BusinessRuleMessage preconditions = 4;
+    repeated BusinessRuleMessage postConditions = 5;
+}
+
+message BusinessContextsResponseMessage {
+    repeated BusinessContextMessage contexts = 1;
+}
+
+message BusinessContextRequestMessage {
+    repeated string requiredContexts = 1;
+}

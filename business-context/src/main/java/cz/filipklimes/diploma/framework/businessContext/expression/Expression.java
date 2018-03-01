@@ -1,13 +1,13 @@
 package cz.filipklimes.diploma.framework.businessContext.expression;
 
-import cz.filipklimes.diploma.framework.businessContext.BusinessContext;
+import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 
 import java.util.*;
 
 public interface Expression<T>
 {
 
-    T interpret(BusinessContext context);
+    T interpret(BusinessOperationContext context);
 
     Collection<Expression<?>> getArguments();
 

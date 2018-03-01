@@ -1,6 +1,6 @@
 package cz.filipklimes.diploma.framework.businessContext.expression;
 
-import cz.filipklimes.diploma.framework.businessContext.BusinessContext;
+import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 
 import java.util.*;
 
@@ -13,7 +13,7 @@ public class IsNotNull<T> extends UnaryOperator<Boolean, T>
     }
 
     @Override
-    public Boolean interpret(final BusinessContext context)
+    public Boolean interpret(final BusinessOperationContext context)
     {
         return getArgument().interpret(context) != null;
     }

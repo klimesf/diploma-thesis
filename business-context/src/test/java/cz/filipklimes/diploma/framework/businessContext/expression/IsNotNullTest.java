@@ -1,6 +1,6 @@
 package cz.filipklimes.diploma.framework.businessContext.expression;
 
-import cz.filipklimes.diploma.framework.businessContext.BusinessContext;
+import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -12,7 +12,7 @@ public class IsNotNullTest
     @Test
     public void testNotNull()
     {
-        BusinessContext context = new BusinessContext("context");
+        BusinessOperationContext context = new BusinessOperationContext("context");
         context.setVariable("var", BigDecimal.valueOf(123));
         Expression<Boolean> constant = new IsNotNull<>(new VariableReference<>("var", ExpressionType.NUMBER));
         Assert.assertTrue(constant.interpret(context));
@@ -21,7 +21,7 @@ public class IsNotNullTest
     @Test
     public void testNull()
     {
-        BusinessContext context = new BusinessContext("context");
+        BusinessOperationContext context = new BusinessOperationContext("context");
         context.setVariable("var", null);
         Expression<Boolean> constant = new IsNotNull<>(new VariableReference<>("var", ExpressionType.NUMBER));
         Assert.assertFalse(constant.interpret(context));

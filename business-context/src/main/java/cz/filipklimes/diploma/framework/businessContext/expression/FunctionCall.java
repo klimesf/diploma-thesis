@@ -1,6 +1,6 @@
 package cz.filipklimes.diploma.framework.businessContext.expression;
 
-import cz.filipklimes.diploma.framework.businessContext.BusinessContext;
+import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 import cz.filipklimes.diploma.framework.businessContext.Function;
 
 import java.util.*;
@@ -21,7 +21,7 @@ public class FunctionCall<T> implements Expression<T>
 
     @Override
     @SuppressWarnings("unchecked")
-    public T interpret(final BusinessContext context)
+    public T interpret(final BusinessOperationContext context)
     {
         Function function = context.getFunction(methodName);
 

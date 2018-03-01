@@ -1,6 +1,6 @@
 package cz.filipklimes.diploma.framework.businessContext.expression.logical;
 
-import cz.filipklimes.diploma.framework.businessContext.BusinessContext;
+import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 import cz.filipklimes.diploma.framework.businessContext.expression.BinaryOperator;
 import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
 
@@ -15,7 +15,7 @@ public class Equals<L, R> extends BinaryOperator<Boolean, L, R>
     }
 
     @Override
-    public Boolean interpret(final BusinessContext context)
+    public Boolean interpret(final BusinessOperationContext context)
     {
         return getLeft()
             .interpret(context)

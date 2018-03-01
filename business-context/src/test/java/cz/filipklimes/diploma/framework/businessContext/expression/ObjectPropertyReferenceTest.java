@@ -1,6 +1,6 @@
 package cz.filipklimes.diploma.framework.businessContext.expression;
 
-import cz.filipklimes.diploma.framework.businessContext.BusinessContext;
+import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 import cz.filipklimes.diploma.framework.businessContext.exception.BadObjectPropertyTypeException;
 import cz.filipklimes.diploma.framework.businessContext.exception.UndefinedObjectPropertyException;
 import cz.filipklimes.diploma.framework.businessContext.exception.UndefinedVariableException;
@@ -15,7 +15,7 @@ public class ObjectPropertyReferenceTest
     @Test
     public void testOk()
     {
-        BusinessContext context = new BusinessContext("test");
+        BusinessOperationContext context = new BusinessOperationContext("test");
         MockObject object = new MockObject();
         context.setVariable("object", object);
 
@@ -28,7 +28,7 @@ public class ObjectPropertyReferenceTest
     @Test(expected = UndefinedObjectPropertyException.class)
     public void testPropertyWithoutGetter()
     {
-        BusinessContext context = new BusinessContext("test");
+        BusinessOperationContext context = new BusinessOperationContext("test");
         MockObject object = new MockObject();
         context.setVariable("object", object);
 
@@ -39,7 +39,7 @@ public class ObjectPropertyReferenceTest
     @Test(expected = BadObjectPropertyTypeException.class)
     public void testBadPropertyType()
     {
-        BusinessContext context = new BusinessContext("test");
+        BusinessOperationContext context = new BusinessOperationContext("test");
         MockObject object = new MockObject();
         context.setVariable("object", object);
 
@@ -50,7 +50,7 @@ public class ObjectPropertyReferenceTest
     @Test(expected = UndefinedVariableException.class)
     public void testNoVariableWithSuchName()
     {
-        BusinessContext context = new BusinessContext("test");
+        BusinessOperationContext context = new BusinessOperationContext("test");
         MockObject object = new MockObject();
         context.setVariable("object", object);
 

@@ -1,11 +1,11 @@
 package cz.filipklimes.diploma.framework.businessContext.loader;
 
-import cz.filipklimes.diploma.framework.businessContext.BusinessRule;
+import cz.filipklimes.diploma.framework.businessContext.BusinessContext;
 
 import java.util.*;
 
 @FunctionalInterface
-public interface BusinessRulesLoader
+public interface BusinessContextLoader
 {
 
     /**
@@ -13,6 +13,6 @@ public interface BusinessRulesLoader
      *
      * @return Set of business rules.
      */
-    Set<BusinessRule> load();
+    Set<BusinessContext> load();
 
 }

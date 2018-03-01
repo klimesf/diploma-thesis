@@ -1,6 +1,6 @@
 package cz.filipklimes.diploma.framework.businessContext.expression.numeric;
 
-import cz.filipklimes.diploma.framework.businessContext.BusinessContext;
+import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 import cz.filipklimes.diploma.framework.businessContext.expression.BinaryOperator;
 import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
 
@@ -16,7 +16,7 @@ public class LessOrEqualTo extends BinaryOperator<Boolean, BigDecimal, BigDecima
     }
 
     @Override
-    public Boolean interpret(final BusinessContext context)
+    public Boolean interpret(final BusinessOperationContext context)
     {
         return getLeft().interpret(context).compareTo(getRight().interpret(context)) <= 0;
     }

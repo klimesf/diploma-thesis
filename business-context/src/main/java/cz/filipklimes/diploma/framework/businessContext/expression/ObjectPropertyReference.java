@@ -1,6 +1,6 @@
 package cz.filipklimes.diploma.framework.businessContext.expression;
 
-import cz.filipklimes.diploma.framework.businessContext.BusinessContext;
+import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 import cz.filipklimes.diploma.framework.businessContext.exception.BadObjectPropertyTypeException;
 import cz.filipklimes.diploma.framework.businessContext.exception.UndefinedObjectPropertyException;
 
@@ -24,7 +24,7 @@ public class ObjectPropertyReference<T> implements Terminal<T>
 
     @Override
     @SuppressWarnings("unchecked")
-    public T interpret(final BusinessContext context)
+    public T interpret(final BusinessOperationContext context)
     {
         Object object = context.getVariable(objectName);
 

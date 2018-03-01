@@ -1,6 +1,6 @@
 package cz.filipklimes.diploma.framework.businessContext.expression;
 
-import cz.filipklimes.diploma.framework.businessContext.BusinessContext;
+import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 
 import java.util.*;
 
@@ -18,7 +18,7 @@ public class VariableReference<T> implements Terminal<T>
 
     @Override
     @SuppressWarnings("unchecked")
-    public T interpret(final BusinessContext context)
+    public T interpret(final BusinessOperationContext context)
     {
         return (T) type.getUnderlyingClass().cast(context.getVariable(name));
     }

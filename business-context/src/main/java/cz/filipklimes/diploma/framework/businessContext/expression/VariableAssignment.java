@@ -1,6 +1,6 @@
 package cz.filipklimes.diploma.framework.businessContext.expression;
 
-import cz.filipklimes.diploma.framework.businessContext.BusinessContext;
+import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 
 import java.util.*;
 
@@ -16,7 +16,7 @@ public class VariableAssignment<T> extends UnaryOperator<Void, T>
     }
 
     @Override
-    public Void interpret(final BusinessContext context)
+    public Void interpret(final BusinessOperationContext context)
     {
         T value = getArgument().interpret(context);
         context.setVariable(name, value);

@@ -1,132 +1,90 @@
 package cz.filipklimes.diploma.framework.businessContext;
 
-import cz.filipklimes.diploma.framework.businessContext.cache.OriginServiceSector;
-import cz.filipklimes.diploma.framework.businessContext.loader.BusinessRulesLoader;
-import lombok.Getter;
+import cz.filipklimes.diploma.framework.businessContext.loader.LocalBusinessContextLoader;
+import cz.filipklimes.diploma.framework.businessContext.loader.RemoteBusinessContextLoader;
+import cz.filipklimes.diploma.framework.businessContext.loader.remote.RemoteServiceAddress;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public final class BusinessContextRegistry
 {
 
-    private static final String LOCAL_ORIGIN = "local";
-
-    private BusinessRulesLoader localLoader;
-    private Map<String, BusinessRulesLoader> remoteLoaders;
-    private Map<String, OriginServiceSector> rulesCache;
-    private boolean initialized;
+    private final LocalBusinessContextLoader localLoader;
+    private final RemoteBusinessContextLoader remoteLoader;
+    private Map<BusinessContextIdentifier, BusinessContext> contexts;
 
     private BusinessContextRegistry(
-        final BusinessRulesLoader localLoader,
-        final Map<String, BusinessRulesLoader> remoteLoaders
+        final LocalBusinessContextLoader localLoader,
+        final RemoteBusinessContextLoader remoteLoader
     )
     {
         this.localLoader = Objects.requireNonNull(localLoader);
-        this.remoteLoaders = Collections.unmodifiableMap(Objects.requireNonNull(remoteLoaders));
-        this.rulesCache = new HashMap<>();
-        this.initialized = false;
+        this.remoteLoader = Objects.requireNonNull(remoteLoader);
+        this.initialize();
     }
 
     /**
-     * Initializes the registry by loading both local and remote business rules
-     * and storing them to local cache.
+     * Initializes the registry by loading local business contexts,
+     * including remote contexts if necessary and storing them to local cache.
      */
-    public void initialize()
+    public final void initialize()
     {
-        // Load & store local rules
-        rulesCache.computeIfAbsent(LOCAL_ORIGIN, OriginServiceSector::new).store(localLoader.load());
-
-        // Load & store remote rules
-        remoteLoaders.entrySet().stream()
-            .map(entry -> new RemoteRules(entry.getKey(), entry.getValue().load()))
-            .forEach(entry -> rulesCache.computeIfAbsent(entry.getOriginName(), OriginServiceSector::new).store(entry.getRules()));
-
-        initialized = true;
-    }
-
-    /**
-     * Finds all preconditions applicable to the business context.
-     *
-     * @param businessContextName Name of the business context.
-     * @return Applicable preconditions.
-     */
-    public Set<BusinessRule> findPreconditions(final String businessContextName)
-    {
-        if (!initialized) {
-            throw new IllegalStateException("Registry must be initialized first");
-        }
-        return rulesCache.entrySet().stream()
-            .peek(this::refreshInvalidSector)
-            .map(sector -> sector.getValue().findPreconditions(businessContextName))
-            .flatMap(Collection::stream)
-            .collect(Collectors.toSet());
-    }
-
-    /**
-     * Finds all post-conditions applicable to the business context.
-     *
-     * @param businessContextName Name od the business context.
-     * @return Applicable post-conditions.
-     */
-    public Set<BusinessRule> findPostConditions(final String businessContextName)
-    {
-        if (!initialized) {
-            throw new IllegalStateException("Registry must be initialized first");
-        }
-        return rulesCache.entrySet().stream()
-            .peek(this::refreshInvalidSector)
-            .map(sector -> sector.getValue().findPostConditions(businessContextName))
-            .flatMap(Collection::stream)
-            .collect(Collectors.toSet());
-    }
-
-    /**
-     * Invalidates registry cache sector belonging to single remote business rule origin.
-     *
-     * @param originServiceName Name of the remote origin.
-     */
-    public void invalidateRemoteOrigin(final String originServiceName)
-    {
-        if (!initialized) {
-            throw new IllegalStateException("Registry must be initialized first");
-        }
-        Optional.ofNullable(rulesCache.get(originServiceName))
-            .ifPresent(OriginServiceSector::invalidate);
-    }
-
-    public Set<BusinessRule> getLocalRules()
-    {
-        if (!initialized) {
-            throw new IllegalStateException("Registry must be initialized first");
-        }
-        return rulesCache.get(LOCAL_ORIGIN).getAllRules();
-    }
-
-    public Map<String, Set<BusinessRule>> getAllRules()
-    {
-        if (!initialized) {
-            throw new IllegalStateException("Registry must be initialized first");
-        }
-        return rulesCache.entrySet().stream()
-            .peek(this::refreshInvalidSector)
+        // Load local contexts
+        contexts = localLoader.load()
+            .stream()
             .collect(Collectors.toMap(
-                Map.Entry::getKey,
-                entry -> entry.getValue().getAllRules()
+                BusinessContext::getIdentifier,
+                Function.identity(),
+                (c1, c2) -> {
+                    throw new IllegalStateException(String.format("Two local business contexts with same identifier: %s", c1.toString()));
+                }
+            ));
+
+        // Analyze and find out which contexts to fetch
+        Set<BusinessContextIdentifier> includedRemoteContexts = contexts.values()
+            .stream()
+            .map(BusinessContext::getIncludedContexts)
+            .flatMap(Set::stream)
+            .filter(contextName -> !contexts.containsKey(contextName))
+            .collect(Collectors.toSet());
+
+        // Load remote contexts
+        Map<BusinessContextIdentifier, BusinessContext> remoteContexts = remoteLoader.loadContextsByIdentifier(includedRemoteContexts);
+
+        // Include remote contexts into the local ones
+        contexts.forEach((name, context) -> {
+            context.getIncludedContexts().forEach(included -> {
+                if (!remoteContexts.containsKey(included)) {
+                    throw new RuntimeException(String.format("Could not fetch remote business context %s", included));
+                }
+                context.merge(remoteContexts.get(included));
+            });
+        });
+    }
+
+    public BusinessContext getContextByName(final BusinessContextIdentifier identifier)
+    {
+        if (!contexts.containsKey(identifier)) {
+            throw new RuntimeException(String.format("No business context with identifier: %s", identifier));
+        }
+        return contexts.get(identifier);
+    }
+
+    public Map<BusinessContextIdentifier, BusinessContext> getContextByNames(final Set<BusinessContextIdentifier> identifier)
+    {
+        return Objects.requireNonNull(identifier).stream()
+            .map(this::getContextByName)
+            .collect(Collectors.toMap(
+                BusinessContext::getIdentifier,
+                Function.identity()
             ));
     }
 
-    private void refreshInvalidSector(final Map.Entry<String, OriginServiceSector> sector)
+    public void markRulesAsIncluded(final RemoteServiceAddress remoteServiceAddress, Set<BusinessContextIdentifier> identifiers)
     {
-        if (!initialized) {
-            throw new IllegalStateException("Registry must be initialized first");
-
-        }
-
-        if (!sector.getValue().isValid()) {
-            Set<BusinessRule> newRules = remoteLoaders.get(sector.getKey()).load();
-            sector.getValue().store(newRules);
-        }
+        throw new UnsupportedOperationException("not implemented yet");
     }
 
     public static Builder builder()
@@ -137,53 +95,28 @@ public final class BusinessContextRegistry
     public static final class Builder
     {
 
-        private BusinessRulesLoader localLoader;
-        private final Map<String, BusinessRulesLoader> remoteLoaders;
+        private LocalBusinessContextLoader localLoader;
+        private RemoteBusinessContextLoader remoteLoader;
 
         private Builder()
         {
-            this.remoteLoaders = new HashMap<>();
         }
 
-        public Builder setLocalLoader(final BusinessRulesLoader loader)
+        public Builder withLocalLoader(final LocalBusinessContextLoader localLoader)
         {
-            localLoader = Objects.requireNonNull(loader);
+            this.localLoader = localLoader;
             return this;
         }
 
-        public Builder addRemoteLoader(final String originName, final BusinessRulesLoader loader)
+        public Builder withRemoteLoader(final RemoteBusinessContextLoader remoteLoader)
         {
-            Objects.requireNonNull(originName);
-            Objects.requireNonNull(loader);
-
-            if (remoteLoaders.containsKey(originName)) {
-                throw new IllegalArgumentException("Builder already contains loader for the specified remote origin");
-            }
-
-            remoteLoaders.put(originName, loader);
+            this.remoteLoader = remoteLoader;
             return this;
         }
 
         public BusinessContextRegistry build()
         {
-            return new BusinessContextRegistry(localLoader, remoteLoaders);
-        }
-
-    }
-
-    private static final class RemoteRules
-    {
-
-        @Getter
-        private final String originName;
-
-        @Getter
-        private final Set<BusinessRule> rules;
-
-        private RemoteRules(final String originName, final Set<BusinessRule> rules)
-        {
-            this.originName = originName;
-            this.rules = rules;
+            return new BusinessContextRegistry(localLoader, remoteLoader);
         }
 
     }

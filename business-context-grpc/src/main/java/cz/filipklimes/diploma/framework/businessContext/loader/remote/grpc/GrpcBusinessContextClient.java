@@ -1,5 +1,7 @@
-package cz.filipklimes.diploma.framework.businessContext.loader.client.protobuf;
+package cz.filipklimes.diploma.framework.businessContext.loader.remote.grpc;
 
+import cz.filipklimes.diploma.framework.businessContext.BusinessContext;
+import cz.filipklimes.diploma.framework.businessContext.BusinessContextIdentifier;
 import cz.filipklimes.diploma.framework.businessContext.BusinessRule;
 import cz.filipklimes.diploma.framework.businessContext.BusinessRuleType;
 import cz.filipklimes.diploma.framework.businessContext.expression.Constant;
@@ -23,59 +25,91 @@ import cz.filipklimes.diploma.framework.businessContext.expression.numeric.LessO
 import cz.filipklimes.diploma.framework.businessContext.expression.numeric.LessThan;
 import cz.filipklimes.diploma.framework.businessContext.expression.numeric.Multiply;
 import cz.filipklimes.diploma.framework.businessContext.expression.numeric.Subtract;
-import cz.filipklimes.diploma.framework.businessContext.provider.server.protobuf.BusinessRulesProtos;
+import cz.filipklimes.diploma.framework.businessContext.loader.remote.RemoteServiceAddress;
+import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.BusinessContextProtos;
+import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.BusinessContextServerGrpc;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
+import io.grpc.StatusRuntimeException;
 
-import java.io.*;
-import java.net.*;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-public class ProtobufBusinessContextClient
+class GrpcBusinessContextClient
 {
 
-    private final String host;
-    private final int port;
+    private static final Logger logger = Logger.getLogger(GrpcBusinessContextClient.class.getName());
 
-    public ProtobufBusinessContextClient(final String host, final int port)
+    private final ManagedChannel channel;
+    private final BusinessContextServerGrpc.BusinessContextServerBlockingStub blockingStub;
+
+    GrpcBusinessContextClient(final RemoteServiceAddress address)
     {
-        this.host = host;
-        this.port = port;
+        this.channel = ManagedChannelBuilder.forAddress(address.getHost(), address.getPort())
+            .usePlaintext(true)
+            .build();
+        this.blockingStub = BusinessContextServerGrpc.newBlockingStub(channel);
+    }
+
+    void shutdown() throws InterruptedException
+    {
+        channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
     }
 
     /**
-     * Recieves rules from protobuf business context server.
+     * Receives business contexts from gRPC business context server.
      *
+     * @param identifiers
      * @return Set of business rules.
      */
-    public Set<BusinessRule> receiveRules()
+    public Set<BusinessContext> receiveContexts(final Set<BusinessContextIdentifier> identifiers)
     {
-        try (
-            Socket socket = new Socket(host, port);
-            InputStream in = socket.getInputStream()
-        ) {
-            return BusinessRulesProtos.BusinessRulesMessage.parseFrom(in)
-                .getRulesList().stream()
-                .map(this::buildBusinessRule)
+        try {
+            return blockingStub.fetchContexts(buildRequest(identifiers))
+                .getContextsList().stream()
+                .map(this::buildBusinessContext)
                 .collect(Collectors.toSet());
 
-        } catch (IOException e) {
-            throw new RuntimeException("Could not load business rules", e);
+        } catch (StatusRuntimeException e) {
+            logger.severe(e.getMessage());
+            return Collections.emptySet();
         }
     }
 
-    private BusinessRule buildBusinessRule(final BusinessRulesProtos.BusinessRuleMessage message)
+    private BusinessContextProtos.BusinessContextRequestMessage buildRequest(final Set<BusinessContextIdentifier> identifiers)
+    {
+        return BusinessContextProtos.BusinessContextRequestMessage.newBuilder()
+            .addAllRequiredContexts(identifiers.stream()
+                .map(BusinessContextIdentifier::toString)
+                .collect(Collectors.toSet()))
+            .build();
+    }
+
+    private BusinessContext buildBusinessContext(final BusinessContextProtos.BusinessContextMessage businessContextMessage)
+    {
+
+        return new BusinessContext(
+            new BusinessContextIdentifier(businessContextMessage.getPrefix(), businessContextMessage.getName()),
+            businessContextMessage.getIncludedContextsList().stream().map(BusinessContextIdentifier::new).collect(Collectors.toSet()),
+            businessContextMessage.getPreconditionsList().stream().map(this::buildBusinessRule).collect(Collectors.toSet()),
+            businessContextMessage.getPostConditionsList().stream().map(this::buildBusinessRule).collect(Collectors.toSet())
+        );
+    }
+
+    private BusinessRule buildBusinessRule(final BusinessContextProtos.BusinessRuleMessage message)
     {
         BusinessRule.Builder builder = BusinessRule.builder();
 
         builder.setName(message.getName());
         builder.setType(convertType(message.getType()));
-        message.getApplicableContextsList().forEach(builder::addApplicableContext);
         builder.setCondition(buildExpression(message.getCondition()));
 
         return builder.build();
     }
 
-    private BusinessRuleType convertType(final BusinessRulesProtos.BusinessRuleType type)
+    private BusinessRuleType convertType(final BusinessContextProtos.BusinessRuleType type)
     {
         switch (type) {
             case PRECONDITION:
@@ -88,7 +122,7 @@ public class ProtobufBusinessContextClient
     }
 
     @SuppressWarnings("unchecked")
-    private <T> Expression<T> buildExpression(final BusinessRulesProtos.Expression message)
+    private <T> Expression<T> buildExpression(final BusinessContextProtos.Expression message)
     {
         switch (message.getName()) {
             case "logical-and":
@@ -152,10 +186,10 @@ public class ProtobufBusinessContextClient
                 throw new RuntimeException(String.format("Unknown expression: %s", message.getName()));
         }
     }
-    
-    private String findPropertyByName(final String name, final BusinessRulesProtos.Expression message)
+
+    private String findPropertyByName(final String name, final BusinessContextProtos.Expression message)
     {
-        for (BusinessRulesProtos.ExpressionProperty expressionProperty : message.getPropertiesList()) {
+        for (BusinessContextProtos.ExpressionProperty expressionProperty : message.getPropertiesList()) {
             if (expressionProperty.getKey().equals(name)) {
                 return expressionProperty.getValue();
             }

@@ -1,7 +1,7 @@
 package cz.filipklimes.diploma.framework.example.order.aop;
 
-import cz.filipklimes.diploma.framework.businessContext.BusinessContext;
-import cz.filipklimes.diploma.framework.businessContext.BusinessRuleEvaluator;
+import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
+import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessRuleEvaluator;
 import cz.filipklimes.diploma.framework.businessContext.annotation.BusinessOperation;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
@@ -25,24 +25,24 @@ public class BusinessContextAspect
     @Before("@annotation(cz.filipklimes.diploma.framework.businessContext.annotation.BusinessOperation)")
     public void validatePreconditions(JoinPoint joinPoint)
     {
-        BusinessContext context = createBusinessContext(joinPoint);
-        evaluator.evaluatePreconditions(context);
+        BusinessOperationContext context = createBusinessContext(joinPoint);
+        // evaluator.evaluatePreconditions(context);
     }
 
     @After("@annotation(cz.filipklimes.diploma.framework.businessContext.annotation.BusinessOperation)")
     public void validatePostConditions(JoinPoint joinPoint)
     {
-        BusinessContext context = createBusinessContext(joinPoint);
-        evaluator.evaluatePostConditions(context);
+        BusinessOperationContext context = createBusinessContext(joinPoint);
+        // evaluator.evaluatePostConditions(context);
     }
 
-    private BusinessContext createBusinessContext(final JoinPoint joinPoint)
+    private BusinessOperationContext createBusinessContext(final JoinPoint joinPoint)
     {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         BusinessOperation annotation = signature.getMethod().getAnnotation(BusinessOperation.class);
 
         // Build business context
-        BusinessContext context = new BusinessContext(annotation.value());
+        BusinessOperationContext context = new BusinessOperationContext(annotation.value());
         String[] parameterNames = signature.getParameterNames();
         Object[] parameters = joinPoint.getArgs();
         for (int i = 0; i < parameters.length; i++) {

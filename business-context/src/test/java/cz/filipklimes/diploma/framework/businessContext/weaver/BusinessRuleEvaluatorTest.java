@@ -1,4 +1,4 @@
-package cz.filipklimes.diploma.framework.businessContext;
+package cz.filipklimes.diploma.framework.businessContext.weaver;
 
 public class BusinessRuleEvaluatorTest
 {
@@ -23,7 +23,7 @@ public class BusinessRuleEvaluatorTest
 //
 //        BusinessRuleEvaluator evaluator = new BusinessRuleEvaluator(ruleSet);
 //
-//        BusinessContext context = new BusinessContext("order.create");
+//        BusinessOperationContext context = new BusinessOperationContext("order.create");
 //        context.setVariable("order", new Order(BigDecimal.valueOf(1000)));
 //        context.setVariable("user", new User("John Doe", BigDecimal.valueOf(70)));
 //
@@ -53,7 +53,7 @@ public class BusinessRuleEvaluatorTest
 //
 //        BusinessRuleEvaluator evaluator = new BusinessRuleEvaluator(ruleSet);
 //
-//        BusinessContext context = new BusinessContext("order.create");
+//        BusinessOperationContext context = new BusinessOperationContext("order.create");
 //        context.setVariable("order", new Order(BigDecimal.valueOf(1000)));
 //
 //        evaluator.evaluate(context);
@@ -82,7 +82,7 @@ public class BusinessRuleEvaluatorTest
 //
 //        BusinessRuleEvaluator evaluator = new BusinessRuleEvaluator(ruleSet);
 //
-//        BusinessContext context = new BusinessContext("order.create");
+//        BusinessOperationContext context = new BusinessOperationContext("order.create");
 //        context.setVariable("order", new Order(BigDecimal.valueOf(1000)));
 //
 //        evaluator.evaluate(context);

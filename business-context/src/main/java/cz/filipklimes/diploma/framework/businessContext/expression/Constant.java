@@ -1,6 +1,6 @@
 package cz.filipklimes.diploma.framework.businessContext.expression;
 
-import cz.filipklimes.diploma.framework.businessContext.BusinessContext;
+import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 
 import java.util.*;
 
@@ -17,7 +17,7 @@ public class Constant<T> implements Terminal<T>
     }
 
     @Override
-    public T interpret(final BusinessContext context)
+    public T interpret(final BusinessOperationContext context)
     {
         return value;
     }

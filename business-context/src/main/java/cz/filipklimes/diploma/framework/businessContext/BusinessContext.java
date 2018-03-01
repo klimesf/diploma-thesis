@@ -1,8 +1,5 @@
 package cz.filipklimes.diploma.framework.businessContext;
 
-import cz.filipklimes.diploma.framework.businessContext.exception.FunctionAlreadyDefinedException;
-import cz.filipklimes.diploma.framework.businessContext.exception.UndefinedFunctionException;
-import cz.filipklimes.diploma.framework.businessContext.exception.UndefinedVariableException;
 import lombok.Getter;
 
 import java.util.*;
@@ -11,80 +8,46 @@ public class BusinessContext
 {
 
     @Getter
-    private final String name;
+    private final BusinessContextIdentifier identifier;
 
-    /**
-     * Variables defined within the business context.
-     */
-    private final Map<String, Object> variables;
+    private final Set<BusinessContextIdentifier> includedContexts;
 
-    /**
-     * functions defined within the business context.
-     */
-    private final Map<String, Function> functions;
+    private final Set<BusinessRule> preConditions;
 
-    public BusinessContext(final String name)
+    private final Set<BusinessRule> postConditions;
+
+    public BusinessContext(
+        final BusinessContextIdentifier identifier,
+        final Set<BusinessContextIdentifier> includedContexts,
+        final Set<BusinessRule> preConditions,
+        final Set<BusinessRule> postConditions
+    )
     {
-        this.name = name;
-        this.variables = new HashMap<>();
-        this.functions = new HashMap<>();
+        this.identifier = identifier;
+        this.includedContexts = new HashSet<>(includedContexts);
+        this.preConditions = new HashSet<>(preConditions);
+        this.postConditions = new HashSet<>(postConditions);
     }
 
-    /**
-     * Returns value of variable with the given name.
-     *
-     * @param name Name of the variable unique within the context.
-     * @return Value of the variable.
-     * @throws UndefinedVariableException When name of the variable was not defined within the context.
-     */
-    public Object getVariable(final String name)
+    public Set<BusinessContextIdentifier> getIncludedContexts()
     {
-        if (!variables.containsKey(name)) {
-            throw new UndefinedVariableException(name);
-        }
-
-        return variables.get(name);
+        return Collections.unmodifiableSet(includedContexts);
     }
 
-    /**
-     * Creates or updates variable with the given name to the given value.
-     *
-     * @param name Name of the variable unique within the context.
-     */
-    public void setVariable(final String name, final Object value)
+    public Set<BusinessRule> getPreConditions()
     {
-        variables.put(name, value);
+        return Collections.unmodifiableSet(preConditions);
     }
 
-    /**
-     * Returns function with the given name.
-     *
-     * @param name Name of the function.
-     * @return Function with the name.
-     * @throws UndefinedFunctionException When function with such name was not defined within the context;
-     */
-    public Function getFunction(final String name)
+    public Set<BusinessRule> getPostConditions()
     {
-        if (!functions.containsKey(name)) {
-            throw new UndefinedFunctionException(name);
-        }
-
-        return functions.get(name);
+        return Collections.unmodifiableSet(postConditions);
     }
 
-    /**
-     * Adds named function to the business context.
-     *
-     * @param name Name of the function.
-     * @param function The function body.
-     * @throws FunctionAlreadyDefinedException When function with such name was already defined within the context.
-     */
-    public void addFunction(final String name, final Function function)
+    public void merge(final BusinessContext other)
     {
-        if (functions.containsKey(name)) {
-            throw new FunctionAlreadyDefinedException(name);
-        }
-        functions.put(name, function);
+        preConditions.addAll(other.getPreConditions());
+        postConditions.addAll(other.getPostConditions());
     }
 
 }

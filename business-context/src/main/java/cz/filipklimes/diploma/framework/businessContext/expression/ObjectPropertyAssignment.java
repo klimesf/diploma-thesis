@@ -1,6 +1,6 @@
 package cz.filipklimes.diploma.framework.businessContext.expression;
 
-import cz.filipklimes.diploma.framework.businessContext.BusinessContext;
+import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 import cz.filipklimes.diploma.framework.businessContext.exception.BadObjectPropertyTypeException;
 import cz.filipklimes.diploma.framework.businessContext.exception.UndefinedObjectPropertyException;
 
@@ -22,7 +22,7 @@ public class ObjectPropertyAssignment<T> extends UnaryOperator<Void, T>
     }
 
     @Override
-    public Void interpret(final BusinessContext context)
+    public Void interpret(final BusinessOperationContext context)
     {
         Object object = context.getVariable(objectName);
 

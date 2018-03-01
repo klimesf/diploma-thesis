@@ -1,6 +1,6 @@
 package cz.filipklimes.diploma.framework.businessContext.expression;
 
-import cz.filipklimes.diploma.framework.businessContext.BusinessContext;
+import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -10,7 +10,7 @@ public class VariableAssignmentTest
     @Test
     public void testNewVariable()
     {
-        BusinessContext context = new BusinessContext("test");
+        BusinessOperationContext context = new BusinessOperationContext("test");
 
         Expression<Void> expression = new VariableAssignment<>("number", new Constant<>(123, ExpressionType.NUMBER));
         expression.interpret(context);
@@ -21,7 +21,7 @@ public class VariableAssignmentTest
     @Test
     public void testExistingVariable()
     {
-        BusinessContext context = new BusinessContext("test");
+        BusinessOperationContext context = new BusinessOperationContext("test");
         context.setVariable("number", "prev val");
 
         Expression<Void> expression = new VariableAssignment<>("number", new Constant<>(123, ExpressionType.NUMBER));
