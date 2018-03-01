@@ -110,3 +110,7 @@ atd., myslím že se tam toho dá vymyslet spoustu.
 ![Business rules administration](https://github.com/klimesf/diploma-thesis-images/blob/master/activity-diagrams/business-context-management.png?raw=true)
 ![Business rules administration](https://github.com/klimesf/diploma-thesis-images/blob/master/sequence-diagrams/business-context-administration.png?raw=true)
 ![Business rules administration](https://github.com/klimesf/diploma-thesis-images/blob/master/sequence-diagrams/business-context-administration-update.png?raw=true)
+
+# Business Context Metamodel
+
+![Business Context Metamodel](https://github.com/klimesf/diploma-thesis-images/blob/master/class-diagrams/business-context-metamodel.png) 
