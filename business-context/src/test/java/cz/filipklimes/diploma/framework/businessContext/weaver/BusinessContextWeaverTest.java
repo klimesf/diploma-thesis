@@ -3,8 +3,9 @@ package cz.filipklimes.diploma.framework.businessContext.weaver;
 import cz.filipklimes.diploma.framework.businessContext.BusinessContext;
 import cz.filipklimes.diploma.framework.businessContext.BusinessContextIdentifier;
 import cz.filipklimes.diploma.framework.businessContext.BusinessContextRegistry;
-import cz.filipklimes.diploma.framework.businessContext.BusinessRule;
-import cz.filipklimes.diploma.framework.businessContext.BusinessRuleType;
+import cz.filipklimes.diploma.framework.businessContext.PostCondition;
+import cz.filipklimes.diploma.framework.businessContext.PostConditionType;
+import cz.filipklimes.diploma.framework.businessContext.Precondition;
 import cz.filipklimes.diploma.framework.businessContext.exception.BusinessRulesCheckFailedException;
 import cz.filipklimes.diploma.framework.businessContext.exception.UndefinedBusinessContextException;
 import cz.filipklimes.diploma.framework.businessContext.expression.Constant;
@@ -30,8 +31,8 @@ public class BusinessContextWeaverTest
         BusinessContextWeaver evaluator = new BusinessContextWeaver(createRegistry());
 
         BusinessOperationContext context = new BusinessOperationContext("user.create");
-        context.setVariable("name", "John Doe");
-        context.setVariable("email", "john.doe@example.com");
+        context.setInputParameter("name", "John Doe");
+        context.setInputParameter("email", "john.doe@example.com");
 
         evaluator.evaluatePreconditions(context);
     }
@@ -42,8 +43,8 @@ public class BusinessContextWeaverTest
         BusinessContextWeaver evaluator = new BusinessContextWeaver(createRegistry());
 
         BusinessOperationContext context = new BusinessOperationContext("user.create");
-        context.setVariable("name", "John Doe");
-        context.setVariable("email", null);
+        context.setInputParameter("name", "John Doe");
+        context.setInputParameter("email", null);
 
         evaluator.evaluatePreconditions(context);
     }
@@ -54,14 +55,15 @@ public class BusinessContextWeaverTest
         BusinessContextWeaver evaluator = new BusinessContextWeaver(createRegistry());
 
         BusinessOperationContext context = new BusinessOperationContext("user.create");
-        context.setVariable("name", "John Doe");
-        context.setVariable("email", "john.doe@example.com");
-        context.setVariable("user", new User("John Doe", "john.doe@example.com"));
+        context.setInputParameter("name", "John Doe");
+        context.setInputParameter("email", "john.doe@example.com");
+
+        context.setOutput(new User("John Doe", "john.doe@example.com"));
 
         evaluator.applyPostConditions(context);
 
-        Assert.assertEquals("John Doe", ((User) context.getVariable("user")).getName());
-        // Assert.assertNull(((User) context.getVariable("user")).getEmail());
+        Assert.assertEquals("John Doe", ((User) context.getOutput()).getName());
+        Assert.assertNull(((User) context.getOutput()).getEmail());
     }
 
     @Test(expected = UndefinedBusinessContextException.class)
@@ -75,21 +77,20 @@ public class BusinessContextWeaverTest
 
     private static BusinessContextRegistry createRegistry()
     {
-        BusinessRule emailNotNull = BusinessRule.builder()
+        Precondition emailNotNull = Precondition.builder()
             .withName("emailIsNotNull")
-            .withType(BusinessRuleType.PRECONDITION)
             .withCondition(new IsNotNull<>(new VariableReference<>("email", STRING)))
             .build();
 
-        BusinessRule nameNotNull = BusinessRule.builder()
+        Precondition nameNotNull = Precondition.builder()
             .withName("nameIsNotNull")
-            .withType(BusinessRuleType.PRECONDITION)
             .withCondition(new IsNotNull<>(new VariableReference<>("name", STRING)))
             .build();
 
-        BusinessRule hideUserEmail = BusinessRule.builder()
+        PostCondition hideUserEmail = PostCondition.builder()
             .withName("hideUserEmail")
-            .withType(BusinessRuleType.POST_CONDITION)
+            .withType(PostConditionType.FILTER_OBJECT_FIELD)
+            .withReferenceName("email")
             .withCondition(new Constant<>(true, BOOL))
             .build();
 

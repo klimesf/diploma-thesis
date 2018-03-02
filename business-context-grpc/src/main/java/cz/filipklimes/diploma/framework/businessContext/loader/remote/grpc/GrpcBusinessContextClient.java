@@ -2,8 +2,9 @@ package cz.filipklimes.diploma.framework.businessContext.loader.remote.grpc;
 
 import cz.filipklimes.diploma.framework.businessContext.BusinessContext;
 import cz.filipklimes.diploma.framework.businessContext.BusinessContextIdentifier;
-import cz.filipklimes.diploma.framework.businessContext.BusinessRule;
-import cz.filipklimes.diploma.framework.businessContext.BusinessRuleType;
+import cz.filipklimes.diploma.framework.businessContext.PostCondition;
+import cz.filipklimes.diploma.framework.businessContext.PostConditionType;
+import cz.filipklimes.diploma.framework.businessContext.Precondition;
 import cz.filipklimes.diploma.framework.businessContext.expression.Constant;
 import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
 import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionType;
@@ -97,29 +98,39 @@ class GrpcBusinessContextClient
         return new BusinessContext(
             new BusinessContextIdentifier(businessContextMessage.getPrefix(), businessContextMessage.getName()),
             businessContextMessage.getIncludedContextsList().stream().map(BusinessContextIdentifier::parse).collect(Collectors.toSet()),
-            businessContextMessage.getPreconditionsList().stream().map(this::buildBusinessRule).collect(Collectors.toSet()),
-            businessContextMessage.getPostConditionsList().stream().map(this::buildBusinessRule).collect(Collectors.toSet())
+            businessContextMessage.getPreconditionsList().stream().map(this::buildPrecondition).collect(Collectors.toSet()),
+            businessContextMessage.getPostConditionsList().stream().map(this::buildPostCondition).collect(Collectors.toSet())
         );
     }
 
-    private BusinessRule buildBusinessRule(final BusinessContextProtos.BusinessRuleMessage message)
+    private Precondition buildPrecondition(final BusinessContextProtos.PreconditionMessage message)
     {
-        BusinessRule.Builder builder = BusinessRule.builder();
-
-        builder.withName(message.getName());
-        builder.withType(convertType(message.getType()));
-        builder.withCondition(buildExpression(message.getCondition()));
-
-        return builder.build();
+        return Precondition.builder()
+            .withName(message.getName())
+            .withCondition(buildExpression(message.getCondition()))
+            .build();
     }
 
-    private BusinessRuleType convertType(final BusinessContextProtos.BusinessRuleType type)
+    private PostCondition buildPostCondition(final BusinessContextProtos.PostConditionMessage message)
+    {
+        return PostCondition.builder()
+            .withName(message.getName())
+            .withType(convertType(message.getType()))
+            .withReferenceName(message.getReferenceName())
+            .withCondition(buildExpression(message.getCondition()))
+            .build();
+    }
+
+    private PostConditionType convertType(final BusinessContextProtos.PostConditionType type)
     {
         switch (type) {
-            case PRECONDITION:
-                return BusinessRuleType.PRECONDITION;
-            case POST_CONDITION:
-                return BusinessRuleType.POST_CONDITION;
+            case FILTER_OBJECT_FIELD:
+                return PostConditionType.FILTER_OBJECT_FIELD;
+            case FILTER_LIST_OF_OBJECTS:
+                return PostConditionType.FILTER_LIST_OF_OBJECTS;
+            case FILTER_LIST_OF_OBJECTS_FIELD:
+                return PostConditionType.FILTER_LIST_OF_OBJECTS_FIELD;
+            case UNKNOWN:
             default:
                 throw new RuntimeException("Unknown business rule type");
         }

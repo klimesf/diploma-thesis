@@ -14,7 +14,7 @@ public class VariableReferenceTest
     public void testOk()
     {
         BusinessOperationContext context = new BusinessOperationContext("test");
-        context.setVariable("number", BigDecimal.valueOf(123));
+        context.setInputParameter("number", BigDecimal.valueOf(123));
 
         Expression<BigDecimal> expression = new VariableReference<>("number", ExpressionType.NUMBER);
         BigDecimal result = expression.interpret(context);
@@ -26,7 +26,7 @@ public class VariableReferenceTest
     public void testNoVariableWithSuchName()
     {
         BusinessOperationContext context = new BusinessOperationContext("test");
-        context.setVariable("number", 123);
+        context.setInputParameter("number", 123);
 
         Expression<BigDecimal> expression = new VariableReference<>("invalid", ExpressionType.NUMBER);
         expression.interpret(context);

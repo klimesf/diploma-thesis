@@ -24,7 +24,7 @@ public class ObjectPropertyAssignment<T> extends UnaryOperator<Void, T>
     @Override
     public Void interpret(final BusinessOperationContext context)
     {
-        Object object = context.getVariable(objectName);
+        Object object = context.getInputParameter(objectName);
 
         Method setter = Arrays.stream(object.getClass().getDeclaredMethods())
             .filter(method -> method.getName().toLowerCase().equals("set" + propertyName.toLowerCase()))

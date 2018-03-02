@@ -20,16 +20,22 @@ message Expression {
     repeated Expression arguments = 3;
 }
 
-enum BusinessRuleType {
-    UNKNOWN = 0;
-    PRECONDITION = 1;
-    POST_CONDITION = 2;
+message PreconditionMessage {
+    required string name = 1;
+    required Expression condition = 2;
 }
 
-message BusinessRuleMessage {
+enum PostConditionType {
+    UNKNOWN = 0;
+    FILTER_OBJECT_FIELD = 1;
+    FILTER_LIST_OF_OBJECTS = 2;
+    FILTER_LIST_OF_OBJECTS_FIELD = 3;
+}
+
+message PostConditionMessage {
     required string name = 1;
-    repeated string applicableContexts = 2;
-    required BusinessRuleType type = 3;
+    required PostConditionType type = 2;
+    required string referenceName = 3;
     required Expression condition = 4;
 }
 
@@ -37,8 +43,8 @@ message BusinessContextMessage {
     required string prefix = 1;
     required string name = 2;
     repeated string includedContexts = 3;
-    repeated BusinessRuleMessage preconditions = 4;
-    repeated BusinessRuleMessage postConditions = 5;
+    repeated PreconditionMessage preconditions = 4;
+    repeated PostConditionMessage postConditions = 5;
 }
 
 message BusinessContextsResponseMessage {

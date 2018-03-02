@@ -13,7 +13,7 @@ public class IsNotNullTest
     public void testNotNull()
     {
         BusinessOperationContext context = new BusinessOperationContext("context");
-        context.setVariable("var", BigDecimal.valueOf(123));
+        context.setInputParameter("var", BigDecimal.valueOf(123));
         Expression<Boolean> constant = new IsNotNull<>(new VariableReference<>("var", ExpressionType.NUMBER));
         Assert.assertTrue(constant.interpret(context));
     }
@@ -22,7 +22,7 @@ public class IsNotNullTest
     public void testNull()
     {
         BusinessOperationContext context = new BusinessOperationContext("context");
-        context.setVariable("var", null);
+        context.setInputParameter("var", null);
         Expression<Boolean> constant = new IsNotNull<>(new VariableReference<>("var", ExpressionType.NUMBER));
         Assert.assertFalse(constant.interpret(context));
     }

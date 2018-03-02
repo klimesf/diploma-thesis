@@ -15,12 +15,12 @@ public class ObjectPropertyAssignmentTest
     {
         BusinessOperationContext context = new BusinessOperationContext("test");
         MockObject object = new MockObject();
-        context.setVariable("object", object);
+        context.setInputParameter("object", object);
 
         Expression<Void> expression = new ObjectPropertyAssignment<>("object", "property", new Constant<>("new value", ExpressionType.STRING));
         expression.interpret(context);
 
-        Assert.assertEquals("new value", ((MockObject) context.getVariable("object")).getProperty());
+        Assert.assertEquals("new value", ((MockObject) context.getInputParameter("object")).getProperty());
     }
 
     @Test(expected = UndefinedObjectPropertyException.class)
@@ -28,7 +28,7 @@ public class ObjectPropertyAssignmentTest
     {
         BusinessOperationContext context = new BusinessOperationContext("test");
         MockObject object = new MockObject();
-        context.setVariable("object", object);
+        context.setInputParameter("object", object);
 
         Expression<Void> expression = new ObjectPropertyAssignment<>("object", "hiddenProperty", new Constant<>("new value", ExpressionType.STRING));
         expression.interpret(context);
@@ -39,7 +39,7 @@ public class ObjectPropertyAssignmentTest
     {
         BusinessOperationContext context = new BusinessOperationContext("test");
         MockObject object = new MockObject();
-        context.setVariable("object", object);
+        context.setInputParameter("object", object);
 
         Expression<Void> expression = new ObjectPropertyAssignment<>("object", "property", new Constant<>(123, ExpressionType.NUMBER));
         expression.interpret(context);
@@ -50,7 +50,7 @@ public class ObjectPropertyAssignmentTest
     {
         BusinessOperationContext context = new BusinessOperationContext("test");
         MockObject object = new MockObject();
-        context.setVariable("object", object);
+        context.setInputParameter("object", object);
 
         Expression<Void> expression = new ObjectPropertyAssignment<>("invalid", "property", new Constant<>("new value", ExpressionType.STRING));
         expression.interpret(context);

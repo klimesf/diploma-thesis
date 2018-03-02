@@ -1,6 +1,6 @@
 package cz.filipklimes.diploma.framework.businessContext.exception;
 
-import cz.filipklimes.diploma.framework.businessContext.BusinessRule;
+import cz.filipklimes.diploma.framework.businessContext.Precondition;
 import lombok.Getter;
 
 import java.util.*;
@@ -9,9 +9,9 @@ public class BusinessRulesCheckFailedException extends Exception
 {
 
     @Getter
-    private final Set<BusinessRule> failedRules;
+    private final Set<Precondition> failedRules;
 
-    public BusinessRulesCheckFailedException(final Set<BusinessRule> failedRules)
+    public BusinessRulesCheckFailedException(final Set<Precondition> failedRules)
     {
         super(String.format("BusinessRules check failed, %d rules were not satisfied", failedRules.size()));
         this.failedRules = Collections.unmodifiableSet(failedRules);

@@ -61,7 +61,7 @@ public class BusinessContextAspect
                 .orElse(null);
 
             if (parameterAnnotation != null) {
-                context.setVariable(parameterAnnotation.value(), parameters[i]);
+                context.setInputParameter(parameterAnnotation.value(), parameters[i]);
             }
         }
         return context;

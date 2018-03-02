@@ -19,7 +19,7 @@ public class VariableAssignment<T> extends UnaryOperator<Void, T>
     public Void interpret(final BusinessOperationContext context)
     {
         T value = getArgument().interpret(context);
-        context.setVariable(name, value);
+        context.setInputParameter(name, value);
         return null;
     }
 

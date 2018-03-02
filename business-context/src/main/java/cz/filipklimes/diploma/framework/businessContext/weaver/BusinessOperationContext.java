@@ -15,9 +15,14 @@ public class BusinessOperationContext
     private final String name;
 
     /**
-     * Variables defined within the business context.
+     * Variable input parameters defined within the business context.
      */
-    private final Map<String, Object> variables;
+    private final Map<String, Object> inputParameters;
+
+    /**
+     * Output parameter of the business context
+     */
+    private Object output;
 
     /**
      * functions defined within the business context.
@@ -27,7 +32,7 @@ public class BusinessOperationContext
     public BusinessOperationContext(final String name)
     {
         this.name = name;
-        this.variables = new HashMap<>();
+        this.inputParameters = new HashMap<>();
         this.functions = new HashMap<>();
     }
 
@@ -38,13 +43,13 @@ public class BusinessOperationContext
      * @return Value of the variable.
      * @throws UndefinedVariableException When name of the variable was not defined within the context.
      */
-    public Object getVariable(final String name)
+    public Object getInputParameter(final String name)
     {
-        if (!variables.containsKey(name)) {
+        if (!inputParameters.containsKey(name)) {
             throw new UndefinedVariableException(name);
         }
 
-        return variables.get(name);
+        return inputParameters.get(name);
     }
 
     /**
@@ -52,9 +57,9 @@ public class BusinessOperationContext
      *
      * @param name Name of the variable unique within the context.
      */
-    public void setVariable(final String name, final Object value)
+    public void setInputParameter(final String name, final Object value)
     {
-        variables.put(name, value);
+        inputParameters.put(name, value);
     }
 
     /**
@@ -86,6 +91,16 @@ public class BusinessOperationContext
             throw new FunctionAlreadyDefinedException(name);
         }
         functions.put(name, function);
+    }
+
+    public Object getOutput()
+    {
+        return output;
+    }
+
+    public void setOutput(final Object output)
+    {
+        this.output = output;
     }
 
 }

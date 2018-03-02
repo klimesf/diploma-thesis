@@ -12,15 +12,15 @@ public class BusinessContext
 
     private final Set<BusinessContextIdentifier> includedContexts;
 
-    private final Set<BusinessRule> preConditions;
+    private final Set<Precondition> preConditions;
 
-    private final Set<BusinessRule> postConditions;
+    private final Set<PostCondition> postConditions;
 
     public BusinessContext(
         final BusinessContextIdentifier identifier,
         final Set<BusinessContextIdentifier> includedContexts,
-        final Set<BusinessRule> preConditions,
-        final Set<BusinessRule> postConditions
+        final Set<Precondition> preConditions,
+        final Set<PostCondition> postConditions
     )
     {
         this.identifier = identifier;
@@ -34,12 +34,12 @@ public class BusinessContext
         return Collections.unmodifiableSet(includedContexts);
     }
 
-    public Set<BusinessRule> getPreconditions()
+    public Set<Precondition> getPreconditions()
     {
         return Collections.unmodifiableSet(preConditions);
     }
 
-    public Set<BusinessRule> getPostConditions()
+    public Set<PostCondition> getPostConditions()
     {
         return Collections.unmodifiableSet(postConditions);
     }
@@ -60,8 +60,8 @@ public class BusinessContext
 
         private BusinessContextIdentifier identifier;
         private final Set<BusinessContextIdentifier> includedContexts;
-        private final Set<BusinessRule> preConditions;
-        private final Set<BusinessRule> postConditions;
+        private final Set<Precondition> preConditions;
+        private final Set<PostCondition> postConditions;
 
         private Builder()
         {
@@ -82,20 +82,14 @@ public class BusinessContext
             return this;
         }
 
-        public Builder withPrecondition(final BusinessRule rule)
+        public Builder withPrecondition(final Precondition rule)
         {
-            if (Objects.requireNonNull(rule).getType() != BusinessRuleType.PRECONDITION) {
-                throw new IllegalArgumentException("This rule is not a precondition");
-            }
             this.preConditions.add(rule);
             return this;
         }
 
-        public Builder withPostCondition(final BusinessRule rule)
+        public Builder withPostCondition(final PostCondition rule)
         {
-            if (Objects.requireNonNull(rule).getType() != BusinessRuleType.POST_CONDITION) {
-                throw new IllegalArgumentException("This rule is not a post-condition");
-            }
             this.postConditions.add(rule);
             return this;
         }

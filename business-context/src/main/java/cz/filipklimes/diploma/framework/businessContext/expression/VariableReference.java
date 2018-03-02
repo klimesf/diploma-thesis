@@ -20,7 +20,7 @@ public class VariableReference<T> implements Terminal<T>
     @SuppressWarnings("unchecked")
     public T interpret(final BusinessOperationContext context)
     {
-        return (T) type.getUnderlyingClass().cast(context.getVariable(name));
+        return (T) type.getUnderlyingClass().cast(context.getInputParameter(name));
     }
 
     @Override

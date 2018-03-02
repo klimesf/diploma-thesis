@@ -26,7 +26,7 @@ public class ObjectPropertyReference<T> implements Terminal<T>
     @SuppressWarnings("unchecked")
     public T interpret(final BusinessOperationContext context)
     {
-        Object object = context.getVariable(objectName);
+        Object object = context.getInputParameter(objectName);
 
         Method getter = Arrays.stream(object.getClass().getDeclaredMethods())
             .filter(method -> method.getName().toLowerCase().equals("get" + propertyName.toLowerCase()))

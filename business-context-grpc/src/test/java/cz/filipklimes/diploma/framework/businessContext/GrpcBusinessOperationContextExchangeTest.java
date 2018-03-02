@@ -19,6 +19,8 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static cz.filipklimes.diploma.framework.businessContext.expression.ExpressionType.BOOL;
+
 public class GrpcBusinessOperationContextExchangeTest
 {
 
@@ -39,9 +41,8 @@ public class GrpcBusinessOperationContextExchangeTest
                         .withIncludedContext(authNotLoggedIn)
                         .withIdentifier(userValidEmail)
                         .withPrecondition(
-                            BusinessRule.builder()
+                            Precondition.builder()
                                 .withName("userEmailNotEmpty")
-                                .withType(BusinessRuleType.PRECONDITION)
                                 .withCondition(new IsNotNull<>(new ObjectPropertyReference<>("user", "email", ExpressionType.STRING)))
                                 .build()
                         )
@@ -58,13 +59,20 @@ public class GrpcBusinessOperationContextExchangeTest
                 BusinessContext.builder()
                     .withIdentifier(authNotLoggedIn)
                     .withPrecondition(
-                        BusinessRule.builder()
+                        Precondition.builder()
                             .withName("userNotLoggedIn")
-                            .withType(BusinessRuleType.PRECONDITION)
                             .withCondition(new Equals<>(
                                 new VariableReference<>("loggedIn", ExpressionType.BOOL),
                                 new Constant<>(false, ExpressionType.BOOL)
                             ))
+                            .build()
+                    )
+                    .withPostCondition(
+                        PostCondition.builder()
+                            .withName("hideUserEmail")
+                            .withType(PostConditionType.FILTER_OBJECT_FIELD)
+                            .withReferenceName("email")
+                            .withCondition(new Constant<>(true, BOOL))
                             .build()
                     )
                     .build()
@@ -94,19 +102,29 @@ public class GrpcBusinessOperationContextExchangeTest
         BusinessContext context = contexts.iterator().next();
         Assert.assertEquals(2, context.getPreconditions().size());
 
-        Map<String, BusinessRule> preConditionMap = context.getPreconditions().stream()
+        Map<String, Precondition> preconditionMap = context.getPreconditions().stream()
             .collect(Collectors.toMap(
-                BusinessRule::getName,
+                Precondition::getName,
                 Function.identity()
             ));
 
-        BusinessRule rule1 = preConditionMap.get("userEmailNotEmpty");
+        Precondition rule1 = preconditionMap.get("userEmailNotEmpty");
         Assert.assertTrue(rule1.getCondition() instanceof IsNotNull);
         IsNotNull condition1 = (IsNotNull) rule1.getCondition();
         Assert.assertTrue(condition1.getArgument() instanceof ObjectPropertyReference);
 
-        BusinessRule rule2 = preConditionMap.get("userNotLoggedIn");
+        Precondition rule2 = preconditionMap.get("userNotLoggedIn");
         Assert.assertTrue(rule2.getCondition() instanceof Equals);
+
+        Map<String, PostCondition> postConditionMap = context.getPostConditions().stream()
+            .collect(Collectors.toMap(
+                PostCondition::getName,
+                Function.identity()
+            ));
+
+        PostCondition rule3 = postConditionMap.get("hideUserEmail");
+        Assert.assertTrue(rule3.getCondition() instanceof Constant);
+        Assert.assertEquals("email", rule3.getReferenceName());
     }
 
 }

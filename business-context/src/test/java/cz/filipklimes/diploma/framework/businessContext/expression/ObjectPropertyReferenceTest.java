@@ -17,7 +17,7 @@ public class ObjectPropertyReferenceTest
     {
         BusinessOperationContext context = new BusinessOperationContext("test");
         MockObject object = new MockObject();
-        context.setVariable("object", object);
+        context.setInputParameter("object", object);
 
         Expression<String> expression = new ObjectPropertyReference<>("object", "property", ExpressionType.STRING);
         String result = expression.interpret(context);
@@ -30,7 +30,7 @@ public class ObjectPropertyReferenceTest
     {
         BusinessOperationContext context = new BusinessOperationContext("test");
         MockObject object = new MockObject();
-        context.setVariable("object", object);
+        context.setInputParameter("object", object);
 
         Expression<String> expression = new ObjectPropertyReference<>("object", "hiddenProperty", ExpressionType.STRING);
         expression.interpret(context);
@@ -41,7 +41,7 @@ public class ObjectPropertyReferenceTest
     {
         BusinessOperationContext context = new BusinessOperationContext("test");
         MockObject object = new MockObject();
-        context.setVariable("object", object);
+        context.setInputParameter("object", object);
 
         Expression<BigDecimal> expression = new ObjectPropertyReference<>("object", "property", ExpressionType.NUMBER);
         expression.interpret(context);
@@ -52,7 +52,7 @@ public class ObjectPropertyReferenceTest
     {
         BusinessOperationContext context = new BusinessOperationContext("test");
         MockObject object = new MockObject();
-        context.setVariable("object", object);
+        context.setInputParameter("object", object);
 
         Expression<BigDecimal> expression = new ObjectPropertyReference<>("invalid", "property", ExpressionType.NUMBER);
         expression.interpret(context);

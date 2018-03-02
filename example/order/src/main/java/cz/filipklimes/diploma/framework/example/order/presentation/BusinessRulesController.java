@@ -13,8 +13,8 @@ public class BusinessRulesController
 //    public String greeting(final Model model)
 //    {
 //        Set<BusinessRuleEntry> businessRuleEntries = new HashSet<>();
-//        for (Map.Entry<String, Set<BusinessRule>> entry : registry.getAllRules().entrySet()) {
-//            for (BusinessRule businessRule : entry.getValue()) {
+//        for (Map.Entry<String, Set<Precondition>> entry : registry.getAllRules().entrySet()) {
+//            for (Precondition businessRule : entry.getValue()) {
 //                businessRuleEntries.add(new BusinessRuleEntry(entry.getKey(), businessRule));
 //            }
 //        }
@@ -43,7 +43,7 @@ public class BusinessRulesController
 //
 //        private BusinessRuleEntry(
 //            final String origin,
-//            final BusinessRule businessRule
+//            final Precondition businessRule
 //        )
 //        {
 //            this.origin = origin;
