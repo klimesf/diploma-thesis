@@ -1,5 +1,6 @@
 package cz.filipklimes.diploma.framework.businessContext;
 
+import cz.filipklimes.diploma.framework.businessContext.exception.UndefinedBusinessContextException;
 import cz.filipklimes.diploma.framework.businessContext.loader.LocalBusinessContextLoader;
 import cz.filipklimes.diploma.framework.businessContext.loader.RemoteBusinessContextLoader;
 import cz.filipklimes.diploma.framework.businessContext.loader.remote.RemoteServiceAddress;
@@ -8,7 +9,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public final class BusinessContextRegistry
+public class BusinessContextRegistry
 {
 
     private final LocalBusinessContextLoader localLoader;
@@ -64,18 +65,25 @@ public final class BusinessContextRegistry
         });
     }
 
-    public BusinessContext getContextByName(final BusinessContextIdentifier identifier)
+    /**
+     * Retrieves business context with given identifier.
+     *
+     * @param identifier Identifier of the business context.
+     * @return The business context with given identifier.
+     * @throws UndefinedBusinessContextException when context with such identifier is not defined within the registry.
+     */
+    public BusinessContext getContextByIdentifier(final BusinessContextIdentifier identifier)
     {
         if (!contexts.containsKey(identifier)) {
-            throw new RuntimeException(String.format("No business context with identifier: %s", identifier));
+            throw new UndefinedBusinessContextException(identifier);
         }
         return contexts.get(identifier);
     }
 
-    public Map<BusinessContextIdentifier, BusinessContext> getContextByNames(final Set<BusinessContextIdentifier> identifier)
+    public Map<BusinessContextIdentifier, BusinessContext> getContextsByIdentifiers(final Set<BusinessContextIdentifier> identifiers)
     {
-        return Objects.requireNonNull(identifier).stream()
-            .map(this::getContextByName)
+        return Objects.requireNonNull(identifiers).stream()
+            .map(this::getContextByIdentifier)
             .collect(Collectors.toMap(
                 BusinessContext::getIdentifier,
                 Function.identity()

@@ -1,7 +1,7 @@
 package cz.filipklimes.diploma.framework.example.order;
 
 import cz.filipklimes.diploma.framework.businessContext.BusinessContextRegistry;
-import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessRuleEvaluator;
+import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessContextWeaver;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -36,9 +36,9 @@ public class Application
     }
 
     @Bean
-    public static BusinessRuleEvaluator businessRuleEvaluator(final BusinessContextRegistry businessContextRegistry)
+    public static BusinessContextWeaver businessRuleEvaluator(final BusinessContextRegistry businessContextRegistry)
     {
-        return new BusinessRuleEvaluator(businessContextRegistry);
+        return new BusinessContextWeaver(businessContextRegistry);
     }
 
 }

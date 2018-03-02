@@ -80,10 +80,10 @@ public final class GrpcBusinessContextServerRunnable
         )
         {
             Set<BusinessContextIdentifier> identifiers = request.getRequiredContextsList().stream()
-                .map(BusinessContextIdentifier::new)
+                .map(BusinessContextIdentifier::parse)
                 .collect(Collectors.toSet());
 
-            Set<BusinessContextProtos.BusinessContextMessage> contextMessages = registry.getContextByNames(identifiers).values().stream()
+            Set<BusinessContextProtos.BusinessContextMessage> contextMessages = registry.getContextsByIdentifiers(identifiers).values().stream()
                 .map(this::buildBusinessContextMessage)
                 .collect(Collectors.toSet());
 
@@ -103,7 +103,7 @@ public final class GrpcBusinessContextServerRunnable
                 .addAllIncludedContexts(context.getIncludedContexts().stream()
                     .map(BusinessContextIdentifier::toString)
                     .collect(Collectors.toSet()))
-                .addAllPreconditions(context.getPreConditions().stream()
+                .addAllPreconditions(context.getPreconditions().stream()
                     .map(this::buildBusinessRuleMessage)
                     .collect(Collectors.toSet()))
                 .addAllPostConditions(context.getPostConditions().stream()

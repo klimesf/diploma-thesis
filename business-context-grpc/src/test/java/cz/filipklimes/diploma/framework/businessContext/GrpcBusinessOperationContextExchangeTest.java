@@ -35,18 +35,16 @@ public class GrpcBusinessOperationContextExchangeTest
             public Set<BusinessContext> load()
             {
                 return Collections.singleton(
-                    new BusinessContext(
-                        userValidEmail,
-                        Collections.singleton(authNotLoggedIn),
-                        Collections.singleton(
-                            new BusinessRule(
-                                "userEmailNotEmpty",
-                                BusinessRuleType.PRECONDITION,
-                                new IsNotNull<>(new ObjectPropertyReference<>("user", "email", ExpressionType.STRING))
-                            )
-                        ),
-                        Collections.emptySet()
-                    )
+                    BusinessContext.builder()
+                        .withIdentifier(userValidEmail)
+                        .withPrecondition(
+                            BusinessRule.builder()
+                                .withName("userEmailNotEmpty")
+                                .withType(BusinessRuleType.PRECONDITION)
+                                .withCondition(new IsNotNull<>(new ObjectPropertyReference<>("user", "email", ExpressionType.STRING)))
+                                .build()
+                        )
+                        .build()
                 );
             }
         });
@@ -56,18 +54,19 @@ public class GrpcBusinessOperationContextExchangeTest
             Map<BusinessContextIdentifier, BusinessContext> contexts = new HashMap<>();
             contexts.put(
                 authNotLoggedIn,
-                new BusinessContext(
-                    authNotLoggedIn,
-                    Collections.emptySet(),
-                    Collections.singleton(
-                        new BusinessRule(
-                            "userNotLoggedIn",
-                            BusinessRuleType.PRECONDITION,
-                            new Equals<>(new VariableReference<>("loggedIn", ExpressionType.BOOL), new Constant<>(false, ExpressionType.BOOL))
-                        )
-                    ),
-                    Collections.emptySet()
-                )
+                BusinessContext.builder()
+                    .withIdentifier(authNotLoggedIn)
+                    .withPrecondition(
+                        BusinessRule.builder()
+                            .withName("userNotLoggedIn")
+                            .withType(BusinessRuleType.PRECONDITION)
+                            .withCondition(new Equals<>(
+                                new VariableReference<>("loggedIn", ExpressionType.BOOL),
+                                new Constant<>(false, ExpressionType.BOOL)
+                            ))
+                            .build()
+                    )
+                    .build()
             );
 
             return identifiers.stream()
@@ -92,9 +91,9 @@ public class GrpcBusinessOperationContextExchangeTest
         Assert.assertEquals(1, contexts.size());
 
         BusinessContext context = contexts.iterator().next();
-        Assert.assertEquals(2, context.getPreConditions().size());
+        Assert.assertEquals(2, context.getPreconditions().size());
 
-        Map<String, BusinessRule> preConditionMap = context.getPreConditions().stream()
+        Map<String, BusinessRule> preConditionMap = context.getPreconditions().stream()
             .collect(Collectors.toMap(
                 BusinessRule::getName,
                 Function.identity()

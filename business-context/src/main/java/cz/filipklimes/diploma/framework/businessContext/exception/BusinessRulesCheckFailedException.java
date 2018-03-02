@@ -5,11 +5,11 @@ import lombok.Getter;
 
 import java.util.*;
 
-public class BusinessRulesCheckFailedException extends RuntimeException
+public class BusinessRulesCheckFailedException extends Exception
 {
 
     @Getter
-    private Set<BusinessRule> failedRules;
+    private final Set<BusinessRule> failedRules;
 
     public BusinessRulesCheckFailedException(final Set<BusinessRule> failedRules)
     {

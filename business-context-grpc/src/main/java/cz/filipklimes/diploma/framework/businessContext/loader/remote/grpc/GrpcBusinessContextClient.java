@@ -92,7 +92,7 @@ class GrpcBusinessContextClient
 
         return new BusinessContext(
             new BusinessContextIdentifier(businessContextMessage.getPrefix(), businessContextMessage.getName()),
-            businessContextMessage.getIncludedContextsList().stream().map(BusinessContextIdentifier::new).collect(Collectors.toSet()),
+            businessContextMessage.getIncludedContextsList().stream().map(BusinessContextIdentifier::parse).collect(Collectors.toSet()),
             businessContextMessage.getPreconditionsList().stream().map(this::buildBusinessRule).collect(Collectors.toSet()),
             businessContextMessage.getPostConditionsList().stream().map(this::buildBusinessRule).collect(Collectors.toSet())
         );
@@ -102,9 +102,9 @@ class GrpcBusinessContextClient
     {
         BusinessRule.Builder builder = BusinessRule.builder();
 
-        builder.setName(message.getName());
-        builder.setType(convertType(message.getType()));
-        builder.setCondition(buildExpression(message.getCondition()));
+        builder.withName(message.getName());
+        builder.withType(convertType(message.getType()));
+        builder.withCondition(buildExpression(message.getCondition()));
 
         return builder.build();
     }

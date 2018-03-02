@@ -1,7 +1,7 @@
 package cz.filipklimes.diploma.framework.example.order.aop;
 
 import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
-import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessRuleEvaluator;
+import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessContextWeaver;
 import cz.filipklimes.diploma.framework.businessContext.annotation.BusinessOperation;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
@@ -15,9 +15,9 @@ import org.springframework.stereotype.Component;
 public class BusinessContextAspect
 {
 
-    private final BusinessRuleEvaluator evaluator;
+    private final BusinessContextWeaver evaluator;
 
-    public BusinessContextAspect(final BusinessRuleEvaluator evaluator)
+    public BusinessContextAspect(final BusinessContextWeaver evaluator)
     {
         this.evaluator = evaluator;
     }

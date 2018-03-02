@@ -1,41 +1,40 @@
-package cz.filipklimes.diploma.framework.businessContext.weaver;
+package cz.filipklimes.diploma.framework.businessContext;
 
-import cz.filipklimes.diploma.framework.businessContext.BusinessRule;
-import cz.filipklimes.diploma.framework.businessContext.BusinessRuleType;
 import cz.filipklimes.diploma.framework.businessContext.expression.Constant;
 import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionType;
 import org.junit.Test;
 
-public class BusinessOperationContextRegistryTest
+public class BusinessContextRegistryTest
 {
 
     @Test
     public void test()
     {
         BusinessRule localPrecondition = BusinessRule.builder()
-            .setName("local pre")
-            .setType(BusinessRuleType.PRECONDITION)
-            .setCondition(new Constant<>(true, ExpressionType.BOOL))
+            .withName("local pre")
+            .withType(BusinessRuleType.PRECONDITION)
+            .withCondition(new Constant<>(true, ExpressionType.BOOL))
             .build();
 
         BusinessRule localPostCondition = BusinessRule.builder()
-            .setName("local post")
-            .setType(BusinessRuleType.POST_CONDITION)
-            .setCondition(new Constant<>(true, ExpressionType.BOOL))
+            .withName("local post")
+            .withType(BusinessRuleType.POST_CONDITION)
+            .withCondition(new Constant<>(true, ExpressionType.BOOL))
             .build();
 
         BusinessRule remotePrecondition = BusinessRule.builder()
-            .setName("remote pre")
-            .setType(BusinessRuleType.PRECONDITION)
-            .setCondition(new Constant<>(true, ExpressionType.BOOL))
+            .withName("remote pre")
+            .withType(BusinessRuleType.PRECONDITION)
+            .withCondition(new Constant<>(true, ExpressionType.BOOL))
             .build();
 
         BusinessRule remotePostCondition = BusinessRule.builder()
-            .setName("remote post")
-            .setType(BusinessRuleType.POST_CONDITION)
-            .setCondition(new Constant<>(true, ExpressionType.BOOL))
+            .withName("remote post")
+            .withType(BusinessRuleType.POST_CONDITION)
+            .withCondition(new Constant<>(true, ExpressionType.BOOL))
             .build();
 
+        // TODO: fixme
 //        BusinessContextRegistry registry = BusinessContextRegistry.builder()
 //            .setLocalLoader(() -> new HashSet<>(Arrays.asList(localPrecondition, localPostCondition)))
 //            .addRemoteLoader("remote", () -> new HashSet<>(Arrays.asList(remotePrecondition, remotePostCondition)))

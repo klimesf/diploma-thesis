@@ -56,19 +56,19 @@ public class BusinessRule implements Serializable
         {
         }
 
-        public Builder setName(final String name)
+        public Builder withName(final String name)
         {
-            this.name = name;
+            this.name = Objects.requireNonNull(name);
             return this;
         }
 
-        public Builder setType(final BusinessRuleType type)
+        public Builder withType(final BusinessRuleType type)
         {
             this.type = Objects.requireNonNull(type);
             return this;
         }
 
-        public Builder setCondition(final Expression<Boolean> condition)
+        public Builder withCondition(final Expression<Boolean> condition)
         {
             this.condition = Objects.requireNonNull(condition);
             return this;
