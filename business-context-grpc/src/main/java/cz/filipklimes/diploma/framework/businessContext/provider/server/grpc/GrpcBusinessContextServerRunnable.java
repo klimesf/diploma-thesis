@@ -6,6 +6,7 @@ import cz.filipklimes.diploma.framework.businessContext.BusinessContextRegistry;
 import cz.filipklimes.diploma.framework.businessContext.BusinessRule;
 import cz.filipklimes.diploma.framework.businessContext.BusinessRuleType;
 import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
+import cz.filipklimes.diploma.framework.businessContext.loader.remote.RemoteServiceAddress;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
@@ -83,9 +84,19 @@ public final class GrpcBusinessContextServerRunnable
                 .map(BusinessContextIdentifier::parse)
                 .collect(Collectors.toSet());
 
-            Set<BusinessContextProtos.BusinessContextMessage> contextMessages = registry.getContextsByIdentifiers(identifiers).values().stream()
+            Set<BusinessContextProtos.BusinessContextMessage> contextMessages = registry.getContextsByIdentifiers(identifiers)
+                .values().stream()
                 .map(this::buildBusinessContextMessage)
                 .collect(Collectors.toSet());
+
+            registry.markAsIncluded(
+                new RemoteServiceAddress(
+                    request.getRequestedFromName(),
+                    request.getRequestedFromHost(),
+                    request.getRequestedFromPort()
+                ),
+                identifiers
+            );
 
             BusinessContextProtos.BusinessContextsResponseMessage response = BusinessContextProtos.BusinessContextsResponseMessage.newBuilder()
                 .addAllContexts(contextMessages)

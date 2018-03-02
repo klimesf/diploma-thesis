@@ -1,6 +1,5 @@
 package cz.filipklimes.diploma.framework.example.order.business;
 
-import cz.filipklimes.diploma.framework.businessContext.exception.BusinessRulesCheckFailedException;
 import cz.filipklimes.diploma.framework.example.order.model.Address;
 import cz.filipklimes.diploma.framework.example.order.model.Order;
 import cz.filipklimes.diploma.framework.example.order.model.OrderRepository;
@@ -29,18 +28,13 @@ public class OrderFacade
 
     public void createOrder(final int userId)
     {
-        try {
-            User user = userRepository.findById(userId);
-            Order order = orderService.create(
-                user,
-                new Address("", "", "", "", ""),
-                new Address("", "", "", "", "")
-            );
-            orderRepository.save(order);
-
-        } catch (BusinessRulesCheckFailedException e) {
-            System.err.println("Business rules check failed");
-        }
+        User user = userRepository.findById(userId);
+        Order order = orderService.create(
+            user,
+            new Address("", "", "", "", ""),
+            new Address("", "", "", "", "")
+        );
+        orderRepository.save(order);
     }
 
 }

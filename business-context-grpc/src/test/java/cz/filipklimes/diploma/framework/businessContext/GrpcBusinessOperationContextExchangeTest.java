@@ -36,6 +36,7 @@ public class GrpcBusinessOperationContextExchangeTest
             {
                 return Collections.singleton(
                     BusinessContext.builder()
+                        .withIncludedContext(authNotLoggedIn)
                         .withIdentifier(userValidEmail)
                         .withPrecondition(
                             BusinessRule.builder()

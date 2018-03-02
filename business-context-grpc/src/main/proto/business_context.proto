@@ -47,4 +47,7 @@ message BusinessContextsResponseMessage {
 
 message BusinessContextRequestMessage {
     repeated string requiredContexts = 1;
+    required string requestedFromName = 2;
+    required string requestedFromHost = 3;
+    required int32 requestedFromPort = 4;
 }

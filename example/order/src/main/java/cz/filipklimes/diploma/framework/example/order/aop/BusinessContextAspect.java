@@ -1,5 +1,7 @@
 package cz.filipklimes.diploma.framework.example.order.aop;
 
+import cz.filipklimes.diploma.framework.businessContext.annotation.BusinessOperationParameter;
+import cz.filipklimes.diploma.framework.businessContext.exception.BusinessRulesCheckFailedException;
 import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessContextWeaver;
 import cz.filipklimes.diploma.framework.businessContext.annotation.BusinessOperation;
@@ -9,6 +11,10 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Parameter;
+import java.util.*;
 
 @Aspect
 @Component
@@ -23,17 +29,17 @@ public class BusinessContextAspect
     }
 
     @Before("@annotation(cz.filipklimes.diploma.framework.businessContext.annotation.BusinessOperation)")
-    public void validatePreconditions(JoinPoint joinPoint)
+    public void validatePreconditions(JoinPoint joinPoint) throws BusinessRulesCheckFailedException
     {
         BusinessOperationContext context = createBusinessContext(joinPoint);
-        // evaluator.evaluatePreconditions(context);
+        evaluator.evaluatePreconditions(context);
     }
 
     @After("@annotation(cz.filipklimes.diploma.framework.businessContext.annotation.BusinessOperation)")
     public void validatePostConditions(JoinPoint joinPoint)
     {
         BusinessOperationContext context = createBusinessContext(joinPoint);
-        // evaluator.evaluatePostConditions(context);
+        evaluator.applyPostConditions(context);
     }
 
     private BusinessOperationContext createBusinessContext(final JoinPoint joinPoint)
@@ -43,10 +49,20 @@ public class BusinessContextAspect
 
         // Build business context
         BusinessOperationContext context = new BusinessOperationContext(annotation.value());
-        String[] parameterNames = signature.getParameterNames();
-        Object[] parameters = joinPoint.getArgs();
+
+        Annotation[][] parameterAnnotations = signature.getMethod().getParameterAnnotations();
+        Parameter[] parameters = signature.getMethod().getParameters();
+
         for (int i = 0; i < parameters.length; i++) {
-            context.setVariable(parameterNames[i], parameters[i]);
+            BusinessOperationParameter parameterAnnotation = Arrays.stream(parameterAnnotations[i])
+                .filter(a -> a instanceof BusinessOperationParameter)
+                .findFirst()
+                .map(BusinessOperationParameter.class::cast)
+                .orElse(null);
+
+            if (parameterAnnotation != null) {
+                context.setVariable(parameterAnnotation.value(), parameters[i]);
+            }
         }
         return context;
     }

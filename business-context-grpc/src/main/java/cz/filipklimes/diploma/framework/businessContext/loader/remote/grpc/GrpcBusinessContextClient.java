@@ -42,11 +42,13 @@ class GrpcBusinessContextClient
 
     private static final Logger logger = Logger.getLogger(GrpcBusinessContextClient.class.getName());
 
+    private final RemoteServiceAddress address;
     private final ManagedChannel channel;
     private final BusinessContextServerGrpc.BusinessContextServerBlockingStub blockingStub;
 
     GrpcBusinessContextClient(final RemoteServiceAddress address)
     {
+        this.address = address;
         this.channel = ManagedChannelBuilder.forAddress(address.getHost(), address.getPort())
             .usePlaintext(true)
             .build();
@@ -84,12 +86,14 @@ class GrpcBusinessContextClient
             .addAllRequiredContexts(identifiers.stream()
                 .map(BusinessContextIdentifier::toString)
                 .collect(Collectors.toSet()))
+            .setRequestedFromName(address.getName())
+            .setRequestedFromHost(address.getHost())
+            .setRequestedFromPort(address.getPort())
             .build();
     }
 
     private BusinessContext buildBusinessContext(final BusinessContextProtos.BusinessContextMessage businessContextMessage)
     {
-
         return new BusinessContext(
             new BusinessContextIdentifier(businessContextMessage.getPrefix(), businessContextMessage.getName()),
             businessContextMessage.getIncludedContextsList().stream().map(BusinessContextIdentifier::parse).collect(Collectors.toSet()),
