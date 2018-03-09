@@ -8,6 +8,7 @@ See framework in action in the [example e-commerce application](https://github.c
 
 ## Modules
 
-- `business-context` - Contains Java implementation of framework for business context rules sharing.
-- `business-context-grpc` - Contains communication implementation using [GRPC](https://grpc.io/) for the Java framework.
+- `java` - Java implementation of the framework
+  - `business-context` - Implementation of framework for business context rules sharing.
+  - `business-context-grpc` - Business context communication implementation using [GRPC](https://grpc.io/) for the Java framework.
 - `example` - Contains example e-commerce system implemented using the business context sharing framework.
