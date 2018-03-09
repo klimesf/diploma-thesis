@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>business-context-grpc</artifactId>
+    <artifactId>business-context-aspectj</artifactId>
 
     <dependencies>
         <dependency>
@@ -18,19 +18,13 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
-        <!-- Protobuffer -->
+        <!-- AspectJ -->
         <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java</artifactId>
-            <version>${protobuf-java.version}</version>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectj.version}</version>
         </dependency>
 
-        <!-- gRPC -->
-        <dependency>
-            <groupId>io.grpc</groupId>
-            <artifactId>grpc-all</artifactId>
-            <version>${grpc.version}</version>
-        </dependency>
     </dependencies>
 
 </project>
