@@ -22,6 +22,18 @@ class BusinessContextIdentifier:
             self.prefix = prefix
             self.name = name
 
+    def __str__(self):
+        return '.'.join([self.prefix, self.name])
+
+    def __key__(self):
+        return self.prefix, self.name
+
+    def __hash__(self) -> int:
+        return hash(self.__key__())
+
+    def __eq__(self, other):
+        return self.__key__() == other.__key__()
+
 
 class InvalidBusinessContextIdentifierException(BaseException):
     identifier: str

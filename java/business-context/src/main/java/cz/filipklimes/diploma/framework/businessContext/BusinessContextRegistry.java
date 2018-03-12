@@ -59,6 +59,10 @@ public class BusinessContextRegistry
         // Include remote contexts into the local ones
         contexts.forEach((name, context) -> {
             context.getIncludedContexts().forEach(included -> {
+                if (contexts.containsKey(included)) {
+                    context.merge(contexts.get(included));
+                    return;
+                }
                 if (!remoteContexts.containsKey(included)) {
                     throw new RuntimeException(String.format("Could not fetch remote business context %s", included));
                 }

@@ -13,3 +13,7 @@ class BusinessContextIdentifierTest(unittest.TestCase):
         identifier = BusinessContextIdentifier("auth.loggedIn")
         self.assertEqual("auth", identifier.prefix)
         self.assertEqual("loggedIn", identifier.name)
+
+    def test_str(self):
+        identifier = BusinessContextIdentifier("auth.loggedIn")
+        self.assertEqual('auth.loggedIn', identifier.__str__())
