@@ -16,4 +16,4 @@ script:
   - cd ./java
   - mvn clean test
   - cd ./../python
-  - pytest
+  - python -m pytest .
