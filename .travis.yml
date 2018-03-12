@@ -1,7 +1,19 @@
-language: java
-jdk:
-  - oraclejdk8
+language: python
+python:
+  - "3.6"
+
+addons:
+  apt:
+    packages:
+      - oracle-java8-set-default
 
 install:
   - sudo apt-get install libprotobuf-java protobuf-compiler
   - protoc --version
+  - pip install -r ./python/requirements.txt
+
+script:
+  - cd ./java
+  - mvn clean test
+  - cd ./../python
+  - pytest
