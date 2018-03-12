@@ -29,7 +29,8 @@ public class ObjectPropertyReference<T> implements Terminal<T>
         Object object = context.getInputParameter(objectName);
 
         Method getter = Arrays.stream(object.getClass().getDeclaredMethods())
-            .filter(method -> method.getName().toLowerCase().equals("get" + propertyName.toLowerCase()))
+            .filter(method -> method.getName().toLowerCase().equals("get" + propertyName.toLowerCase())
+                || method.getName().toLowerCase().equals("is" + propertyName.toLowerCase()))
             .findAny()
             .orElseThrow(() -> new UndefinedObjectPropertyException(objectName, propertyName));
 

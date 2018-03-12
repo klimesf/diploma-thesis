@@ -55,9 +55,11 @@ public class BusinessContextWeaver
                     filterObjectField(operationContext, postCondition);
                     break;
                 case FILTER_LIST_OF_OBJECTS:
+                    filterListOfObjects(operationContext, postCondition);
+                    break;
                 case FILTER_LIST_OF_OBJECTS_FIELD:
-                    // TODO: implement
-                    throw new UnsupportedOperationException("not implemented yet");
+                    filterListOfObjectsField(operationContext, postCondition);
+                    break;
                 default:
                     throw new RuntimeException("Unsupported PostConditionType");
             }
@@ -66,12 +68,13 @@ public class BusinessContextWeaver
 
     private void filterObjectField(final BusinessOperationContext operationContext, final PostCondition postCondition)
     {
+        Object object = operationContext.getOutput();
+
         if (!postCondition.getCondition().interpret(operationContext)) {
             return;
         }
 
         try {
-            Object object = operationContext.getOutput();
             Field declaredField = object.getClass().getDeclaredField(postCondition.getReferenceName());
             declaredField.setAccessible(true);
             declaredField.set(object, null);
@@ -79,6 +82,53 @@ public class BusinessContextWeaver
         } catch (IllegalAccessException | NoSuchFieldException e) {
             throw new RuntimeException("Could not access object property", e);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void filterListOfObjects(final BusinessOperationContext operationContext, final PostCondition postCondition)
+    {
+        Iterable list = (Iterable<?>) operationContext.getOutput();
+
+        Collection result = new ArrayList<>();
+        list.forEach(item -> {
+            try {
+                BusinessOperationContext itemContext = operationContext.clone();
+                itemContext.setInputParameter("item", item);
+
+                if (!postCondition.getCondition().interpret(itemContext)) {
+                    return;
+                }
+
+                result.add(item);
+
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException("Could not access object property", e);
+            }
+        });
+
+        operationContext.setOutput(Collections.unmodifiableCollection(result));
+    }
+
+    private void filterListOfObjectsField(final BusinessOperationContext operationContext, final PostCondition postCondition)
+    {
+        Iterable<?> list = (Iterable<?>) operationContext.getOutput();
+        list.forEach(item -> {
+            try {
+                BusinessOperationContext itemContext = operationContext.clone();
+                itemContext.setInputParameter("item", item);
+
+                if (!postCondition.getCondition().interpret(itemContext)) {
+                    return;
+                }
+
+                Field declaredField = item.getClass().getDeclaredField(postCondition.getReferenceName());
+                declaredField.setAccessible(true);
+                declaredField.set(item, null);
+
+            } catch (IllegalAccessException | NoSuchFieldException | CloneNotSupportedException e) {
+                throw new RuntimeException("Could not access object property", e);
+            }
+        });
     }
 
     private static final class EvaluationResult

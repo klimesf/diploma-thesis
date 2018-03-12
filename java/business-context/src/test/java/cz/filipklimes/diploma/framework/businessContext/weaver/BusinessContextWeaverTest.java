@@ -10,13 +10,16 @@ import cz.filipklimes.diploma.framework.businessContext.exception.BusinessRulesC
 import cz.filipklimes.diploma.framework.businessContext.exception.UndefinedBusinessContextException;
 import cz.filipklimes.diploma.framework.businessContext.expression.Constant;
 import cz.filipklimes.diploma.framework.businessContext.expression.IsNotNull;
+import cz.filipklimes.diploma.framework.businessContext.expression.ObjectPropertyReference;
 import cz.filipklimes.diploma.framework.businessContext.expression.VariableReference;
+import cz.filipklimes.diploma.framework.businessContext.expression.logical.Equals;
 import cz.filipklimes.diploma.framework.businessContext.loader.LocalBusinessContextLoader;
 import cz.filipklimes.diploma.framework.businessContext.loader.RemoteBusinessContextLoader;
 import lombok.Getter;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 import static cz.filipklimes.diploma.framework.businessContext.expression.ExpressionType.BOOL;
@@ -50,7 +53,7 @@ public class BusinessContextWeaverTest
     }
 
     @Test
-    public void testPostConditions()
+    public void testPostConditionsFilterObjectField()
     {
         BusinessContextWeaver evaluator = new BusinessContextWeaver(createRegistry());
 
@@ -64,6 +67,26 @@ public class BusinessContextWeaverTest
 
         Assert.assertEquals("John Doe", ((User) context.getOutput()).getName());
         Assert.assertNull(((User) context.getOutput()).getEmail());
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testPostConditionsFilterListOfObjects()
+    {
+        BusinessContextWeaver evaluator = new BusinessContextWeaver(createRegistry());
+
+        BusinessOperationContext context = new BusinessOperationContext("product.listAll");
+
+        Product normalProduct = new Product(false, new BigDecimal("123.45"));
+        Product hiddenProduct = new Product(true, new BigDecimal("123.45"));
+        context.setOutput(Arrays.asList(normalProduct, hiddenProduct));
+
+        evaluator.applyPostConditions(context);
+
+        Collection<Product> output = (Collection<Product>) context.getOutput();
+        Assert.assertEquals(1, output.size());
+        Assert.assertTrue(output.contains(normalProduct));
+        Assert.assertNull(output.iterator().next().getBuyingPrice());
     }
 
     @Test(expected = UndefinedBusinessContextException.class)
@@ -94,6 +117,20 @@ public class BusinessContextWeaverTest
             .withCondition(new Constant<>(true, BOOL))
             .build();
 
+        PostCondition hideInactiveProducts = PostCondition.builder()
+            .withName("hideInactiveProducts")
+            .withType(PostConditionType.FILTER_LIST_OF_OBJECTS)
+            .withReferenceName("item")
+            .withCondition(new Equals<>(new ObjectPropertyReference<>("item", "hidden", BOOL), new Constant<>(false, BOOL)))
+            .build();
+
+        PostCondition hideBuyingPrice = PostCondition.builder()
+            .withName("hideBuyingPrice")
+            .withType(PostConditionType.FILTER_LIST_OF_OBJECTS_FIELD)
+            .withReferenceName("buyingPrice")
+            .withCondition(new Constant<>(true, BOOL))
+            .build();
+
         BusinessContextIdentifier userCreateContextIdentifier = BusinessContextIdentifier.parse("user.create");
         BusinessContext userCreateContext = BusinessContext.builder()
             .withIdentifier(userCreateContextIdentifier)
@@ -102,13 +139,20 @@ public class BusinessContextWeaverTest
             .withPostCondition(hideUserEmail)
             .build();
 
+        BusinessContextIdentifier listAllProductsIdentifier = BusinessContextIdentifier.parse("product.listAll");
+        BusinessContext listAllProductsContext = BusinessContext.builder()
+            .withIdentifier(listAllProductsIdentifier)
+            .withPostCondition(hideInactiveProducts)
+            .withPostCondition(hideBuyingPrice)
+            .build();
+
         return BusinessContextRegistry.builder()
             .withLocalLoader(new LocalBusinessContextLoader()
             {
                 @Override
                 public Set<BusinessContext> load()
                 {
-                    return Collections.singleton(userCreateContext);
+                    return new HashSet<>(Arrays.asList(userCreateContext, listAllProductsContext));
                 }
             })
             .withRemoteLoader(new RemoteBusinessContextLoader(new HashMap<>()))
@@ -128,6 +172,23 @@ public class BusinessContextWeaverTest
         {
             this.name = name;
             this.email = email;
+        }
+
+    }
+
+    public static class Product
+    {
+
+        @Getter
+        private final Boolean hidden;
+
+        @Getter
+        private final BigDecimal buyingPrice;
+
+        public Product(final boolean hidden, final BigDecimal buyingPrice)
+        {
+            this.hidden = hidden;
+            this.buyingPrice = buyingPrice;
         }
 
     }

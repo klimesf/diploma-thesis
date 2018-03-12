@@ -8,7 +8,7 @@ import lombok.Getter;
 
 import java.util.*;
 
-public class BusinessOperationContext
+public class BusinessOperationContext implements Cloneable
 {
 
     @Getter
@@ -101,6 +101,12 @@ public class BusinessOperationContext
     public void setOutput(final Object output)
     {
         this.output = output;
+    }
+
+    @Override
+    protected BusinessOperationContext clone() throws CloneNotSupportedException
+    {
+        return (BusinessOperationContext) super.clone();
     }
 
 }
