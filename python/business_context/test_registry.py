@@ -2,7 +2,7 @@ import unittest
 
 from typing import Set
 from business_context.context import BusinessContext
-from business_context.rule import Precondition, PostCondition
+from business_context.rule import Precondition, PostCondition, PostConditionType
 from business_context.identifier import Identifier
 from business_context.registry import Registry, LocalBusinessContextLoader, RemoteBusinessContextLoader, RemoteLoader
 from business_context.expression import Constant
@@ -18,8 +18,8 @@ class BusinessContextRegistryTest(unittest.TestCase):
         precondition_1 = Precondition('precondition_1', Constant(True))
         precondition_2 = Precondition('precondition_2', Constant(False))
 
-        post_condition_1 = PostCondition('post_condition_1', 'user', Constant(True))
-        post_condition_2 = PostCondition('post_condition_2', 'user', Constant(True))
+        post_condition_1 = PostCondition('post_condition_1', 'user', PostConditionType.FILTER_OBJECT_FIELD, Constant(True))
+        post_condition_2 = PostCondition('post_condition_2', 'user', PostConditionType.FILTER_OBJECT_FIELD, Constant(True))
 
         auth_logged_in = BusinessContext(auth_logged_in_identifier, set(), {precondition_1}, {post_condition_1})
         user_create = BusinessContext(user_create_identifier, {auth_logged_in_identifier}, {precondition_2}, {post_condition_2})
