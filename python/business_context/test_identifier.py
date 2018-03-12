@@ -1,19 +1,19 @@
 import unittest
 
-from business_context.business_context_identifier import BusinessContextIdentifier
+from business_context.identifier import Identifier
 
 
-class BusinessContextIdentifierTest(unittest.TestCase):
+class IdentifierTest(unittest.TestCase):
     def test_split(self):
-        identifier = BusinessContextIdentifier("auth", "loggedIn")
+        identifier = Identifier("auth", "loggedIn")
         self.assertEqual("auth", identifier.prefix)
         self.assertEqual("loggedIn", identifier.name)
 
     def test_single(self):
-        identifier = BusinessContextIdentifier("auth.loggedIn")
+        identifier = Identifier("auth.loggedIn")
         self.assertEqual("auth", identifier.prefix)
         self.assertEqual("loggedIn", identifier.name)
 
     def test_str(self):
-        identifier = BusinessContextIdentifier("auth.loggedIn")
+        identifier = Identifier("auth.loggedIn")
         self.assertEqual('auth.loggedIn', identifier.__str__())

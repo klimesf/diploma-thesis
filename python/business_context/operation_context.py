@@ -1,18 +1,4 @@
-class UndefinedInputParameterException(BaseException):
-    name: str
-
-    def __init__(self, name: str):
-        self.name = name
-
-
-class UndefinedFunctionException(BaseException):
-    name: str
-
-    def __init__(self, name: str):
-        self.name = name
-
-
-class BusinessOperationContext:
+class OperationContext:
     name: str
     _input_parameters = {}
     _functions = {}
@@ -34,5 +20,19 @@ class BusinessOperationContext:
             raise UndefinedFunctionException(name)
         return self._functions[name]
 
-    def set_function(self, name: str, function):
-        self._functions[name] = function
+    def set_function(self, name: str, func):
+        self._functions[name] = func
+
+
+class UndefinedInputParameterException(BaseException):
+    name: str
+
+    def __init__(self, name: str):
+        self.name = name
+
+
+class UndefinedFunctionException(BaseException):
+    name: str
+
+    def __init__(self, name: str):
+        self.name = name

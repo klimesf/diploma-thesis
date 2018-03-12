@@ -1,7 +1,7 @@
 import re
 
 
-class BusinessContextIdentifier:
+class Identifier:
     _prefixed_pattern = re.compile('^([a-zA-Z0-9]+)\.([a-zA-Z0-9]+)$')
     _part_pattern = re.compile('^([a-zA-Z0-9]+)$')
     prefix: str

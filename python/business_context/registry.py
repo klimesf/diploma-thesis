@@ -1,21 +1,22 @@
-from business_context.business_context import BusinessContext
-from business_context.business_context_identifier import BusinessContextIdentifier
+from typing import Set, Dict
+from business_context.context import BusinessContext
+from business_context.identifier import Identifier
 
 
 class LocalBusinessContextLoader:
     def __init__(self):
         pass
 
-    def load(self) -> set:
+    def load(self) -> Set[BusinessContext]:
         # TODO: implement
         return {
-            BusinessContext(BusinessContextIdentifier('user.create'), set(), set(), set()),
-            BusinessContext(BusinessContextIdentifier('user.create'), set(), set(), set())
+            BusinessContext(Identifier('user.create'), set(), set(), set()),
+            BusinessContext(Identifier('user.create'), set(), set(), set()),
         }
 
 
 class RemoteLoader:
-    def load_contexts(self, identifiers: {BusinessContextIdentifier}) -> set:
+    def load_contexts(self, identifiers: Set[Identifier]) -> Set[BusinessContext]:
         pass
 
 
@@ -25,19 +26,19 @@ class RemoteBusinessContextLoader:
     def __init__(self, loader: RemoteLoader):
         self._loader = loader
 
-    def load_contexts_by_identifier(self, identifiers: {BusinessContextIdentifier}) -> dict:
+    def load_contexts_by_identifier(self, identifiers: Set[Identifier]) -> Dict[Identifier, BusinessContext]:
         contexts = {}
         for context in self._loader.load_contexts(identifiers):
             contexts[context.identifier] = context
         return contexts
 
 
-class BusinessContextRegistry:
+class Registry:
     _local_loader: LocalBusinessContextLoader
     _remote_loader: RemoteBusinessContextLoader
     _contexts = {}
 
-    def __init__(self, local_loader, remote_loader):
+    def __init__(self, local_loader: LocalBusinessContextLoader, remote_loader: RemoteBusinessContextLoader):
         self._local_loader = local_loader
         self._remote_loader = remote_loader
         self.initialize()
@@ -76,7 +77,7 @@ class BusinessContextRegistry:
                 context.merge(remote_contexts[included_identifier])
             self._contexts[context.identifier] = context
 
-    def get_context_by_identifier(self, identifier: BusinessContextIdentifier):
+    def get_context_by_identifier(self, identifier: Identifier) -> BusinessContext:
         """
         Finds and returns business context with given identifier or raises
         BusinessContextNotFound if such identifier is not defined within the registry.
@@ -105,14 +106,14 @@ class BusinessContextRegistry:
 
 
 class DuplicatedBusinessContext(BaseException):
-    identifier: BusinessContextIdentifier
+    identifier: Identifier
 
-    def __init__(self, identifier: BusinessContextIdentifier):
+    def __init__(self, identifier: Identifier):
         self.identifier = identifier
 
 
 class BusinessContextNotFound(BaseException):
-    identifier: BusinessContextIdentifier
+    identifier: Identifier
 
-    def __init__(self, identifier: BusinessContextIdentifier):
+    def __init__(self, identifier: Identifier):
         self.identifier = identifier

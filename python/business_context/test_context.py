@@ -1,20 +1,21 @@
 import unittest
 
-from business_context.business_context import BusinessContext, Precondition, PostCondition
-from business_context.business_context_identifier import BusinessContextIdentifier
+from business_context.context import BusinessContext
+from business_context.rule import Precondition, PostCondition
+from business_context.identifier import Identifier
 from business_context.expression import Constant
 
 
 class BusinessContextTest(unittest.TestCase):
     def test_merge(self):
-        identifier_1 = BusinessContextIdentifier("auth", "userLoggedIn")
-        identifier_2 = BusinessContextIdentifier("user", "create")
+        identifier_1 = Identifier("auth", "userLoggedIn")
+        identifier_2 = Identifier("user", "create")
 
         precondition_1 = Precondition('precondition_1', Constant(True))
         precondition_2 = Precondition('precondition_2', Constant(True))
 
-        post_condition_1 = Precondition('post_condition_1', Constant(True))
-        post_condition_2 = Precondition('post_condition_2', Constant(True))
+        post_condition_1 = PostCondition('post_condition_1', 'user', Constant(True))
+        post_condition_2 = PostCondition('post_condition_2', 'user', Constant(True))
 
         context_1 = BusinessContext(identifier_1, set(), {precondition_1}, {post_condition_1})
         context_2 = BusinessContext(identifier_2, set(), {precondition_2}, {post_condition_2})

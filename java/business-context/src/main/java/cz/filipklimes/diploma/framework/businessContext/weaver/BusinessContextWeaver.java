@@ -70,7 +70,6 @@ public class BusinessContextWeaver
             return;
         }
 
-
         try {
             Object object = operationContext.getOutput();
             Field declaredField = object.getClass().getDeclaredField(postCondition.getReferenceName());
