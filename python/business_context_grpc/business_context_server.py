@@ -71,10 +71,7 @@ def build_expression_properties(properties: Dict[str, str]) -> List[ExpressionPr
 
 
 def build_expression_arguments(arguments: List[Expression]) -> List[ExpressionMessage]:
-    messages = []
-    for argument in arguments:
-        messages.append(build_expression(argument))
-    return messages
+    return list(map(build_expression, arguments))
 
 
 def build_post_condition(post_condition: PostCondition) -> PostConditionMessage:
@@ -86,21 +83,12 @@ def build_precondition(precondition: Precondition) -> PreconditionMessage:
     return PreconditionMessage(name=precondition.name, condition=build_expression(precondition.condition))
 
 
-def build_context_messages(contexts: Set[BusinessContext]) -> List[BusinessContextMessage]:
-    messages = []
-    for context in contexts:
-        included_contexts = []
-        for included in context.included_contexts:
-            included_contexts.append(included.__str__())
-        precondition_messages = []
-        for precondition in context.preconditions:
-            precondition_messages.append(build_precondition(precondition))
-        post_condition_messages = []
-        for post_condition in context.post_conditions:
-            post_condition_messages.append(build_post_condition(post_condition))
-        messages.append(BusinessContextMessage(prefix=context.identifier.prefix, name=context.identifier.name, includedContexts=included_contexts,
-                                               preconditions=precondition_messages, postConditions=post_condition_messages))
-    return messages
+def build_context_message(context: BusinessContext) -> BusinessContextMessage:
+    included_contexts = list(map(Identifier.__str__, context.included_contexts))
+    precondition_messages = list(map(build_precondition, context.preconditions))
+    post_condition_messages = list(map(build_post_condition, context.post_conditions))
+    return BusinessContextMessage(prefix=context.identifier.prefix, name=context.identifier.name, includedContexts=included_contexts,
+                                           preconditions=precondition_messages, postConditions=post_condition_messages)
 
 
 class Server(business_context_pb2_grpc.BusinessContextServerServicer):
@@ -108,9 +96,6 @@ class Server(business_context_pb2_grpc.BusinessContextServerServicer):
         self._registry = registry
 
     def FetchContexts(self, request, context):
-        identifiers = set()
-        for required in request.requiredContexts:
-            identifiers.add(Identifier(required))
-
+        identifiers = set(map(Identifier, request.requiredContexts))
         contexts = self._registry.get_contexts_by_identifiers(identifiers)
-        return business_context_pb2.BusinessContextsResponseMessage(contexts=build_context_messages(contexts))
+        return business_context_pb2.BusinessContextsResponseMessage(contexts=list(map(build_context_message, contexts)))

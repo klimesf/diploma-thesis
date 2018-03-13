@@ -29,20 +29,13 @@ def find_property_by_name(name: str, properties: List[ExpressionPropertyMessage]
     return result
 
 
-def build_arguments(messages: List[ExpressionMessage]) -> List[Expression]:
-    arguments = []
-    for message in messages:
-        arguments.append(build_expression(message))
-    return arguments
-
-
 def build_expression(message: ExpressionMessage) -> Expression:
     matcher = {
         'constant': lambda m: Constant(value=find_property_by_name('value', m.properties),
                                        type=convert_expression_type(find_property_by_name('type', m.properties))),
         'function-call': lambda m: FunctionCall(method_name=find_property_by_name('methodName', m.properties),
                                                 type=convert_expression_type(find_property_by_name('type', m.properties)),
-                                                arguments=build_arguments(m.arguments)),
+                                                arguments=list(map(build_expression, m.arguments))),
         'is-not-null': lambda m: IsNotNull(argument=build_expression(m.arguments[0])),
         'object-property-reference': lambda m: ObjectPropertyReference(object_name=find_property_by_name('objectName', m.properties),
                                                                        property_name=find_property_by_name('propertyName', m.properties),
@@ -80,15 +73,9 @@ def build_post_condition(message: PostConditionMessage) -> PostCondition:
 
 
 def build_context(message: BusinessContextMessage) -> BusinessContext:
-    included_contexts = set()
-    for included in message.includedContexts:
-        included_contexts.add(Identifier(included))
-    preconditions = set()
-    for precondition in message.preconditions:
-        preconditions.add(build_precondition(precondition))
-    post_conditions = set()
-    for post_condition in message.postConditions:
-        post_conditions.add(build_post_condition(post_condition))
+    included_contexts = set(map(Identifier, message.includedContexts))
+    preconditions = set(map(build_precondition, message.preconditions))
+    post_conditions = set(map(build_post_condition, message.postConditions))
     return BusinessContext(identifier=Identifier(message.prefix, message.name), included_contexts=included_contexts,
                            preconditions=preconditions, post_conditions=post_conditions)
 
@@ -96,14 +83,6 @@ def build_context(message: BusinessContextMessage) -> BusinessContext:
 def retrieve_contexts(identifiers: [Identifier], port: int) -> Set[BusinessContext]:
     channel = grpc.insecure_channel('localhost:' + port.__str__())
     stub = business_context_pb2_grpc.BusinessContextServerStub(channel)
-
-    required_contexts = []
-    for identifier in identifiers:
-        required_contexts.append(identifier.__str__())
+    required_contexts = list(map(Identifier.__str__, identifiers))
     response = stub.FetchContexts(business_context_pb2.BusinessContextRequestMessage(requiredContexts=required_contexts))
-
-    contexts = set()
-    for message in response.contexts:
-        contexts.add(build_context(message))
-
-    return contexts
+    return set(map(build_context, response.contexts))

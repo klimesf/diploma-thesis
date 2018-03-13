@@ -14,8 +14,8 @@ class BusinessContextTest(unittest.TestCase):
         precondition_1 = Precondition('precondition_1', Constant(value=True, type=ExpressionType.BOOL))
         precondition_2 = Precondition('precondition_2', Constant(value=True, type=ExpressionType.BOOL))
 
-        post_condition_1 = PostCondition('post_condition_1', 'user', PostConditionType.FILTER_OBJECT_FIELD, Constant(value=True, type=ExpressionType.BOOL))
-        post_condition_2 = PostCondition('post_condition_2', 'user', PostConditionType.FILTER_OBJECT_FIELD, Constant(value=True, type=ExpressionType.BOOL))
+        post_condition_1 = PostCondition('post_condition_1', PostConditionType.FILTER_OBJECT_FIELD, 'user', Constant(value=True, type=ExpressionType.BOOL))
+        post_condition_2 = PostCondition('post_condition_2', PostConditionType.FILTER_OBJECT_FIELD, 'user', Constant(value=True, type=ExpressionType.BOOL))
 
         context_1 = BusinessContext(identifier_1, set(), {precondition_1}, {post_condition_1})
         context_2 = BusinessContext(identifier_2, set(), {precondition_2}, {post_condition_2})
