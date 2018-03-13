@@ -9,23 +9,23 @@ service BusinessContextServer {
     rpc FetchContexts (BusinessContextRequestMessage) returns (BusinessContextsResponseMessage) {}
 }
 
-message ExpressionProperty {
+message ExpressionPropertyMessage {
     required string key = 1;
     required string value = 2;
 }
 
-message Expression {
+message ExpressionMessage {
     required string name = 1;
-    repeated ExpressionProperty properties = 2;
-    repeated Expression arguments = 3;
+    repeated ExpressionPropertyMessage properties = 2;
+    repeated ExpressionMessage arguments = 3;
 }
 
 message PreconditionMessage {
     required string name = 1;
-    required Expression condition = 2;
+    required ExpressionMessage condition = 2;
 }
 
-enum PostConditionType {
+enum PostConditionTypeMessage {
     UNKNOWN = 0;
     FILTER_OBJECT_FIELD = 1;
     FILTER_LIST_OF_OBJECTS = 2;
@@ -34,9 +34,9 @@ enum PostConditionType {
 
 message PostConditionMessage {
     required string name = 1;
-    required PostConditionType type = 2;
+    required PostConditionTypeMessage type = 2;
     required string referenceName = 3;
-    required Expression condition = 4;
+    required ExpressionMessage condition = 4;
 }
 
 message BusinessContextMessage {
@@ -53,7 +53,4 @@ message BusinessContextsResponseMessage {
 
 message BusinessContextRequestMessage {
     repeated string requiredContexts = 1;
-    required string requestedFromName = 2;
-    required string requestedFromHost = 3;
-    required int32 requestedFromPort = 4;
 }

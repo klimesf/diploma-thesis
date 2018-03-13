@@ -7,7 +7,14 @@ import cz.filipklimes.diploma.framework.businessContext.PostCondition;
 import cz.filipklimes.diploma.framework.businessContext.PostConditionType;
 import cz.filipklimes.diploma.framework.businessContext.Precondition;
 import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
-import cz.filipklimes.diploma.framework.businessContext.loader.remote.RemoteServiceAddress;
+import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.BusinessContextProtos.BusinessContextMessage;
+import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.BusinessContextProtos.BusinessContextRequestMessage;
+import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.BusinessContextProtos.BusinessContextsResponseMessage;
+import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.BusinessContextProtos.ExpressionMessage;
+import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.BusinessContextProtos.ExpressionPropertyMessage;
+import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.BusinessContextProtos.PostConditionMessage;
+import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.BusinessContextProtos.PostConditionTypeMessage;
+import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.BusinessContextProtos.PreconditionMessage;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
@@ -77,29 +84,20 @@ public final class GrpcBusinessContextServerRunnable
 
         @Override
         public void fetchContexts(
-            final BusinessContextProtos.BusinessContextRequestMessage request,
-            final StreamObserver<BusinessContextProtos.BusinessContextsResponseMessage> responseObserver
+            final BusinessContextRequestMessage request,
+            final StreamObserver<BusinessContextsResponseMessage> responseObserver
         )
         {
             Set<BusinessContextIdentifier> identifiers = request.getRequiredContextsList().stream()
                 .map(BusinessContextIdentifier::parse)
                 .collect(Collectors.toSet());
 
-            Set<BusinessContextProtos.BusinessContextMessage> contextMessages = registry.getContextsByIdentifiers(identifiers)
+            Set<BusinessContextMessage> contextMessages = registry.getContextsByIdentifiers(identifiers)
                 .values().stream()
                 .map(this::buildBusinessContextMessage)
                 .collect(Collectors.toSet());
 
-            registry.markAsIncluded(
-                new RemoteServiceAddress(
-                    request.getRequestedFromName(),
-                    request.getRequestedFromHost(),
-                    request.getRequestedFromPort()
-                ),
-                identifiers
-            );
-
-            BusinessContextProtos.BusinessContextsResponseMessage response = BusinessContextProtos.BusinessContextsResponseMessage.newBuilder()
+            BusinessContextsResponseMessage response = BusinessContextsResponseMessage.newBuilder()
                 .addAllContexts(contextMessages)
                 .build();
 
@@ -107,9 +105,9 @@ public final class GrpcBusinessContextServerRunnable
             responseObserver.onCompleted();
         }
 
-        private BusinessContextProtos.BusinessContextMessage buildBusinessContextMessage(final BusinessContext context)
+        private BusinessContextMessage buildBusinessContextMessage(final BusinessContext context)
         {
-            return BusinessContextProtos.BusinessContextMessage.newBuilder()
+            return BusinessContextMessage.newBuilder()
                 .setPrefix(context.getIdentifier().getPrefix())
                 .setName(context.getIdentifier().getName())
                 .addAllIncludedContexts(context.getIncludedContexts().stream()
@@ -124,17 +122,17 @@ public final class GrpcBusinessContextServerRunnable
                 .build();
         }
 
-        private BusinessContextProtos.PreconditionMessage buildPrecondition(final Precondition rule)
+        private PreconditionMessage buildPrecondition(final Precondition rule)
         {
-            return BusinessContextProtos.PreconditionMessage.newBuilder()
+            return PreconditionMessage.newBuilder()
                 .setName(rule.getName())
                 .setCondition(buildExpression(rule.getCondition()))
                 .build();
         }
 
-        private BusinessContextProtos.PostConditionMessage buildPrecondition(final PostCondition rule)
+        private PostConditionMessage buildPrecondition(final PostCondition rule)
         {
-            return BusinessContextProtos.PostConditionMessage.newBuilder()
+            return PostConditionMessage.newBuilder()
                 .setName(rule.getName())
                 .setType(convertType(rule.getType()))
                 .setReferenceName(rule.getReferenceName())
@@ -142,27 +140,27 @@ public final class GrpcBusinessContextServerRunnable
                 .build();
         }
 
-        private BusinessContextProtos.PostConditionType convertType(final PostConditionType type)
+        private PostConditionTypeMessage convertType(final PostConditionType type)
         {
             switch (type) {
                 case FILTER_OBJECT_FIELD:
-                    return BusinessContextProtos.PostConditionType.FILTER_OBJECT_FIELD;
+                    return PostConditionTypeMessage.FILTER_OBJECT_FIELD;
                 case FILTER_LIST_OF_OBJECTS:
-                    return BusinessContextProtos.PostConditionType.FILTER_LIST_OF_OBJECTS;
+                    return PostConditionTypeMessage.FILTER_LIST_OF_OBJECTS;
                 case FILTER_LIST_OF_OBJECTS_FIELD:
-                    return BusinessContextProtos.PostConditionType.FILTER_LIST_OF_OBJECTS_FIELD;
+                    return PostConditionTypeMessage.FILTER_LIST_OF_OBJECTS_FIELD;
                 default:
-                    return BusinessContextProtos.PostConditionType.UNKNOWN;
+                    return PostConditionTypeMessage.UNKNOWN;
             }
         }
 
-        private BusinessContextProtos.Expression buildExpression(final Expression<?> expression)
+        private ExpressionMessage buildExpression(final Expression<?> expression)
         {
-            BusinessContextProtos.Expression.Builder builder = BusinessContextProtos.Expression.newBuilder();
+            ExpressionMessage.Builder builder = ExpressionMessage.newBuilder();
             builder.setName(expression.getName());
 
             expression.getProperties().forEach((key, value) ->
-                builder.addProperties(BusinessContextProtos.ExpressionProperty.newBuilder().setKey(key).setValue(value).build())
+                builder.addProperties(ExpressionPropertyMessage.newBuilder().setKey(key).setValue(value).build())
             );
 
             expression.getArguments().stream()

@@ -27,7 +27,13 @@ import cz.filipklimes.diploma.framework.businessContext.expression.numeric.LessT
 import cz.filipklimes.diploma.framework.businessContext.expression.numeric.Multiply;
 import cz.filipklimes.diploma.framework.businessContext.expression.numeric.Subtract;
 import cz.filipklimes.diploma.framework.businessContext.loader.remote.RemoteServiceAddress;
-import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.BusinessContextProtos;
+import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.BusinessContextProtos.BusinessContextMessage;
+import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.BusinessContextProtos.BusinessContextRequestMessage;
+import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.BusinessContextProtos.ExpressionMessage;
+import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.BusinessContextProtos.ExpressionPropertyMessage;
+import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.BusinessContextProtos.PostConditionMessage;
+import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.BusinessContextProtos.PostConditionTypeMessage;
+import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.BusinessContextProtos.PreconditionMessage;
 import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.BusinessContextServerGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -81,19 +87,16 @@ class GrpcBusinessContextClient
         }
     }
 
-    private BusinessContextProtos.BusinessContextRequestMessage buildRequest(final Set<BusinessContextIdentifier> identifiers)
+    private BusinessContextRequestMessage buildRequest(final Set<BusinessContextIdentifier> identifiers)
     {
-        return BusinessContextProtos.BusinessContextRequestMessage.newBuilder()
+        return BusinessContextRequestMessage.newBuilder()
             .addAllRequiredContexts(identifiers.stream()
                 .map(BusinessContextIdentifier::toString)
                 .collect(Collectors.toSet()))
-            .setRequestedFromName(address.getName())
-            .setRequestedFromHost(address.getHost())
-            .setRequestedFromPort(address.getPort())
             .build();
     }
 
-    private BusinessContext buildBusinessContext(final BusinessContextProtos.BusinessContextMessage businessContextMessage)
+    private BusinessContext buildBusinessContext(final BusinessContextMessage businessContextMessage)
     {
         return new BusinessContext(
             new BusinessContextIdentifier(businessContextMessage.getPrefix(), businessContextMessage.getName()),
@@ -103,7 +106,7 @@ class GrpcBusinessContextClient
         );
     }
 
-    private Precondition buildPrecondition(final BusinessContextProtos.PreconditionMessage message)
+    private Precondition buildPrecondition(final PreconditionMessage message)
     {
         return Precondition.builder()
             .withName(message.getName())
@@ -111,7 +114,7 @@ class GrpcBusinessContextClient
             .build();
     }
 
-    private PostCondition buildPostCondition(final BusinessContextProtos.PostConditionMessage message)
+    private PostCondition buildPostCondition(final PostConditionMessage message)
     {
         return PostCondition.builder()
             .withName(message.getName())
@@ -121,7 +124,7 @@ class GrpcBusinessContextClient
             .build();
     }
 
-    private PostConditionType convertType(final BusinessContextProtos.PostConditionType type)
+    private PostConditionType convertType(final PostConditionTypeMessage type)
     {
         switch (type) {
             case FILTER_OBJECT_FIELD:
@@ -137,7 +140,7 @@ class GrpcBusinessContextClient
     }
 
     @SuppressWarnings("unchecked")
-    private <T> Expression<T> buildExpression(final BusinessContextProtos.Expression message)
+    private <T> Expression<T> buildExpression(final ExpressionMessage message)
     {
         switch (message.getName()) {
             case "logical-and":
@@ -202,9 +205,9 @@ class GrpcBusinessContextClient
         }
     }
 
-    private String findPropertyByName(final String name, final BusinessContextProtos.Expression message)
+    private String findPropertyByName(final String name, final ExpressionMessage message)
     {
-        for (BusinessContextProtos.ExpressionProperty expressionProperty : message.getPropertiesList()) {
+        for (ExpressionPropertyMessage expressionProperty : message.getPropertiesList()) {
             if (expressionProperty.getKey().equals(name)) {
                 return expressionProperty.getValue();
             }

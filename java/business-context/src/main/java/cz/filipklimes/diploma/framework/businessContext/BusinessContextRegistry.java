@@ -15,7 +15,6 @@ public class BusinessContextRegistry
     private final LocalBusinessContextLoader localLoader;
     private final RemoteBusinessContextLoader remoteLoader;
     private Map<BusinessContextIdentifier, BusinessContext> contexts;
-    private final Map<RemoteServiceAddress, Set<BusinessContextIdentifier>> sentContexts;
 
     private BusinessContextRegistry(
         final LocalBusinessContextLoader localLoader,
@@ -24,7 +23,6 @@ public class BusinessContextRegistry
     {
         this.localLoader = Objects.requireNonNull(localLoader);
         this.remoteLoader = Objects.requireNonNull(remoteLoader);
-        this.sentContexts = new HashMap<>();
         this.initialize();
     }
 
@@ -97,21 +95,6 @@ public class BusinessContextRegistry
     }
 
     /**
-     * Marks the business contexts with given identifiers as included
-     * @param remoteServiceAddress
-     * @param identifiers
-     */
-    public synchronized void markAsIncluded(
-        final RemoteServiceAddress remoteServiceAddress,
-        final Collection<BusinessContextIdentifier> identifiers
-    )
-    {
-        sentContexts
-            .computeIfAbsent(remoteServiceAddress, key -> new HashSet<>())
-            .addAll(identifiers);
-    }
-
-    /**
      * Saves business context.
      * @param businessContext The new or updated business context.
      * @return Set of remote services which should be notified about the change.
@@ -120,14 +103,7 @@ public class BusinessContextRegistry
     {
         // Import included contexts
         // Save to cache
-        // Notify
 
-        // TODO: implement
-        throw new UnsupportedOperationException("not implemented yet");
-    }
-
-    public synchronized void reimportBusinessContext(final BusinessContextIdentifier identifier)
-    {
         // TODO: implement
         throw new UnsupportedOperationException("not implemented yet");
     }
