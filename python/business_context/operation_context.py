@@ -21,6 +21,12 @@ class OperationContext:
     def set_function(self, name: str, func):
         self._functions[name] = func
 
+    def get_output(self):
+        return self._output
+
+    def set_output(self, value: any):
+        self._output = value
+
 
 class UndefinedInputParameterException(BaseException):
     name: str
