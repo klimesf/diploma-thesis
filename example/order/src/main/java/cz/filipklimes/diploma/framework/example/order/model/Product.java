@@ -19,17 +19,22 @@ public class Product implements Entity
     @Getter
     private Integer stockCount;
 
+    @Getter
+    private Boolean hidden;
+
     public Product(
         final Long id,
         final Integer costPrice,
         final Integer sellPrice,
-        final Integer stockCount
+        final Integer stockCount,
+        final Boolean hidden
     )
     {
         this.id = id;
         this.costPrice = costPrice;
         this.sellPrice = sellPrice;
         this.stockCount = stockCount;
+        this.hidden = hidden;
     }
 
 }

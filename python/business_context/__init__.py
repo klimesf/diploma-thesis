@@ -15,3 +15,5 @@ __all__ = [
     expression,
     operation_context,
 ]
+
+__version__ = '1.0.0'
