@@ -7,18 +7,18 @@ class FunctionCallTest(unittest.TestCase):
     def test(self):
         context = OperationContext('user.create')
         context.set_function('add', lambda x, y: x + y)
-        expr = FunctionCall('add', 1, 2)
-        self.assertEquals(3, expr.interpret(context))
+        expr = FunctionCall(method_name='add', type=ExpressionType.NUMBER, arguments=[Constant(1, ExpressionType.NUMBER), Constant(2, ExpressionType.NUMBER)])
+        self.assertEqual(3, expr.interpret(context))
 
 
 class IsNotNullTest(unittest.TestCase):
     def test(self):
         context = OperationContext('user.create')
-        expr = IsNotNull(Constant(True))
+        expr = IsNotNull(Constant(value=True, type=ExpressionType.BOOL))
         self.assertTrue(expr.interpret(context))
-        expr = IsNotNull(Constant(False))
+        expr = IsNotNull(Constant(value=False, type=ExpressionType.BOOL))
         self.assertTrue(expr.interpret(context))
-        expr = IsNotNull(Constant(None))
+        expr = IsNotNull(Constant(value=None, type=ExpressionType.BOOL))
         self.assertFalse(expr.interpret(context))
 
 
@@ -32,9 +32,9 @@ class ObjectPropertyReferenceTest(unittest.TestCase):
     def test(self):
         context = OperationContext('user.create')
         context.set_input_parameter('user', self.User('John Doe'))
-        expr = ObjectPropertyReference('user', 'name')
-        self.assertEquals('John Doe', expr.interpret(context))
-        expr = ObjectPropertyReference('user', 'email')
+        expr = ObjectPropertyReference(object_name='user', property_name='name', type=ExpressionType.STRING)
+        self.assertEqual('John Doe', expr.interpret(context))
+        expr = ObjectPropertyReference(object_name='user', property_name='email', type=ExpressionType.STRING)
         self.assertRaises(AttributeError, expr.interpret, context)
 
 
@@ -42,53 +42,53 @@ class VariableReferenceTest(unittest.TestCase):
     def test(self):
         context = OperationContext('user.create')
         context.set_input_parameter('name', 'John Doe')
-        expr = VariableReference('name')
-        self.assertEquals('John Doe', expr.interpret(context))
+        expr = VariableReference('name', type=ExpressionType.STRING)
+        self.assertEqual('John Doe', expr.interpret(context))
 
 
 class LogicalAndTest(unittest.TestCase):
     def test(self):
         context = OperationContext('user.create')
-        expr = LogicalAnd(Constant(True), Constant(True))
+        expr = LogicalAnd(Constant(value=True, type=ExpressionType.BOOL), Constant(value=True, type=ExpressionType.BOOL))
         self.assertTrue(expr.interpret(context))
-        expr = LogicalAnd(Constant(True), Constant(False))
+        expr = LogicalAnd(Constant(value=True, type=ExpressionType.BOOL), Constant(value=False, type=ExpressionType.BOOL))
         self.assertFalse(expr.interpret(context))
-        expr = LogicalAnd(Constant(False), Constant(True))
+        expr = LogicalAnd(Constant(value=False, type=ExpressionType.BOOL), Constant(value=True, type=ExpressionType.BOOL))
         self.assertFalse(expr.interpret(context))
-        expr = LogicalAnd(Constant(False), Constant(False))
+        expr = LogicalAnd(Constant(value=False, type=ExpressionType.BOOL), Constant(value=False, type=ExpressionType.BOOL))
         self.assertFalse(expr.interpret(context))
 
 
 class LogicalEqualsTest(unittest.TestCase):
     def test(self):
         context = OperationContext('user.create')
-        expr = LogicalEquals(Constant(True), Constant(True))
+        expr = LogicalEquals(Constant(value=True, type=ExpressionType.BOOL), Constant(value=True, type=ExpressionType.BOOL))
         self.assertTrue(expr.interpret(context))
-        expr = LogicalEquals(Constant(True), Constant(False))
+        expr = LogicalEquals(Constant(value=True, type=ExpressionType.BOOL), Constant(value=False, type=ExpressionType.BOOL))
         self.assertFalse(expr.interpret(context))
-        expr = LogicalEquals(Constant(False), Constant(True))
+        expr = LogicalEquals(Constant(value=False, type=ExpressionType.BOOL), Constant(value=True, type=ExpressionType.BOOL))
         self.assertFalse(expr.interpret(context))
-        expr = LogicalEquals(Constant(False), Constant(False))
+        expr = LogicalEquals(Constant(value=False, type=ExpressionType.BOOL), Constant(value=False, type=ExpressionType.BOOL))
         self.assertTrue(expr.interpret(context))
 
 
 class LogicalNegateTest(unittest.TestCase):
     def test(self):
         context = OperationContext('user.create')
-        expr = LogicalNegate(Constant(True))
+        expr = LogicalNegate(Constant(value=True, type=ExpressionType.BOOL))
         self.assertFalse(expr.interpret(context))
-        expr = LogicalNegate(Constant(False))
+        expr = LogicalNegate(Constant(value=False, type=ExpressionType.BOOL))
         self.assertTrue(expr.interpret(context))
 
 
 class LogicalOrTest(unittest.TestCase):
     def test(self):
         context = OperationContext('user.create')
-        expr = LogicalOr(Constant(True), Constant(True))
+        expr = LogicalOr(Constant(value=True, type=ExpressionType.BOOL), Constant(value=True, type=ExpressionType.BOOL))
         self.assertTrue(expr.interpret(context))
-        expr = LogicalOr(Constant(True), Constant(False))
+        expr = LogicalOr(Constant(value=True, type=ExpressionType.BOOL), Constant(value=False, type=ExpressionType.BOOL))
         self.assertTrue(expr.interpret(context))
-        expr = LogicalOr(Constant(False), Constant(True))
+        expr = LogicalOr(Constant(value=False, type=ExpressionType.BOOL), Constant(value=True, type=ExpressionType.BOOL))
         self.assertTrue(expr.interpret(context))
-        expr = LogicalOr(Constant(False), Constant(False))
+        expr = LogicalOr(Constant(value=False, type=ExpressionType.BOOL), Constant(value=False, type=ExpressionType.BOOL))
         self.assertFalse(expr.interpret(context))

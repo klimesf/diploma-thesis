@@ -2,23 +2,18 @@ import time
 import threading
 import grpc
 from concurrent import futures
-from typing import Set, List
+from typing import Set, List, Dict
 from business_context.context import BusinessContext
 from business_context.expression import Expression
 from business_context.identifier import Identifier
 from business_context.registry import Registry
-from business_context.rule import Precondition, PostCondition
-from business_context_grpc.business_context_pb2 import BusinessContextMessage, PreconditionMessage, PostConditionMessage, ExpressionMessage
+from business_context.rule import Precondition, PostCondition, PostConditionType
+from business_context_grpc.business_context_pb2 import BusinessContextMessage, PreconditionMessage, PostConditionMessage, ExpressionMessage, PostConditionTypeMessage, ExpressionPropertyMessage
 from . import business_context_pb2
 from . import business_context_pb2_grpc
 
 
 class ServerThread(threading.Thread):
-    _port: int
-    _registry: Registry
-    _run: bool
-    _sleep_interval: int
-
     def __init__(self, registry: Registry, sleep_interval: int, port: int):
         self._port = port
         self._registry = registry
@@ -50,9 +45,65 @@ class ServerThread(threading.Thread):
         server.stop(0)
 
 
-class Server(business_context_pb2_grpc.BusinessContextServerServicer):
-    _registry: Registry
+def convert_post_condition_type(type: PostConditionType) -> PostConditionTypeMessage:
+    converter = {
+        PostConditionType.FILTER_OBJECT_FIELD: 1,
+        PostConditionType.FILTER_LIST_OF_OBJECTS: 2,
+        PostConditionType.FILTER_LIST_OF_OBJECTS_FIELD: 3,
+    }
+    if type not in converter:
+        raise Exception('Unknown post condition type')
+    return converter[type]
+    pass
 
+
+def build_expression(expression: Expression) -> ExpressionMessage:
+    return ExpressionMessage(name=expression.get_name(), properties=build_expression_properties(expression.get_properties()),
+                             arguments=build_expression_arguments(expression.get_arguments()))
+
+
+def build_expression_properties(properties: Dict[str, str]) -> List[ExpressionPropertyMessage]:
+    messages = []
+    for key, value in properties.items():
+        message = ExpressionPropertyMessage(key=key, value=value.__str__())
+        messages.append(message)
+    return messages
+
+
+def build_expression_arguments(arguments: List[Expression]) -> List[ExpressionMessage]:
+    messages = []
+    for argument in arguments:
+        messages.append(build_expression(argument))
+    return messages
+
+
+def build_post_condition(post_condition: PostCondition) -> PostConditionMessage:
+    return PostConditionMessage(name=post_condition.name, type=convert_post_condition_type(post_condition.type),
+                                referenceName=post_condition.reference_name, condition=build_expression(post_condition.condition))
+
+
+def build_precondition(precondition: Precondition) -> PreconditionMessage:
+    return PreconditionMessage(name=precondition.name, condition=build_expression(precondition.condition))
+
+
+def build_context_messages(contexts: Set[BusinessContext]) -> List[BusinessContextMessage]:
+    messages = []
+    for context in contexts:
+        included_contexts = []
+        for included in context.included_contexts:
+            included_contexts.append(included.__str__())
+        precondition_messages = []
+        for precondition in context.preconditions:
+            precondition_messages.append(build_precondition(precondition))
+        post_condition_messages = []
+        for post_condition in context.post_conditions:
+            post_condition_messages.append(build_post_condition(post_condition))
+        messages.append(BusinessContextMessage(prefix=context.identifier.prefix, name=context.identifier.name, includedContexts=included_contexts,
+                                               preconditions=precondition_messages, postConditions=post_condition_messages))
+    return messages
+
+
+class Server(business_context_pb2_grpc.BusinessContextServerServicer):
     def __init__(self, registry: Registry):
         self._registry = registry
 
@@ -62,32 +113,4 @@ class Server(business_context_pb2_grpc.BusinessContextServerServicer):
             identifiers.add(Identifier(required))
 
         contexts = self._registry.get_contexts_by_identifiers(identifiers)
-        return business_context_pb2.BusinessContextsResponseMessage(contexts=self.build_context_messages(contexts))
-
-    def build_context_messages(self, contexts: Set[BusinessContext]) -> List[BusinessContextMessage]:
-        messages = []
-        for context in contexts:
-            included_contexts = []
-            for included in context.included_contexts:
-                included_contexts.append(included.__str__())
-            precondition_messages = []
-            # for precondition in context.preconditions:
-            #     precondition_messages.append(self.build_precondition(precondition))
-            post_condition_messages = []
-            # for post_condition in context.post_conditions:
-            #     post_condition_messages.append(self.build_post_condition(post_condition))
-            messages.append(BusinessContextMessage(prefix=context.identifier.prefix, name=context.identifier.name, includedContexts=included_contexts,
-                                                   preconditions=precondition_messages, postConditions=post_condition_messages))
-        return messages
-
-    def build_precondition(self, precondition: Precondition) -> PreconditionMessage:
-        # TODO: implement
-        return PreconditionMessage()
-
-    def build_post_condition(self, post_condition: PostCondition) -> PostConditionMessage:
-        # TODO: implement
-        return PreconditionMessage()
-
-    def build_expression(self, expression: Expression) -> ExpressionMessage:
-        # TODO: implement
-        return ExpressionMessage()
+        return business_context_pb2.BusinessContextsResponseMessage(contexts=build_context_messages(contexts))

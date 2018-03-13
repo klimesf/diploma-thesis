@@ -1,17 +1,62 @@
 import grpc
-from typing import Set
+from typing import Set, List
 from business_context.context import BusinessContext
-from business_context.expression import Expression
+from business_context.expression import Expression, Constant, ExpressionType, FunctionCall, IsNotNull, ObjectPropertyReference, VariableReference, LogicalAnd, LogicalOr, LogicalEquals, LogicalNegate
 from business_context.identifier import Identifier
 from business_context.rule import Precondition, PostCondition, PostConditionType
-from business_context_grpc.business_context_pb2 import BusinessContextMessage, PreconditionMessage, ExpressionMessage, PostConditionMessage, PostConditionTypeMessage
+from business_context_grpc.business_context_pb2 import BusinessContextMessage, PreconditionMessage, ExpressionMessage, PostConditionMessage, PostConditionTypeMessage, ExpressionPropertyMessage
 from . import business_context_pb2
 from . import business_context_pb2_grpc
 
 
+def convert_expression_type(name: str) -> ExpressionType:
+    converter = {
+        'string': ExpressionType.STRING,
+        'number': ExpressionType.NUMBER,
+        'bool': ExpressionType.BOOL,
+        'void': ExpressionType.VOID,
+    }
+    if name not in converter:
+        raise Exception('Unknown expression type ' + name)
+    return converter[name]
+
+
+def find_property_by_name(name: str, properties: List[ExpressionPropertyMessage]) -> any:
+    result = None
+    for property in properties:
+        if property.key == name:
+            return property.value
+    return result
+
+
+def build_arguments(messages: List[ExpressionMessage]) -> List[Expression]:
+    arguments = []
+    for message in messages:
+        arguments.append(build_expression(message))
+    return arguments
+
+
 def build_expression(message: ExpressionMessage) -> Expression:
-    # TODO: implement
-    return Expression()
+    matcher = {
+        'constant': lambda m: Constant(value=find_property_by_name('value', m.properties),
+                                       type=convert_expression_type(find_property_by_name('type', m.properties))),
+        'function-call': lambda m: FunctionCall(method_name=find_property_by_name('methodName', m.properties),
+                                                type=convert_expression_type(find_property_by_name('type', m.properties)),
+                                                arguments=build_arguments(m.arguments)),
+        'is-not-null': lambda m: IsNotNull(argument=build_expression(m.arguments[0])),
+        'object-property-reference': lambda m: ObjectPropertyReference(object_name=find_property_by_name('objectName', m.properties),
+                                                                       property_name=find_property_by_name('propertyName', m.properties),
+                                                                       type=convert_expression_type(find_property_by_name('type', m.properties))),
+        'variable-reference': lambda m: VariableReference(name=find_property_by_name('name', m.properties),
+                                                          type=convert_expression_type(find_property_by_name('type', m.properties))),
+        'logical-and': lambda m: LogicalAnd(left=build_expression(m.arguments[0]), right=build_expression(m.arguments[1])),
+        'logical-equals': lambda m: LogicalEquals(left=build_expression(m.arguments[0]), right=build_expression(m.arguments[1])),
+        'logical-negate': lambda m: LogicalNegate(argument=build_expression(m.arguments[0])),
+        'logical-or': lambda m: LogicalOr(left=build_expression(m.arguments[0]), right=build_expression(m.arguments[1])),
+    }
+    if message.name not in matcher:
+        raise Exception('Unknown Expression ' + message.name)
+    return matcher[message.name](message)
 
 
 def build_precondition(message: PreconditionMessage) -> Precondition:
@@ -20,9 +65,9 @@ def build_precondition(message: PreconditionMessage) -> Precondition:
 
 def convert_post_condition_type(type: PostConditionTypeMessage) -> PostConditionType:
     converter = {
-        PostConditionTypeMessage.FILTER_OBJECT_FIELD: PostConditionType.FILTER_OBJECT_FIELD,
-        PostConditionTypeMessage.FILTER_LIST_OF_OBJECTS: PostConditionType.FILTER_LIST_OF_OBJECTS,
-        PostConditionTypeMessage.FILTER_LIST_OF_OBJECTS_FIELD: PostConditionType.FILTER_LIST_OF_OBJECTS_FIELD,
+        1: PostConditionType.FILTER_OBJECT_FIELD,
+        2: PostConditionType.FILTER_LIST_OF_OBJECTS,
+        3: PostConditionType.FILTER_LIST_OF_OBJECTS_FIELD,
     }
     if type not in converter:
         raise Exception('Unknown post condition type')
@@ -36,8 +81,14 @@ def build_post_condition(message: PostConditionMessage) -> PostCondition:
 
 def build_context(message: BusinessContextMessage) -> BusinessContext:
     included_contexts = set()
+    for included in message.includedContexts:
+        included_contexts.add(Identifier(included))
     preconditions = set()
+    for precondition in message.preconditions:
+        preconditions.add(build_precondition(precondition))
     post_conditions = set()
+    for post_condition in message.postConditions:
+        post_conditions.add(build_post_condition(post_condition))
     return BusinessContext(identifier=Identifier(message.prefix, message.name), included_contexts=included_contexts,
                            preconditions=preconditions, post_conditions=post_conditions)
 

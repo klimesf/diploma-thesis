@@ -7,8 +7,6 @@ from business_context.rule import Precondition
 
 
 class Weaver:
-    _registry: Registry
-
     def __init__(self, registry: Registry):
         self._registry = registry
 
@@ -33,7 +31,5 @@ class Weaver:
 
 
 class BusinessRulesCheckFailed(BaseException):
-    failed: Set[Precondition]
-
     def __init__(self, failed: Set[Precondition]):
         self.failed = failed

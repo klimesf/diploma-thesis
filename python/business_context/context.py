@@ -4,11 +4,6 @@ from business_context.rule import Precondition, PostCondition
 
 
 class BusinessContext:
-    identifier: Identifier
-    included_contexts: Set[Identifier]
-    preconditions: Set[Precondition]
-    post_conditions: Set[PostCondition]
-
     def __init__(self, identifier: Identifier, included_contexts: Set[Identifier],
                  preconditions: Set[Precondition], post_conditions: Set[PostCondition]):
         self.identifier = identifier

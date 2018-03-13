@@ -4,8 +4,6 @@ import re
 class Identifier:
     _prefixed_pattern = re.compile('^([a-zA-Z0-9]+)\.([a-zA-Z0-9]+)$')
     _part_pattern = re.compile('^([a-zA-Z0-9]+)$')
-    prefix: str
-    name: str
 
     def __init__(self, prefix: str, name: str = None):
         if name is None:
@@ -36,7 +34,5 @@ class Identifier:
 
 
 class InvalidBusinessContextIdentifierException(BaseException):
-    identifier: str
-
     def __init__(self, identifier: str):
         self.identifier = identifier

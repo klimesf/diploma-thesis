@@ -1,11 +1,9 @@
 class OperationContext:
-    name: str
-    _input_parameters = {}
-    _functions = {}
-    _output = None
-
     def __init__(self, name: str):
         self.name = name
+        self._input_parameters = {}
+        self._functions = {}
+        self._output = None
 
     def get_input_parameter(self, name: str):
         if name not in self._input_parameters.keys():

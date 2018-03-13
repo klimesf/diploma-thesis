@@ -21,8 +21,6 @@ class RemoteLoader:
 
 
 class RemoteBusinessContextLoader:
-    _loader: RemoteLoader
-
     def __init__(self, loader: RemoteLoader):
         self._loader = loader
 
@@ -34,13 +32,10 @@ class RemoteBusinessContextLoader:
 
 
 class Registry:
-    _local_loader: LocalBusinessContextLoader
-    _remote_loader: RemoteBusinessContextLoader
-    _contexts = {}
-
     def __init__(self, local_loader: LocalBusinessContextLoader, remote_loader: RemoteBusinessContextLoader):
         self._local_loader = local_loader
         self._remote_loader = remote_loader
+        self._contexts = {}
         self.initialize()
 
     def initialize(self):
@@ -106,14 +101,10 @@ class Registry:
 
 
 class DuplicatedBusinessContext(BaseException):
-    identifier: Identifier
-
     def __init__(self, identifier: Identifier):
         self.identifier = identifier
 
 
 class BusinessContextNotFound(BaseException):
-    identifier: Identifier
-
     def __init__(self, identifier: Identifier):
         self.identifier = identifier
