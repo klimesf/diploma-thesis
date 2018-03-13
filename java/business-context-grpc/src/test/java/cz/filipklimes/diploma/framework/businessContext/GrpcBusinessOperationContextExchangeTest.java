@@ -62,8 +62,8 @@ public class GrpcBusinessOperationContextExchangeTest
                         Precondition.builder()
                             .withName("userNotLoggedIn")
                             .withCondition(new Equals<>(
-                                new VariableReference<>("loggedIn", ExpressionType.BOOL),
-                                new Constant<>(false, ExpressionType.BOOL)
+                                new VariableReference<>("loggedIn", BOOL),
+                                new Constant<>(false, BOOL)
                             ))
                             .build()
                     )

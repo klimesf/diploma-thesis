@@ -117,7 +117,7 @@ public final class GrpcBusinessContextServerRunnable
                     .map(this::buildPrecondition)
                     .collect(Collectors.toSet()))
                 .addAllPostConditions(context.getPostConditions().stream()
-                    .map(this::buildPrecondition)
+                    .map(this::buildPostCondition)
                     .collect(Collectors.toSet()))
                 .build();
         }
@@ -130,7 +130,7 @@ public final class GrpcBusinessContextServerRunnable
                 .build();
         }
 
-        private PostConditionMessage buildPrecondition(final PostCondition rule)
+        private PostConditionMessage buildPostCondition(final PostCondition rule)
         {
             return PostConditionMessage.newBuilder()
                 .setName(rule.getName())
