@@ -1,6 +1,8 @@
 language: python
 python:
   - "3.6"
+node_js:
+  - "9.8"
 
 addons:
   apt:
@@ -11,9 +13,14 @@ install:
   - sudo apt-get install libprotobuf-java protobuf-compiler
   - protoc --version
   - pip install -r ./python/requirements.txt
+  - cd nodejs/business-context
+  - npm install
+  - cd ../../
 
 script:
   - cd ./java
   - mvn clean test
   - cd ./../python
   - python -m pytest .
+  - cd ./../nodejs/business-context
+  - npm test

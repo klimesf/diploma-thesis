@@ -1,0 +1,31 @@
+{
+  "name": "business-context-framework",
+  "version": "1.0.0",
+  "description": "A framework for context-aware aspect-driven services",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha --compilers js:babel-core/register --recursive",
+    "build": "rimraf dist/ && babel ./src --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files",
+    "start": "npm run build && node dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/klimesf/diploma-thesis.git"
+  },
+  "author": "Filip Klimeš <klimefi1@fel.cvut.cz>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/klimesf/diploma-thesis/issues"
+  },
+  "homepage": "https://github.com/klimesf/diploma-thesis#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "chai": "^4.1.2",
+    "mocha": "^5.0.4",
+    "rimraf": "^2.6.2"
+  },
+  "dependencies": {
+    "npm": "^5.7.1"
+  }
+}
