@@ -6,7 +6,7 @@ export default class ObjectPropertyReference {
     }
 
     interpret(context) {
-        object = context.getInputParameter(this.objectName)
+        const object = context.getInputParameter(this.objectName)
         if (!object.hasOwnProperty(this.propertyName)) {
             throw "object " + this.objectName + " has no property " + this.propertyName
         }

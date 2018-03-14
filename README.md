@@ -20,8 +20,15 @@ See framework in action in the [example e-commerce application](https://github.c
     - `src/main/java` - Source files in Java
     - `src/main/proto` - Protobuffer schemas
     - `src/test/java` - Test files in Java
+- `nodejs` - [Node.js](https://nodejs.org/en/) implementation of the framework 
+  - `business-context` – Implementation of framework for business contexts sharing in Node.js.
+    - `src/` – Source files of the implementation
+    - `test/` – Test files for the implementation using [mocha.js](https://mochajs.org/) and [chai.js](http://www.chaijs.com/) 
+  - `business-context-grpc` – Business context communication implementation using [GRPC](https://grpc.io/) for the Node.js framework.
+    - `src/` – Source files of the implementation
+    - `test/` – Test files for the implementation using [mocha.js](https://mochajs.org/) and [chai.js](http://www.chaijs.com/) 
 - `proto` – GRPC and Protobuffer definitions for business context framework communication
-- `python` - Python implementation of the framework following [Maven](https://maven.apache.org/) project structure
+- `python` - Python implementation of the framework
   - `business_context` - Implementation of framework for business contexts sharing in Python.
     - `test_*.py` – Python unit test files for the framework implementation.
   - `business_context_grpc` - Business context communication implementation using [GRPC](https://grpc.io/) for the Python framework.
