@@ -99,6 +99,10 @@ class Registry:
             found.add(self._contexts[identifier])
         return found
 
+    def save_or_update_context(self, context: BusinessContext):
+        # TODO: implement
+        pass
+
 
 class DuplicatedBusinessContext(BaseException):
     def __init__(self, identifier: Identifier):
