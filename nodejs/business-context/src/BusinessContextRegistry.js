@@ -31,7 +31,7 @@ export default class BusinessContextRegistry {
         const remoteContexts = this.remoteLoader.loadContextsByIdentifier(remoteContextsIdentifiers)
 
         // Include remote contexts into the local ones
-        this.contexts.forEach(context => {
+        Object.values(this.contexts).forEach(context => {
             context.includedContexts.forEach(includedContextIdentifier => {
                 if (this.contexts.hasOwnProperty(includedContextIdentifier)) {
                     context.merge(this.contexts[includedContextIdentifier])

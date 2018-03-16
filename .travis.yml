@@ -16,6 +16,9 @@ install:
   - cd nodejs/business-context
   - npm install
   - cd ../../
+  - cd nodejs/business-context-grpc
+  - npm install
+  - cd ../../
 
 script:
   - cd ./java
@@ -23,4 +26,6 @@ script:
   - cd ./../python
   - python -m pytest .
   - cd ./../nodejs/business-context
+  - npm test
+  - cd ./../business-context-grpc
   - npm test

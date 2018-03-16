@@ -25,7 +25,7 @@ export default class ObjectPropertyReference {
         return {
             objectName: this.objectName,
             propertyName: this.propertyName,
-            type: this.type
+            type: this.type.name
         }
     }
 

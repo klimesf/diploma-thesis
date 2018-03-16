@@ -18,8 +18,8 @@ export default class Constant {
 
     getProperties() {
         return {
-            value: this.value,
-            type: this.type,
+            value: this.type.serialize(this.value),
+            type: this.type.name,
         }
     }
 

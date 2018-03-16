@@ -22,7 +22,7 @@ export default class FunctionCall {
     getProperties() {
         return {
             methodName: this.methodName,
-            type: this.type,
+            type: this.type.name,
         }
     }
 

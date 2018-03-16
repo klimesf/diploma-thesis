@@ -19,7 +19,7 @@ export default class VariableReference {
     getProperties() {
         return {
             name: this.name,
-            type: this.type,
+            type: this.type.name,
         }
     }
 
