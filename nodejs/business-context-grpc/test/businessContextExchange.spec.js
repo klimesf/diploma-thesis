@@ -4,7 +4,6 @@ const client = require('./../src/client')
 const server = require('./../src/server')
 
 const chai = require('chai')
-const expect = chai.expect
 
 const BusinessContextRegistry = require('../../business-context/src/BusinessContextRegistry').default
 const BusinessContext = require('../../business-context/src/BusinessContext').default
