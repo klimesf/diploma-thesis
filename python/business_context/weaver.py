@@ -41,7 +41,8 @@ class Weaver:
     def _filter_object_field(self, post_condition: PostCondition, operation_context: OperationContext):
         if post_condition.condition.interpret(operation_context):
             output = operation_context.get_output()
-            setattr(output, post_condition.reference_name, None)
+            if output is not None:
+                setattr(output, post_condition.reference_name, None)
 
     def _filter_list_of_objects(self, post_condition: PostCondition, operation_context: OperationContext):
         result = []
