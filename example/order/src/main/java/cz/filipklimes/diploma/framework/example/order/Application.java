@@ -26,8 +26,11 @@ import java.util.*;
 public class Application
 {
 
-    private static String PRODUCT_HOST = "localhost";
-    private static int PRODUCT_PORT = 5552;
+    private static String PRODUCT_SERVICE_HOST = "localhost";
+    private static int PRODUCT_SERVICE_PORT = 5552;
+
+    private static String USER_SERVICE_HOST = "localhost";
+    private static int USER_SERVICE_PORT = 5553;
 
     public static void main(String[] args)
     {
@@ -38,7 +41,8 @@ public class Application
     public static BusinessContextRegistry businessContextRegistry()
     {
         Map<String, RemoteLoader> remoteLoaders = new HashMap<>();
-        remoteLoaders.put("product", new GrpcRemoteLoader(new RemoteServiceAddress("product", PRODUCT_HOST, PRODUCT_PORT)));
+        remoteLoaders.put("product", new GrpcRemoteLoader(new RemoteServiceAddress("product", PRODUCT_SERVICE_HOST, PRODUCT_SERVICE_PORT)));
+        remoteLoaders.put("user", new GrpcRemoteLoader(new RemoteServiceAddress("user", USER_SERVICE_HOST, USER_SERVICE_PORT)));
 
         BusinessContextRegistry registry = BusinessContextRegistry.builder()
             .withLocalLoader(new LocalBusinessContextLoader()
@@ -49,6 +53,10 @@ public class Application
                     return new HashSet<>(Arrays.asList(
                         BusinessContext.builder()
                             .withIncludedContext(BusinessContextIdentifier.parse("product.listAll"))
+                            .withIncludedContext(BusinessContextIdentifier.parse("user.validEmail"))
+                            .withIdentifier(BusinessContextIdentifier.parse("order.valid"))
+                            .build(),
+                        BusinessContext.builder()
                             .withIdentifier(BusinessContextIdentifier.parse("order.addToShoppingCart"))
                             .withPrecondition(Precondition.builder()
                                 .withName("Shopping cart must contain less than 10 items")

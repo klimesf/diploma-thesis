@@ -7,10 +7,7 @@
     "test": "./node_modules/.bin/mocha --require babel-core/register --recursive",
     "build": "rimraf dist/ && babel ./src --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/klimesf/diploma-thesis.git"
-  },
+  "repository": "git+https://github.com/klimesf/diploma-thesis.git",
   "author": "Filip Klimeš <klimefi1@fel.cvut.cz>",
   "license": "MIT",
   "bugs": {
