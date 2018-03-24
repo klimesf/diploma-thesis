@@ -1,4 +1,4 @@
-package cz.filipklimes.diploma.framework.example.ui.repository;
+package cz.filipklimes.diploma.framework.example.ui.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.filipklimes.diploma.framework.example.ui.business.Product;
@@ -9,16 +9,17 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.util.*;
 
-@Repository
-public class ProductRepository
+@Service
+public class ProductClient
 {
 
-    private static Logger log = LoggerFactory.getLogger(ProductRepository.class);
+    private static Logger log = LoggerFactory.getLogger(ProductClient.class);
 
     public List<Product> listProducts()
     {
@@ -26,7 +27,12 @@ public class ProductRepository
             HttpUriRequest request = new HttpGet("http://localhost:5502/");
 
             try (CloseableHttpResponse response = client.execute(request)) {
-                log.debug(String.format("Fetched products, HTTP status %d", response.getStatusLine().getStatusCode()));
+                int statusCode = response.getStatusLine().getStatusCode();
+                log.debug(String.format("Fetched products, HTTP status %d", statusCode));
+
+                if (statusCode != HttpStatus.OK.value()) {
+                    throw new RuntimeException(String.format("Could not load products: status code %d", statusCode));
+                }
 
                 ObjectMapper objectMapper = new ObjectMapper();
                 Product[] products = objectMapper.readValue(response.getEntity().getContent(), Product[].class);
@@ -48,7 +54,7 @@ public class ProductRepository
                 int statusCode = response.getStatusLine().getStatusCode();
                 log.debug(String.format("Fetched product %d, HTTP status %d", productId, statusCode));
 
-                if (statusCode == 404) {
+                if (statusCode == HttpStatus.NOT_FOUND.value()) {
                     return null;
                 }
 

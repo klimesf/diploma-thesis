@@ -41,7 +41,7 @@ public class Application
                     return Collections.singleton(
                         BusinessContext.builder()
                             .withIncludedContext(BusinessContextIdentifier.parse("product.listAll"))
-                            .withIdentifier(BusinessContextIdentifier.parse("cart.addProduct"))
+                            .withIdentifier(BusinessContextIdentifier.parse("order.addToShoppingCart"))
                             .build()
                     );
                 }

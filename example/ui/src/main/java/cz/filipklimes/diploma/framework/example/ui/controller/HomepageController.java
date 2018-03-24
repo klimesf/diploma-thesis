@@ -1,7 +1,8 @@
 package cz.filipklimes.diploma.framework.example.ui.controller;
 
 import cz.filipklimes.diploma.framework.example.ui.business.Product;
-import cz.filipklimes.diploma.framework.example.ui.repository.ProductRepository;
+import cz.filipklimes.diploma.framework.example.ui.client.ProductClient;
+import cz.filipklimes.diploma.framework.example.ui.client.ShoppingCartClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,19 +14,25 @@ import java.util.*;
 public class HomepageController
 {
 
-    private final ProductRepository productRepository;
+    private final ProductClient productClient;
+    private final ShoppingCartClient shoppingCartClient;
 
     @Autowired
-    public HomepageController(final ProductRepository productRepository)
+    public HomepageController(
+        final ProductClient productClient,
+        final ShoppingCartClient shoppingCartClient
+    )
     {
-        this.productRepository = productRepository;
+        this.productClient = productClient;
+        this.shoppingCartClient = shoppingCartClient;
     }
 
     @GetMapping("/")
     public String homepage(Model model)
     {
-        List<Product> products = productRepository.listProducts();
+        List<Product> products = productClient.listProducts();
         model.addAttribute("products", products);
+        model.addAttribute("cartCount", shoppingCartClient.listCartItems().size());
 
         // Flash messages
         model.addAttribute("successMessage", model.asMap().get("success"));

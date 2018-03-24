@@ -2,39 +2,38 @@ package cz.filipklimes.diploma.framework.example.order.facade;
 
 import cz.filipklimes.diploma.framework.example.order.business.Address;
 import cz.filipklimes.diploma.framework.example.order.business.Order;
-import cz.filipklimes.diploma.framework.example.order.repository.OrderRepository;
-import cz.filipklimes.diploma.framework.example.order.business.User;
-import cz.filipklimes.diploma.framework.example.order.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 @Service
 public class OrderFacade
 {
 
-    private final UserRepository userRepository;
-    private final OrderRepository orderRepository;
+    private static Logger log = LoggerFactory.getLogger(OrderFacade.class);
+
     private final OrderService orderService;
+    private final List<Order> orders; // No persistence for prototyping purposes
 
     public OrderFacade(
-        final UserRepository userRepository,
-        final OrderRepository orderRepository,
         final OrderService orderService
     )
     {
-        this.userRepository = userRepository;
-        this.orderRepository = orderRepository;
         this.orderService = orderService;
+        this.orders = new ArrayList<>();
     }
 
     public void createOrder(final int userId)
     {
-        User user = userRepository.findById(userId);
         Order order = orderService.create(
-            user,
+            null,
             new Address("", "", "", "", ""),
             new Address("", "", "", "", "")
         );
-        orderRepository.save(order);
+        orders.add(order);
+        log.info(String.format("Created a new order %d", order.getId()));
     }
 
 }

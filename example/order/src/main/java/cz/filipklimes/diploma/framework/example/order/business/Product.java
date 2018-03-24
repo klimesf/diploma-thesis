@@ -1,40 +1,32 @@
 package cz.filipklimes.diploma.framework.example.order.business;
 
 import lombok.Getter;
-import lombok.Setter;
 
-public class Product implements Entity
+public class Product
 {
 
     @Getter
-    @Setter
-    private Long id;
-
-    @Getter
-    private Integer costPrice;
+    private Integer id;
 
     @Getter
     private Integer sellPrice;
 
     @Getter
-    private Integer stockCount;
+    private String name;
 
     @Getter
-    private Boolean hidden;
+    private String description;
 
-    public Product(
-        final Long id,
-        final Integer costPrice,
-        final Integer sellPrice,
-        final Integer stockCount,
-        final Boolean hidden
-    )
+    public Product()
+    {
+    }
+
+    public Product(final Integer id, final Integer sellPrice, final String name, final String description)
     {
         this.id = id;
-        this.costPrice = costPrice;
         this.sellPrice = sellPrice;
-        this.stockCount = stockCount;
-        this.hidden = hidden;
+        this.name = name;
+        this.description = description;
     }
 
 }

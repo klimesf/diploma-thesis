@@ -11,6 +11,25 @@
     <title>Example e-commerce system</title>
 </head>
 <body>
+<nav class="navbar navbar-dark bg-dark navbar-expand-lg" style="margin-bottom: 0;">
+    <div class="container">
+        <a class="navbar-brand" href="#">Example</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item"><a class="nav-link" href="#">Link</a></li>
+                <li class="nav-item"><a class="nav-link disabled" href="#">Disabled</a></li>
+            </ul>
+            <div class="form-inline my-2 my-lg-0 text-light">
+                Shopping cart has&nbsp;<span th:text="${cartCount}"></span>&nbsp;items
+            </div>
+        </div>
+    </div>
+</nav>
+
 <div class="jumbotron text-center">
     <h1>Example e-commerce system</h1>
     <p>Buy everything you need!</p>

@@ -5,12 +5,12 @@ import lombok.Setter;
 
 import java.util.*;
 
-public class Order implements Entity
+public class Order
 {
 
     @Getter
     @Setter
-    private Long id;
+    private Integer id;
 
     @Getter
     private User user;

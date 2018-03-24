@@ -3,7 +3,7 @@ package cz.filipklimes.diploma.framework.example.order.business;
 import lombok.Getter;
 import lombok.Setter;
 
-public class Address implements Entity
+public class Address
 {
 
     @Getter
