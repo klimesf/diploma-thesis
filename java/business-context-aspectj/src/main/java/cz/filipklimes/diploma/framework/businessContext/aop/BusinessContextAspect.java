@@ -50,6 +50,7 @@ public class BusinessContextAspect
 
         Annotation[][] parameterAnnotations = signature.getMethod().getParameterAnnotations();
         Parameter[] parameters = signature.getMethod().getParameters();
+        Object[] args = joinPoint.getArgs();
 
         for (int i = 0; i < parameters.length; i++) {
             BusinessOperationParameter parameterAnnotation = Arrays.stream(parameterAnnotations[i])
@@ -59,7 +60,7 @@ public class BusinessContextAspect
                 .orElse(null);
 
             if (parameterAnnotation != null) {
-                context.setInputParameter(parameterAnnotation.value(), parameters[i]);
+                context.setInputParameter(parameterAnnotation.value(), args[i]);
             }
         }
         return context;

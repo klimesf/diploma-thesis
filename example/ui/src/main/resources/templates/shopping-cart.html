@@ -8,12 +8,12 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <title>Example e-commerce system</title>
+    <title>Shopping cart | Example e-commerce system</title>
 </head>
 <body>
 <nav class="navbar navbar-dark bg-dark navbar-expand-lg" style="margin-bottom: 0;">
     <div class="container">
-        <a class="navbar-brand" href="#">Example</a>
+        <a class="navbar-brand" href="/">Example</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -32,7 +32,7 @@
 
 <div class="jumbotron text-center">
     <h1>Example e-commerce system</h1>
-    <p>Buy everything you need!</p>
+    <p>Shopping cart</p>
 </div>
 
 <div class="container" th:if="${successMessage != null || errorMessage != null || infoMessage != null}">
@@ -42,15 +42,30 @@
 </div>
 
 <div class="container">
-    <div class="row">
-        <div th:each="product : ${products}" class="col-sm-4">
-            <!--/*@thymesVar id="product" type="cz.filipklimes.diploma.framework.example.ui.business.Product"*/-->
-            <h3 th:text="${product.name}"></h3>
-            <p th:text="${#numbers.formatDecimal(product.sellPrice, 0, 'COMMA', 2, 'POINT')} + ' €'"></p>
-            <p th:text="${product.description}"></p>
-            <a th:href="@{/add-to-cart/{productId}(productId=${product.id})}">Add to cart</a>
-        </div>
-    </div>
+    <h2>Shopping cart items</h2>
+    <table class="table table-striped">
+        <thead class="thead-dart">
+        <tr>
+            <th scope="col">Product</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Price</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${items}">
+            <!--/*@thymesVar id="item" type="cz.filipklimes.diploma.framework.example.ui.facade.ShoppingCartFacade.Item"*/-->
+            <td th:text="${item.productName}"></td>
+            <td th:text="${item.quantity}"></td>
+            <td th:text="${#numbers.formatDecimal(item.productPrice, 0, 'COMMA', 2, 'POINT')} + ' €'"></td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <th scope="col" colspan="2">Subtotal</th>
+            <th scope="col" th:text="${#numbers.formatDecimal(total, 0, 'COMMA', 2, 'POINT')} + ' €'"></th>
+        </tr>
+        </tfoot>
+    </table>
 </div>
 
 <!-- Optional JavaScript -->

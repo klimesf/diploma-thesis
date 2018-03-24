@@ -17,7 +17,7 @@ public class ShoppingCartService
         @BusinessOperationParameter("user") final User user,
         @BusinessOperationParameter("product") final Product product,
         @BusinessOperationParameter("quantity") final Integer quantity,
-        final ShoppingCart shoppingCart
+        @BusinessOperationParameter("shoppingCart") final ShoppingCart shoppingCart
     )
     {
         shoppingCart.addItem(new ShoppingCartItem(product.getId(), quantity));

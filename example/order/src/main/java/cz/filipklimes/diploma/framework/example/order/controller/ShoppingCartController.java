@@ -1,5 +1,7 @@
 package cz.filipklimes.diploma.framework.example.order.controller;
 
+import cz.filipklimes.diploma.framework.businessContext.Precondition;
+import cz.filipklimes.diploma.framework.businessContext.exception.BusinessRulesCheckFailedException;
 import cz.filipklimes.diploma.framework.example.order.business.ShoppingCartItem;
 import cz.filipklimes.diploma.framework.example.order.exception.ProductNotFoundException;
 import cz.filipklimes.diploma.framework.example.order.facade.ShoppingCartFacade;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 public class ShoppingCartController
@@ -37,8 +40,20 @@ public class ShoppingCartController
         try {
             shoppingCartFacade.addProduct(request.getProductId(), request.getQuantity());
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
+
         } catch (ProductNotFoundException e) {
             return new ResponseEntity<>(new AddProductToCartErrorResponse(e.getMessage()), HttpStatus.UNPROCESSABLE_ENTITY);
+
+        } catch (BusinessRulesCheckFailedException e) {
+            return new ResponseEntity<>(
+                new AddProductToCartErrorResponse(String.format(
+                    "Could not add product to cart: %s",
+                    e.getFailedRules().stream()
+                        .map(Precondition::getName)
+                        .collect(Collectors.joining(", "))
+                )),
+                HttpStatus.UNPROCESSABLE_ENTITY
+            );
         }
     }
 

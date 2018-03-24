@@ -46,6 +46,10 @@ public class BusinessContextWeaver
 
     public void applyPostConditions(final BusinessOperationContext operationContext)
     {
+        if (operationContext.getOutput() == null) {
+            return;
+        }
+
         BusinessContextIdentifier businessContextidentifier = BusinessContextIdentifier.parse(operationContext.getName());
         BusinessContext businessContext = registry.getContextByIdentifier(businessContextidentifier);
 

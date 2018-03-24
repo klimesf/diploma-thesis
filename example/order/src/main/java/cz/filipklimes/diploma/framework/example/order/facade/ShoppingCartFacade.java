@@ -1,5 +1,6 @@
 package cz.filipklimes.diploma.framework.example.order.facade;
 
+import cz.filipklimes.diploma.framework.businessContext.exception.BusinessRulesCheckFailedException;
 import cz.filipklimes.diploma.framework.example.order.business.Product;
 import cz.filipklimes.diploma.framework.example.order.business.ShoppingCart;
 import cz.filipklimes.diploma.framework.example.order.business.ShoppingCartItem;
@@ -33,6 +34,10 @@ public class ShoppingCartFacade
         return shoppingCart.getItems();
     }
 
+    /**
+     * @throws ProductNotFoundException When product with given Id does not exist.
+     * @throws BusinessRulesCheckFailedException When business rule check fails.
+     */
     public void addProduct(final Integer productId, final Integer quantity) throws ProductNotFoundException
     {
         Product product = productClient.getProduct(productId);
