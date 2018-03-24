@@ -4,6 +4,7 @@ import cz.filipklimes.diploma.framework.businessContext.exception.BusinessRulesC
 import cz.filipklimes.diploma.framework.example.order.business.Product;
 import cz.filipklimes.diploma.framework.example.order.business.ShoppingCart;
 import cz.filipklimes.diploma.framework.example.order.business.ShoppingCartItem;
+import cz.filipklimes.diploma.framework.example.order.business.User;
 import cz.filipklimes.diploma.framework.example.order.client.ProductClient;
 import cz.filipklimes.diploma.framework.example.order.exception.ProductNotFoundException;
 import org.slf4j.Logger;
@@ -45,7 +46,7 @@ public class ShoppingCartFacade
             throw new ProductNotFoundException(productId);
         }
 
-        shoppingCartService.addToShoppingCart(null, product, quantity, shoppingCart);
+        shoppingCartService.addToShoppingCart(new User(3, "Dr. Faust", "faust@example.com", "ADMINISTRATOR"), product, quantity, shoppingCart);
 
         log.info(String.format(
             "Added product %d pieces of product %d into shopping cart, it now has %d items",

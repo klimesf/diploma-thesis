@@ -26,8 +26,7 @@ public class GrpcRemoteLoader implements RemoteLoader
         } finally {
             try {
                 client.shutdown();
-            } catch (InterruptedException e) {
-                System.err.println(e.getMessage());;
+            } catch (InterruptedException ignored) {
             }
         }
     }

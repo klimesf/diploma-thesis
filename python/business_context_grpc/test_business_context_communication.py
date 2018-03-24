@@ -44,11 +44,12 @@ class GrpcBusinessOperationContextExchangeTest(unittest.TestCase):
         server_registry = Registry(MockLocalLoader(), RemoteBusinessContextLoader(MockRemoteLoader()))
 
         port = 5551
+        host = 'localhost'
         server = ServerThread(registry=server_registry, sleep_interval=1, port=port)
         server.start()
         time.sleep(1)  # Give server time to initialize
 
-        retrieved = retrieve_contexts({user_create_identifier}, port)
+        retrieved = retrieve_contexts({user_create_identifier}, host, port)
         self.assertEqual(1, len(retrieved))
         received_context = retrieved.pop()
         self.assertEqual(user_create_identifier, received_context.identifier)

@@ -1,48 +1,19 @@
 from flask import Flask, jsonify, abort
-from typing import Optional
-from business_context.rule import *
-from business_context.expression import *
-from business_context.context import *
+from typing import Optional, List
 from business_context.registry import *
 from business_context.weaver import *
 from business_context.operation_context import *
 from business_context_grpc.business_context_server import *
+from business_contexts import LocalLoader, GrpcRemoteLoader
 
 app = Flask(__name__)
 
-
-class MockLocalLoader(LocalBusinessContextLoader):
-    def load(self) -> Set[BusinessContext]:
-        return {list_all_products, product_detail}
-
-
-class MockRemoteLoader(RemoteLoader):
-    def __init__(self):
-        self._contexts = {}
-
-    def load_contexts(self, identifiers: Set[Identifier]) -> Set[BusinessContext]:
-        result = set()
-        for identifier in identifiers:
-            if identifier in self._contexts:
-                result.add(self._contexts[identifier])
-        return result
-
-
-list_all_products_identifier = Identifier("product", "listAll")
-product_detail_identifier = Identifier("product", "detail")
-
-filter_hidden_products = PostCondition('filterHiddenProducts', PostConditionType.FILTER_LIST_OF_OBJECTS, 'item',
-                                       LogicalEquals(ObjectPropertyReference('item', 'hidden', ExpressionType.BOOL),
-                                                     Constant(value=True, type=ExpressionType.BOOL)))
-filter_buying_prices = PostCondition(name='filterProductsBuyingPrices', type=PostConditionType.FILTER_LIST_OF_OBJECTS_FIELD,
-                                     reference_name='buyingPrice', condition=Constant(value=True, type=ExpressionType.BOOL))
-filter_buying_price = PostCondition(name='filterProductBuyingPrice', type=PostConditionType.FILTER_OBJECT_FIELD,
-                                     reference_name='buyingPrice', condition=Constant(value=True, type=ExpressionType.BOOL))
-list_all_products = BusinessContext(list_all_products_identifier, set(), set(), {filter_hidden_products, filter_buying_prices})
-product_detail = BusinessContext(product_detail_identifier, set(), set(), {filter_buying_price})
-
-registry = Registry(MockLocalLoader(), RemoteBusinessContextLoader(MockRemoteLoader()))
-
+registry = Registry(
+    LocalLoader(),
+    RemoteBusinessContextLoader(GrpcRemoteLoader({
+        'auth': {'host': 'localhost', 'port': 5553}
+    }))
+)
 weaver = Weaver(registry)
 
 

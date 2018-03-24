@@ -29,7 +29,7 @@ public class BusinessContextWeaver
      * @param operationContext The business operation context.
      * @throws BusinessRulesCheckFailedException When any Business Rule was not satisfied.
      */
-    public void evaluatePreconditions(final BusinessOperationContext operationContext) throws BusinessRulesCheckFailedException
+    public void evaluatePreconditions(final BusinessOperationContext operationContext)
     {
         BusinessContextIdentifier businessContextidentifier = BusinessContextIdentifier.parse(operationContext.getName());
         BusinessContext businessContext = registry.getContextByIdentifier(businessContextidentifier);

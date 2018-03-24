@@ -26,6 +26,9 @@ import java.util.*;
 public class Application
 {
 
+    private static String AUTH_SERVICE_HOST = "localhost";
+    private static int AUTH_SERVICE_PORT = 5553;
+
     private static String PRODUCT_SERVICE_HOST = "localhost";
     private static int PRODUCT_SERVICE_PORT = 5552;
 
@@ -43,6 +46,7 @@ public class Application
         Map<String, RemoteLoader> remoteLoaders = new HashMap<>();
         remoteLoaders.put("product", new GrpcRemoteLoader(new RemoteServiceAddress("product", PRODUCT_SERVICE_HOST, PRODUCT_SERVICE_PORT)));
         remoteLoaders.put("user", new GrpcRemoteLoader(new RemoteServiceAddress("user", USER_SERVICE_HOST, USER_SERVICE_PORT)));
+        remoteLoaders.put("auth", new GrpcRemoteLoader(new RemoteServiceAddress("auth", AUTH_SERVICE_HOST, AUTH_SERVICE_PORT)));
 
         BusinessContextRegistry registry = BusinessContextRegistry.builder()
             .withLocalLoader(new LocalBusinessContextLoader()
@@ -52,12 +56,31 @@ public class Application
                 {
                     return new HashSet<>(Arrays.asList(
                         BusinessContext.builder()
-                            .withIncludedContext(BusinessContextIdentifier.parse("product.listAll"))
-                            .withIncludedContext(BusinessContextIdentifier.parse("user.validEmail"))
                             .withIdentifier(BusinessContextIdentifier.parse("order.valid"))
+                            .withIncludedContext(BusinessContextIdentifier.parse("user.validEmail"))
+                            .build(),
+                        BusinessContext.builder()
+                            .withIdentifier(BusinessContextIdentifier.parse("order.create"))
+                            .withIncludedContext(BusinessContextIdentifier.parse("auth.userLoggedIn"))
+                            .withIncludedContext(BusinessContextIdentifier.parse("order.valid"))
+                            // TODO: preconditions, postconditions
+                            .build(),
+                        BusinessContext.builder()
+                            .withIdentifier(BusinessContextIdentifier.parse("order.changeState"))
+                            .withIncludedContext(BusinessContextIdentifier.parse("auth.employeeLoggedIn"))
+                            .withIncludedContext(BusinessContextIdentifier.parse("order.valid"))
+                            // TODO: preconditions, postconditions
+                            .build(),
+                        BusinessContext.builder()
+                            .withIdentifier(BusinessContextIdentifier.parse("order.listAll"))
+                            .withIncludedContext(BusinessContextIdentifier.parse("auth.employeeLoggedIn"))
+                            // TODO: preconditions, postconditions
                             .build(),
                         BusinessContext.builder()
                             .withIdentifier(BusinessContextIdentifier.parse("order.addToShoppingCart"))
+                            .withIncludedContext(BusinessContextIdentifier.parse("auth.userLoggedIn"))
+                            .withIncludedContext(BusinessContextIdentifier.parse("product.hidden"))
+                            .withIncludedContext(BusinessContextIdentifier.parse("product.stock"))
                             .withPrecondition(Precondition.builder()
                                 .withName("Shopping cart must contain less than 10 items")
                                 .withCondition(new LessThan( // The rule is validated before the item is added

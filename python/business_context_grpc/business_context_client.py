@@ -80,8 +80,8 @@ def build_context(message: BusinessContextMessage) -> BusinessContext:
                            preconditions=preconditions, post_conditions=post_conditions)
 
 
-def retrieve_contexts(identifiers: [Identifier], port: int) -> Set[BusinessContext]:
-    channel = grpc.insecure_channel('localhost:' + port.__str__())
+def retrieve_contexts(identifiers: [Identifier], host: str, port: int) -> Set[BusinessContext]:
+    channel = grpc.insecure_channel(host + ':' + port.__str__())
     stub = business_context_pb2_grpc.BusinessContextServerStub(channel)
     required_contexts = list(map(Identifier.__str__, identifiers))
     response = stub.FetchContexts(business_context_pb2.BusinessContextRequestMessage(requiredContexts=required_contexts))

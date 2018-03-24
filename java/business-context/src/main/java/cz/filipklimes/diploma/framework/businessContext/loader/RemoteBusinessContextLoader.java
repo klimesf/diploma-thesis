@@ -27,7 +27,7 @@ public class RemoteBusinessContextLoader
         );
 
         return identifierByPrefix.entrySet()
-            .parallelStream()
+            .stream()
             .map(this::loadContextsFromRemote)
             .flatMap(Set::stream)
             .collect(Collectors.toMap(
