@@ -20,18 +20,24 @@ public enum ExpressionType
         BigDecimal.class,
         value -> ((BigDecimal) value).toPlainString(),
         BigDecimal::new
-        ),
+    ),
     BOOL(
         "bool",
         Boolean.class,
         Object::toString,
         Boolean::new
-        ),
+    ),
     VOID(
         "void",
         Void.class,
         Object::toString,
         value -> null
+    ),
+    OBJECT(
+        "object",
+        Object.class,
+        Object::toString,
+        value -> null // No deserialization of objects in prototype
     );
 
     private static final Map<String, ExpressionType> nameMap = new HashMap<>();

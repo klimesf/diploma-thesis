@@ -9,6 +9,7 @@ class ExpressionType(Enum):
     NUMBER = 'number'
     BOOL = 'bool'
     VOID = 'void'
+    OBJECT = 'object'
 
 
 class Expression:

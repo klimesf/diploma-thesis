@@ -44,7 +44,7 @@ exports.setUp = () => {
                         BusinessContextIdentifier.of('auth.userLoggedIn'),
                         new Set(),
                         new Set()
-                            .add(new Precondition('User must be signed in', new IsNotNull(new VariableReference('user', ExpressionType.VOID))),),
+                            .add(new Precondition('User must be signed in', new IsNotNull(new VariableReference('user', ExpressionType.OBJECT))),),
                         new Set()
                     ),
                     new BusinessContext(

@@ -19,6 +19,11 @@ const ExpressionType = Object.freeze({
         serialize: value => '',
         deserialize: value => null
     },
+    OBJECT: {
+        name: 'object',
+        serialize: value => '',
+        deserialize: value => null // No object deserialization in prototype
+    },
 })
 
 export default ExpressionType
