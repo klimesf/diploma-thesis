@@ -5,10 +5,9 @@ const express = require('express'),
     port = process.env.PORT || 5503,
     bodyParser = require('body-parser'),
     userRoutes = require('./routes/userRoutes'),
-    businessContext = require('./businessContext')
+    model = require('./model')
 
-// Business context
-businessContext.setUp()
+model.init()
 
 // Middlewares
 app.use(bodyParser.urlencoded({extended: true}))

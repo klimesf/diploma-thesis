@@ -70,8 +70,14 @@ exports.setUp = () => {
                         new Set()
                     ),
                     new BusinessContext(
-                        BusinessContextIdentifier.of('user.createCustomer'),
+                        BusinessContextIdentifier.of('user.register'),
                         new Set().add(BusinessContextIdentifier.of('user.validEmail')),
+                        new Set(),
+                        new Set()
+                    ),
+                    new BusinessContext(
+                        BusinessContextIdentifier.of('user.listAll'),
+                        new Set(),
                         new Set(),
                         new Set()
                     ),
