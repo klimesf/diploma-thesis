@@ -30,7 +30,11 @@ public class DataFixtures
         try {
             User user = new User(1, "John Doe", "john.doe@example.com", "CUSTOMER");
             shoppingCartFacade.addProduct(user, 1, 1);
-            orderFacade.createOrder(user, new Address(), new Address());
+            orderFacade.createOrder(
+                user,
+                new Address("Czechia", "Prague", "Karlovo Náměstí 5", "15000"),
+                new Address("Czechia", "Prague", "Karlovo Náměstí 5", "15000")
+            );
 
             shoppingCartFacade.addProduct(user, 1, 1);
 

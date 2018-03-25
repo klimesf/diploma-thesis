@@ -35,6 +35,12 @@ public class Application
     private static String USER_SERVICE_HOST = "localhost";
     private static int USER_SERVICE_PORT = 5553;
 
+    private static String SHIPPING_SERVICE_HOST = "localhost";
+    private static int SHIPPING_SERVICE_PORT = 5554;
+
+    private static String BILLING_SERVICE_HOST = "localhost";
+    private static int BILLING_SERVICE_PORT = 5555;
+
     public static void main(String[] args)
     {
         SpringApplication.run(Application.class, args);
@@ -47,6 +53,8 @@ public class Application
         remoteLoaders.put("product", new GrpcRemoteLoader(new RemoteServiceAddress("product", PRODUCT_SERVICE_HOST, PRODUCT_SERVICE_PORT)));
         remoteLoaders.put("user", new GrpcRemoteLoader(new RemoteServiceAddress("user", USER_SERVICE_HOST, USER_SERVICE_PORT)));
         remoteLoaders.put("auth", new GrpcRemoteLoader(new RemoteServiceAddress("auth", AUTH_SERVICE_HOST, AUTH_SERVICE_PORT)));
+        remoteLoaders.put("shipping", new GrpcRemoteLoader(new RemoteServiceAddress("shipping", SHIPPING_SERVICE_HOST, SHIPPING_SERVICE_PORT)));
+        remoteLoaders.put("billing", new GrpcRemoteLoader(new RemoteServiceAddress("billing", BILLING_SERVICE_HOST, BILLING_SERVICE_PORT)));
 
         BusinessContextRegistry registry = BusinessContextRegistry.builder()
             .withLocalLoader(new LocalBusinessContextLoader()
@@ -58,6 +66,8 @@ public class Application
                         BusinessContext.builder()
                             .withIdentifier(BusinessContextIdentifier.parse("order.valid"))
                             .withIncludedContext(BusinessContextIdentifier.parse("user.validEmail"))
+                            .withIncludedContext(BusinessContextIdentifier.parse("shipping.correctAddress"))
+                            .withIncludedContext(BusinessContextIdentifier.parse("billing.correctAddress"))
                             .build(),
                         BusinessContext.builder()
                             .withIdentifier(BusinessContextIdentifier.parse("order.create"))
