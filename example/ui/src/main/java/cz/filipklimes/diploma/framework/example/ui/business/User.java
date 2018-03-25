@@ -6,6 +6,9 @@ public class User
 {
 
     @Getter
+    private Integer id;
+
+    @Getter
     private String name;
 
     @Getter
@@ -18,8 +21,9 @@ public class User
     {
     }
 
-    public User(final String name, final String email, final String role)
+    public User(final Integer id, final String name, final String email, final String role)
     {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.role = role;

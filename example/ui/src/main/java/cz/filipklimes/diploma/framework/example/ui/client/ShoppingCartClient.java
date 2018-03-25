@@ -2,6 +2,7 @@ package cz.filipklimes.diploma.framework.example.ui.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.filipklimes.diploma.framework.example.ui.exception.CouldNotAddShoppingCartItemException;
+import cz.filipklimes.diploma.framework.example.ui.facade.SignedUser;
 import lombok.Getter;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -12,6 +13,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -24,10 +26,22 @@ public class ShoppingCartClient
 
     private static Logger log = LoggerFactory.getLogger(ShoppingCartClient.class);
 
+    private final SignedUser signedUser;
+
+    @Autowired
+    public ShoppingCartClient(final SignedUser signedUser)
+    {
+        this.signedUser = signedUser;
+    }
+
     public List<ShoppingCartItem> listCartItems()
     {
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
             HttpUriRequest request = new HttpGet("http://localhost:5501/shopping-cart");
+            if (signedUser.isAnyoneSignedIn()) {
+                request.addHeader("X-User-Id", String.valueOf(signedUser.getCurrentlyLoggedUser().getId()));
+                request.addHeader("X-User-Role", signedUser.getCurrentlyLoggedUser().getRole());
+            }
 
             try (CloseableHttpResponse response = client.execute(request)) {
                 int statusCode = response.getStatusLine().getStatusCode();
@@ -51,13 +65,18 @@ public class ShoppingCartClient
     {
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
             HttpPost request = new HttpPost("http://localhost:5501/shopping-cart");
+            if (signedUser.isAnyoneSignedIn()) {
+                request.addHeader("X-User-Id", String.valueOf(signedUser.getCurrentlyLoggedUser().getId()));
+                request.addHeader("X-User-Role", signedUser.getCurrentlyLoggedUser().getRole());
+            }
+
             String json = String.format("{\"productId\":%d, \"quantity\":%d}", productId, quantity);
             request.setEntity(new StringEntity(json));
             request.setHeader("Content-type", "application/json");
 
             try (CloseableHttpResponse response = client.execute(request)) {
                 int statusCode = response.getStatusLine().getStatusCode();
-                log.debug(String.format("Fetched products, HTTP status %d", statusCode));
+                log.debug(String.format("Added product to shopping cart, HTTP status %d", statusCode));
 
                 ObjectMapper objectMapper = new ObjectMapper();
                 if (statusCode == HttpStatus.UNPROCESSABLE_ENTITY.value()) {
@@ -84,19 +103,9 @@ public class ShoppingCartClient
         @Getter
         private Integer quantity;
 
-        public ShoppingCartItem()
-        {
-        }
-
-        public ShoppingCartItem(final Integer productId, final Integer quantity)
-        {
-            this.productId = productId;
-            this.quantity = quantity;
-        }
-
     }
 
-    public static final class ListShoppingCartItemsResponse
+    private static final class ListShoppingCartItemsResponse
     {
 
         @Getter
@@ -105,32 +114,13 @@ public class ShoppingCartClient
         @Getter
         private List<ShoppingCartItem> items;
 
-        public ListShoppingCartItemsResponse()
-        {
-        }
-
-        public ListShoppingCartItemsResponse(final Integer count, final List<ShoppingCartItem> items)
-        {
-            this.count = count;
-            this.items = Collections.unmodifiableList(items);
-        }
-
     }
 
-    public static final class AddProductToCartErrorResponse
+    private static final class AddProductToCartErrorResponse
     {
 
         @Getter
         private String message;
-
-        public AddProductToCartErrorResponse()
-        {
-        }
-
-        private AddProductToCartErrorResponse(final String message)
-        {
-            this.message = message;
-        }
 
     }
 

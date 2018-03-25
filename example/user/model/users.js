@@ -1,6 +1,7 @@
 'use strict'
 
 // Prototype fixtures
+let nextId = 4;
 const users = {
     1: {id: 1, name: 'John Doe', email: 'john.doe@example.com', role: 'CUSTOMER'},
     2: {id: 2, name: 'Jane Doe', email: 'jane.doe@example.com', role: 'EMPLOYEE'},
@@ -18,6 +19,15 @@ exports.getUser = (id) => {
         if (!users.hasOwnProperty(id)) {
             reject("User not found")
         }
+        resolve(users[id])
+    })
+}
+
+exports.register = (name, email) => {
+    return new Promise((resolve, reject) => {
+        const id = nextId++;
+        users[id] = {id: id, name: name, email: email, role: 'CUSTOMER'}
+        console.log("Registered user with id " + id)
         resolve(users[id])
     })
 }

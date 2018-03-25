@@ -5,6 +5,7 @@ module.exports = app => {
 
     app.route('/users')
         .get(userController.listUsers)
+        .post(userController.register)
 
 
     app.route('/users/:userId')

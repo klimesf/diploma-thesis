@@ -8,7 +8,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <title>Example e-commerce system</title>
+    <title>Users | Example e-commerce system</title>
 </head>
 <body>
 <nav class="navbar navbar-dark bg-dark navbar-expand-lg" style="margin-bottom: 0;">
@@ -24,9 +24,11 @@
                 <!--<li class="nav-item"><a class="nav-link disabled" href="#">Disabled</a></li>-->
             </ul>
             <div class="form-inline my-2 my-lg-0 text-light">
-                <a href="/users" th:if="${isUserLoggedIn}" style="color: white;" th:text="'User: ' + ${user.name} + '&nbsp;|&nbsp;'"></a>
-                <a href="/users" th:if="${!isUserLoggedIn}" style="color: white;">Sign in&nbsp;|&nbsp;</a>
-                <a href="/shopping-cart" style="color: white;">Shopping cart has&nbsp;<span th:text="${cartCount}"></span>&nbsp;items</a>
+                <div class="form-inline my-2 my-lg-0 text-light">
+                    <a href="/users" th:if="${isUserLoggedIn}" style="color: white;" th:text="'User: ' + ${user.name} + '&nbsp;|&nbsp;'"></a>
+                    <a href="/users" th:if="${!isUserLoggedIn}" style="color: white;">Sign in&nbsp;|&nbsp;</a>
+                    <a href="/shopping-cart" style="color: white;">Shopping cart has&nbsp;<span th:text="${cartCount}"></span>&nbsp;items</a>
+                </div>
             </div>
         </div>
     </div>
@@ -34,7 +36,7 @@
 
 <div class="jumbotron text-center">
     <h1>Example e-commerce system</h1>
-    <p>Buy everything you need!</p>
+    <p>Users</p>
 </div>
 
 <div class="container" th:if="${successMessage != null || errorMessage != null || infoMessage != null}">
@@ -44,15 +46,28 @@
 </div>
 
 <div class="container">
-    <div class="row">
-        <div th:each="product : ${products}" class="col-sm-4">
-            <!--/*@thymesVar id="product" type="cz.filipklimes.diploma.framework.example.ui.business.Product"*/-->
-            <h3 th:text="${product.name}"></h3>
-            <p th:text="${#numbers.formatDecimal(product.sellPrice, 0, 'COMMA', 2, 'POINT')} + ' €'"></p>
-            <p th:text="${product.description}"></p>
-            <a th:href="@{/add-to-cart/{productId}(productId=${product.id})}">Add to cart</a>
-        </div>
-    </div>
+    <h2>Users</h2>
+    <table class="table table-striped">
+        <thead class="thead-dart">
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Role</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${users}">
+            <!--/*@thymesVar id="item" type="cz.filipklimes.diploma.framework.example.ui.business.User"*/-->
+            <td th:text="${item.id}"></td>
+            <td th:text="${item.name}"></td>
+            <td th:text="${item.email}"></td>
+            <td th:text="${item.role}"></td>
+            <td><a th:href="@{/sign-in/{userId}(userId=${item.id})}">Sign in</a></td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 
 <!-- Optional JavaScript -->

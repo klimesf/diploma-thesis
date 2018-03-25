@@ -11,8 +11,17 @@ const express = require('express'),
 businessContext.setUp()
 
 // Middlewares
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.json())
+app.use((req, res, next) => {
+    res.on("finish", () => {
+        const date = new Date().toISOString()
+            .replace(/T/, ' ')
+            .replace(/\..+/, '')
+        console.log("* [" + date + "] \"" + req.method + " " + req.originalUrl + "\" " + res.statusCode)
+    })
+    return next()
+})
 
 // Routes
 userRoutes(app)

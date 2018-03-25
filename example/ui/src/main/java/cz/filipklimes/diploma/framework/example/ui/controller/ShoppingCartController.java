@@ -4,6 +4,7 @@ import cz.filipklimes.diploma.framework.example.ui.business.Product;
 import cz.filipklimes.diploma.framework.example.ui.exception.CouldNotAddShoppingCartItemException;
 import cz.filipklimes.diploma.framework.example.ui.exception.ProductNotFoundException;
 import cz.filipklimes.diploma.framework.example.ui.facade.ShoppingCartFacade;
+import cz.filipklimes.diploma.framework.example.ui.facade.SignedUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,11 +20,13 @@ public class ShoppingCartController
 {
 
     private final ShoppingCartFacade shoppingCartFacade;
+    private final SignedUser signedUser;
 
     @Autowired
-    public ShoppingCartController(final ShoppingCartFacade shoppingCartFacade)
+    public ShoppingCartController(final ShoppingCartFacade shoppingCartFacade, final SignedUser signedUser)
     {
         this.shoppingCartFacade = shoppingCartFacade;
+        this.signedUser = signedUser;
     }
 
     @GetMapping("/shopping-cart")
@@ -31,8 +34,13 @@ public class ShoppingCartController
     {
         List<ShoppingCartFacade.Item> items = shoppingCartFacade.listItems();
         model.addAttribute("items", items);
-        model.addAttribute("cartCount", items.size());
         model.addAttribute("total", items.stream().mapToInt(item -> item.getProductPrice() * item.getQuantity()).sum());
+
+        // Header info
+        model.addAttribute("cartCount", items.size());
+        model.addAttribute("isUserLoggedIn", signedUser.isAnyoneSignedIn());
+        model.addAttribute("user", signedUser.getCurrentlyLoggedUser());
+
         return "shopping-cart";
     }
 
