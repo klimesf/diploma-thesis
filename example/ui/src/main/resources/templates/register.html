@@ -8,7 +8,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <title>Users | Example e-commerce system</title>
+    <title>Register | Example e-commerce system</title>
 </head>
 <body>
 <nav class="navbar navbar-dark bg-dark navbar-expand-lg" style="margin-bottom: 0;">
@@ -20,6 +20,9 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/orders" th:if="${isUserLoggedIn && (user.role == 'ADMINISTRATOR' || user.role == 'EMPLOYEE')}" style="color: white;">Manage orders</a>
+                </li>
                 <!--<li class="nav-item"><a class="nav-link" href="#">Link</a></li>-->
                 <!--<li class="nav-item"><a class="nav-link disabled" href="#">Disabled</a></li>-->
             </ul>

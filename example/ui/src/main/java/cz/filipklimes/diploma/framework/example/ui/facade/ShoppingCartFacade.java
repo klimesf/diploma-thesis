@@ -2,8 +2,8 @@ package cz.filipklimes.diploma.framework.example.ui.facade;
 
 import cz.filipklimes.diploma.framework.example.ui.business.Product;
 import cz.filipklimes.diploma.framework.example.ui.client.ProductClient;
-import cz.filipklimes.diploma.framework.example.ui.client.ShoppingCartClient;
-import cz.filipklimes.diploma.framework.example.ui.client.ShoppingCartClient.ShoppingCartItem;
+import cz.filipklimes.diploma.framework.example.ui.client.OrderClient;
+import cz.filipklimes.diploma.framework.example.ui.client.OrderClient.ShoppingCartItem;
 import cz.filipklimes.diploma.framework.example.ui.exception.CouldNotAddShoppingCartItemException;
 import cz.filipklimes.diploma.framework.example.ui.exception.ProductNotFoundException;
 import lombok.Getter;
@@ -15,22 +15,22 @@ import java.util.*;
 public class ShoppingCartFacade
 {
 
-    private final ShoppingCartClient shoppingCartClient;
+    private final OrderClient orderClient;
     private final ProductClient productClient;
 
     public ShoppingCartFacade(
-        final ShoppingCartClient shoppingCartClient,
+        final OrderClient orderClient,
         final ProductClient productClient
     )
     {
-        this.shoppingCartClient = shoppingCartClient;
+        this.orderClient = orderClient;
         this.productClient = productClient;
     }
 
     public List<Item> listItems() throws ProductNotFoundException
     {
         List<Item> items = new ArrayList<>();
-        for (ShoppingCartItem item : shoppingCartClient.listCartItems()) {
+        for (ShoppingCartItem item : orderClient.listCartItems()) {
             Product product = productClient.getProduct(item.getProductId());
             if (product == null) {
                 throw new ProductNotFoundException(item.getProductId());
@@ -42,7 +42,7 @@ public class ShoppingCartFacade
 
     public Product addProduct(final Integer productId) throws CouldNotAddShoppingCartItemException, ProductNotFoundException
     {
-        shoppingCartClient.addItem(productId, 1);
+        orderClient.addItem(productId, 1);
         Product product = productClient.getProduct(productId);
         if (product == null) {
             throw new ProductNotFoundException(productId);

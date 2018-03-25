@@ -1,4 +1,4 @@
-package cz.filipklimes.diploma.framework.example.order.business;
+package cz.filipklimes.diploma.framework.example.ui.business;
 
 import lombok.Getter;
 
@@ -21,12 +21,7 @@ public class Address
     {
     }
 
-    public Address(
-        final String country,
-        final String city,
-        final String street,
-        final String postal
-    )
+    public Address(final String country, final String city, final String street, final String postal)
     {
         this.country = country;
         this.city = city;

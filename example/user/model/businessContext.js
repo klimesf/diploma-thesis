@@ -12,6 +12,7 @@ const BusinessContextRegistry = require('business-context-framework/dist/Busines
     ObjectPropertyReference = require('business-context-framework/dist/expression/ObjectPropertyReference').default,
     ExpressionType = require('business-context-framework/dist/expression/ExpressionType').default,
     Equals = require('business-context-framework/dist/expression/logical/Equals').default,
+    Or = require('business-context-framework/dist/expression/logical/Or').default,
     businessContextPort = process.env.BUSINESS_CONTEXT_PORT || 5553,
     server = require('business-context-grpc/dist/server')
 
@@ -34,10 +35,17 @@ exports.setUp = () => {
                         BusinessContextIdentifier.of('auth.employeeLoggedIn'),
                         new Set(),
                         new Set()
-                            .add(new Precondition('Signed user must be an employee', new Equals(
-                                new ObjectPropertyReference('user', 'role', ExpressionType.STRING),
-                                new Constant("EMPLOYEE", ExpressionType.STRING)
-                            ))),
+                            .add(new Precondition('Signed user must be an employee',
+                                new Or(
+                                    new Equals(
+                                        new ObjectPropertyReference('user', 'role', ExpressionType.STRING),
+                                        new Constant("EMPLOYEE", ExpressionType.STRING)
+                                    ),
+                                    new Equals(
+                                        new ObjectPropertyReference('user', 'role', ExpressionType.STRING),
+                                        new Constant("ADMINISTRATOR", ExpressionType.STRING)
+                                    )
+                                ))),
                         new Set()
                     ),
                     new BusinessContext(

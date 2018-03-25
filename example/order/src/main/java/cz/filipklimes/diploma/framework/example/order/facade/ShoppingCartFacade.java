@@ -21,7 +21,7 @@ public class ShoppingCartFacade
 
     private final ProductClient productClient;
     private final ShoppingCartService shoppingCartService;
-    private final ShoppingCart shoppingCart; // No user dependency or persistence for prototyping purposes
+    private ShoppingCart shoppingCart; // No user dependency or persistence for prototyping purposes
 
     public ShoppingCartFacade(final ProductClient productClient, final ShoppingCartService shoppingCartService)
     {
@@ -39,14 +39,19 @@ public class ShoppingCartFacade
      * @throws ProductNotFoundException When product with given Id does not exist.
      * @throws BusinessRulesCheckFailedException When business rule check fails.
      */
-    public void addProduct(final Integer productId, final Integer quantity) throws ProductNotFoundException
+    public void addProduct(final User user, final Integer productId, final Integer quantity) throws ProductNotFoundException
     {
         Product product = productClient.getProduct(productId);
         if (product == null) {
             throw new ProductNotFoundException(productId);
         }
 
-        shoppingCartService.addToShoppingCart(new User(3, "Dr. Faust", "faust@example.com", "ADMINISTRATOR"), product, quantity, shoppingCart);
+        shoppingCartService.addToShoppingCart(
+            user,
+            product,
+            quantity,
+            shoppingCart
+        );
 
         log.info(String.format(
             "Added product %d pieces of product %d into shopping cart, it now has %d items",
@@ -54,6 +59,11 @@ public class ShoppingCartFacade
             product.getId(),
             shoppingCart.getItems().size()
         ));
+    }
+
+    public void clearCart()
+    {
+        shoppingCart = new ShoppingCart();
     }
 
 }

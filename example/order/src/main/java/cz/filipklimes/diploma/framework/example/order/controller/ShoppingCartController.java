@@ -3,6 +3,9 @@ package cz.filipklimes.diploma.framework.example.order.controller;
 import cz.filipklimes.diploma.framework.businessContext.Precondition;
 import cz.filipklimes.diploma.framework.businessContext.exception.BusinessRulesCheckFailedException;
 import cz.filipklimes.diploma.framework.example.order.business.ShoppingCartItem;
+import cz.filipklimes.diploma.framework.example.order.business.User;
+import cz.filipklimes.diploma.framework.example.order.client.UserClient;
+import cz.filipklimes.diploma.framework.example.order.controller.response.ErrorResponse;
 import cz.filipklimes.diploma.framework.example.order.exception.ProductNotFoundException;
 import cz.filipklimes.diploma.framework.example.order.facade.ShoppingCartFacade;
 import lombok.Getter;
@@ -11,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
@@ -20,10 +24,12 @@ import java.util.stream.Collectors;
 public class ShoppingCartController
 {
 
+    private UserClient userClient;
     private final ShoppingCartFacade shoppingCartFacade;
 
-    public ShoppingCartController(final ShoppingCartFacade shoppingCartFacade)
+    public ShoppingCartController(final UserClient userClient, final ShoppingCartFacade shoppingCartFacade)
     {
+        this.userClient = userClient;
         this.shoppingCartFacade = shoppingCartFacade;
     }
 
@@ -35,18 +41,22 @@ public class ShoppingCartController
     }
 
     @PostMapping("/shopping-cart")
-    public ResponseEntity<?> addProduct(@RequestBody AddProductToCartRequest request)
+    public ResponseEntity<?> addProduct(
+        @RequestHeader(value = "X-User-Id", required = false) String userId,
+        @RequestBody AddProductToCartRequest request
+    )
     {
         try {
-            shoppingCartFacade.addProduct(request.getProductId(), request.getQuantity());
+            User user = userId != null ? userClient.getUser(Integer.valueOf(userId)) : null;
+            shoppingCartFacade.addProduct(user, request.getProductId(), request.getQuantity());
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
 
         } catch (ProductNotFoundException e) {
-            return new ResponseEntity<>(new AddProductToCartErrorResponse(e.getMessage()), HttpStatus.UNPROCESSABLE_ENTITY);
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.UNPROCESSABLE_ENTITY);
 
         } catch (BusinessRulesCheckFailedException e) {
             return new ResponseEntity<>(
-                new AddProductToCartErrorResponse(String.format(
+                new ErrorResponse(String.format(
                     "Could not add product to cart: %s",
                     e.getFailedRules().stream()
                         .map(Precondition::getName)
@@ -91,19 +101,6 @@ public class ShoppingCartController
         {
             this.productId = productId;
             this.quantity = quantity;
-        }
-
-    }
-
-    public static final class AddProductToCartErrorResponse
-    {
-
-        @Getter
-        private final String message;
-
-        private AddProductToCartErrorResponse(final String message)
-        {
-            this.message = message;
         }
 
     }

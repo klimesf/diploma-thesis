@@ -2,9 +2,9 @@ package cz.filipklimes.diploma.framework.example.ui.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.filipklimes.diploma.framework.example.ui.business.User;
+import cz.filipklimes.diploma.framework.example.ui.controller.response.ErrorResponse;
 import cz.filipklimes.diploma.framework.example.ui.exception.CouldNotCreateUserException;
 import cz.filipklimes.diploma.framework.example.ui.facade.SignedUser;
-import lombok.Getter;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -110,7 +110,7 @@ public class UserClient
 
                 ObjectMapper objectMapper = new ObjectMapper();
                 if (statusCode == HttpStatus.UNPROCESSABLE_ENTITY.value()) {
-                    RegisterUserErrorResponse errorResponse = objectMapper.readValue(response.getEntity().getContent(), RegisterUserErrorResponse.class);
+                    ErrorResponse errorResponse = objectMapper.readValue(response.getEntity().getContent(), ErrorResponse.class);
                     throw new CouldNotCreateUserException(errorResponse.getMessage());
                 }
 
@@ -124,14 +124,6 @@ public class UserClient
         } catch (IOException e) {
             throw new RuntimeException("Could not register new user", e);
         }
-    }
-
-    public static final class RegisterUserErrorResponse
-    {
-
-        @Getter
-        private String message;
-
     }
 
 }

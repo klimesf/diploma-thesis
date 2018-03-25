@@ -1,5 +1,7 @@
 package cz.filipklimes.diploma.framework.example.order;
 
+import cz.filipklimes.diploma.framework.example.order.business.Address;
+import cz.filipklimes.diploma.framework.example.order.business.User;
 import cz.filipklimes.diploma.framework.example.order.exception.ProductNotFoundException;
 import cz.filipklimes.diploma.framework.example.order.facade.OrderFacade;
 import cz.filipklimes.diploma.framework.example.order.facade.ShoppingCartFacade;
@@ -26,8 +28,11 @@ public class DataFixtures
     private void createFixtures()
     {
         try {
-            shoppingCartFacade.addProduct(1, 1);
-            // TODO: create order
+            User user = new User(1, "John Doe", "john.doe@example.com", "CUSTOMER");
+            shoppingCartFacade.addProduct(user, 1, 1);
+            orderFacade.createOrder(user, new Address(), new Address());
+
+            shoppingCartFacade.addProduct(user, 1, 1);
 
         } catch (ProductNotFoundException e) {
             log.error(String.format("Could not create fixtures: %s", e.getMessage()));

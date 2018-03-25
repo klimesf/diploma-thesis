@@ -1,7 +1,7 @@
 package cz.filipklimes.diploma.framework.example.ui.controller;
 
 import cz.filipklimes.diploma.framework.example.ui.business.User;
-import cz.filipklimes.diploma.framework.example.ui.client.ShoppingCartClient;
+import cz.filipklimes.diploma.framework.example.ui.client.OrderClient;
 import cz.filipklimes.diploma.framework.example.ui.exception.CouldNotCreateUserException;
 import cz.filipklimes.diploma.framework.example.ui.exception.UserNotFoundException;
 import cz.filipklimes.diploma.framework.example.ui.facade.SignedUser;
@@ -22,18 +22,18 @@ import org.springframework.web.servlet.view.RedirectView;
 public class UserController
 {
 
-    private final ShoppingCartClient shoppingCartClient;
+    private final OrderClient orderClient;
     private final UserFacade userFacade;
     private final SignedUser signedUser;
 
     @Autowired
     public UserController(
-        final ShoppingCartClient shoppingCartClient,
+        final OrderClient orderClient,
         final UserFacade userFacade,
         final SignedUser signedUser
     )
     {
-        this.shoppingCartClient = shoppingCartClient;
+        this.orderClient = orderClient;
         this.userFacade = userFacade;
         this.signedUser = signedUser;
     }
@@ -44,7 +44,7 @@ public class UserController
         model.addAttribute("users", userFacade.listUsers());
 
         // Header info
-        model.addAttribute("cartCount", shoppingCartClient.listCartItems().size());
+        model.addAttribute("cartCount", orderClient.listCartItems().size());
         model.addAttribute("isUserLoggedIn", signedUser.isAnyoneSignedIn());
         model.addAttribute("user", signedUser.getCurrentlyLoggedUser());
 
@@ -68,7 +68,7 @@ public class UserController
     public String register(Model model)
     {
         // Header info
-        model.addAttribute("cartCount", shoppingCartClient.listCartItems().size());
+        model.addAttribute("cartCount", orderClient.listCartItems().size());
         model.addAttribute("isUserLoggedIn", signedUser.isAnyoneSignedIn());
         model.addAttribute("user", signedUser.getCurrentlyLoggedUser());
         model.addAttribute("userForm", new UserForm());
@@ -79,9 +79,8 @@ public class UserController
     @PostMapping("/register")
     public RedirectView handleRegister(@ModelAttribute UserForm userForm, RedirectAttributes attributes)
     {
-        User user = null;
         try {
-            user = userFacade.register(userForm.getName(), userForm.getEmail());
+            User user = userFacade.register(userForm.getName(), userForm.getEmail());
             signedUser.signIn(user);
             attributes.addFlashAttribute("success", String.format("Registered new user %s", user.getName()));
 
