@@ -35,6 +35,8 @@ class ProductRepository:
             2: Product(2, "Ferrari 458 Italia", "Beautiful car for wealthy engineers", None, 150000, 5, False),
             3: Product(3, "Hamburger", "A meal for the working class", None, 6, 5, False),
             4: Product(4, "A dirty sock", "Very dirty and cheap sock", None, 1, 5, True),
+            5: Product(5, "Wardrobe", "Wooden wardrobe for your clothes", None, 300, 1, False),
+            6: Product(6, "A chair", "Prime italian leather, it can bend over backwards", None, 399, 0, False),
         }
 
     @business_operation("product.listAll", weaver)

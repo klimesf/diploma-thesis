@@ -48,7 +48,7 @@
 
 <div class="container">
     <div class="row">
-        <div th:each="product : ${products}" class="col-sm-4">
+        <div th:each="product : ${products}" class="col-sm-4" style="margin-bottom: 30px;">
             <!--/*@thymesVar id="product" type="cz.filipklimes.diploma.framework.example.ui.business.Product"*/-->
             <h3 th:text="${product.name}"></h3>
             <p th:text="${#numbers.formatDecimal(product.sellPrice, 0, 'COMMA', 2, 'POINT')} + ' €'"></p>
