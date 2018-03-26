@@ -11,6 +11,7 @@
 
     <modules>
         <module>business-context</module>
+        <module>business-context-aspectj</module>
         <module>business-context-grpc</module>
     </modules>
 
