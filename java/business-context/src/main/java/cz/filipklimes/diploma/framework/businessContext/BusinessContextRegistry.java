@@ -94,6 +94,13 @@ public class BusinessContextRegistry
             ));
     }
 
+    public Set<BusinessContext> getAllContexts()
+    {
+        return contexts.entrySet().stream()
+            .map(Map.Entry::getValue)
+            .collect(Collectors.toSet());
+    }
+
     /**
      * Saves business context.
      * @param businessContext The new or updated business context.

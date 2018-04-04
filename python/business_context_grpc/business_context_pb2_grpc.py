@@ -19,6 +19,11 @@ class BusinessContextServerStub(object):
         request_serializer=business__context__pb2.BusinessContextRequestMessage.SerializeToString,
         response_deserializer=business__context__pb2.BusinessContextsResponseMessage.FromString,
         )
+    self.FetchAllContexts = channel.unary_unary(
+        '/businessContext.BusinessContextServer/FetchAllContexts',
+        request_serializer=business__context__pb2.Empty.SerializeToString,
+        response_deserializer=business__context__pb2.BusinessContextsResponseMessage.FromString,
+        )
 
 
 class BusinessContextServerServicer(object):
@@ -32,12 +37,24 @@ class BusinessContextServerServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
+  def FetchAllContexts(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
 
 def add_BusinessContextServerServicer_to_server(servicer, server):
   rpc_method_handlers = {
       'FetchContexts': grpc.unary_unary_rpc_method_handler(
           servicer.FetchContexts,
           request_deserializer=business__context__pb2.BusinessContextRequestMessage.FromString,
+          response_serializer=business__context__pb2.BusinessContextsResponseMessage.SerializeToString,
+      ),
+      'FetchAllContexts': grpc.unary_unary_rpc_method_handler(
+          servicer.FetchAllContexts,
+          request_deserializer=business__context__pb2.Empty.FromString,
           response_serializer=business__context__pb2.BusinessContextsResponseMessage.SerializeToString,
       ),
   }

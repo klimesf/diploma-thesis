@@ -27,6 +27,7 @@ import cz.filipklimes.diploma.framework.businessContext.expression.numeric.LessT
 import cz.filipklimes.diploma.framework.businessContext.expression.numeric.Multiply;
 import cz.filipklimes.diploma.framework.businessContext.expression.numeric.Subtract;
 import cz.filipklimes.diploma.framework.businessContext.loader.remote.RemoteServiceAddress;
+import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.BusinessContextProtos;
 import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.BusinessContextProtos.BusinessContextMessage;
 import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.BusinessContextProtos.BusinessContextRequestMessage;
 import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.BusinessContextProtos.ExpressionMessage;
@@ -65,16 +66,10 @@ class GrpcBusinessContextClient
         channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
     }
 
-    /**
-     * Receives business contexts from gRPC business context server.
-     *
-     * @param identifiers
-     * @return Set of business rules.
-     */
-    public Set<BusinessContext> receiveContexts(final Set<BusinessContextIdentifier> identifiers)
+    public Set<BusinessContext> fetchContexts(final Set<BusinessContextIdentifier> identifiers)
     {
         try {
-            return blockingStub.fetchContexts(buildRequest(identifiers))
+            return blockingStub.fetchContexts(buildContextRequest(identifiers))
                 .getContextsList().stream()
                 .map(this::buildBusinessContext)
                 .collect(Collectors.toSet());
@@ -85,7 +80,21 @@ class GrpcBusinessContextClient
         }
     }
 
-    private BusinessContextRequestMessage buildRequest(final Set<BusinessContextIdentifier> identifiers)
+    public Set<BusinessContext> fetchAllContexts()
+    {
+        try {
+            return blockingStub.fetchAllContexts(BusinessContextProtos.Empty.newBuilder().build())
+                .getContextsList().stream()
+                .map(this::buildBusinessContext)
+                .collect(Collectors.toSet());
+
+        } catch (StatusRuntimeException e) {
+            logger.severe(e.getMessage());
+            return Collections.emptySet();
+        }
+    }
+
+    private BusinessContextRequestMessage buildContextRequest(final Set<BusinessContextIdentifier> identifiers)
     {
         return BusinessContextRequestMessage.newBuilder()
             .addAllRequiredContexts(identifiers.stream()

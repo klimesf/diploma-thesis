@@ -24,79 +24,25 @@ import static cz.filipklimes.diploma.framework.businessContext.expression.Expres
 public class GrpcBusinessOperationContextExchangeTest
 {
 
+    private static final BusinessContextIdentifier AUTH_NOT_LOGGED_IN = new BusinessContextIdentifier("auth", "notLoggedIn");
+    private static final BusinessContextIdentifier USER_VALID_EMAIL = new BusinessContextIdentifier("user", "validEmail");
+    private static final BusinessContextIdentifier USER_CREATE = new BusinessContextIdentifier("user", "create");
+
     @Test
     public void test()
     {
-        final BusinessContextIdentifier authNotLoggedIn = new BusinessContextIdentifier("auth", "notLoggedIn");
-        final BusinessContextIdentifier userValidEmail = new BusinessContextIdentifier("user", "validEmail");
-
-        BusinessContextRegistry.Builder builder = BusinessContextRegistry.builder();
-        builder.withLocalLoader(new LocalBusinessContextLoader()
-        {
-            @Override
-            public Set<BusinessContext> load()
-            {
-                return Collections.singleton(
-                    BusinessContext.builder()
-                        .withIncludedContext(authNotLoggedIn)
-                        .withIdentifier(userValidEmail)
-                        .withPrecondition(
-                            Precondition.builder()
-                                .withName("userEmailNotEmpty")
-                                .withCondition(new IsNotNull<>(new ObjectPropertyReference<>("user", "email", ExpressionType.STRING)))
-                                .build()
-                        )
-                        .build()
-                );
-            }
-        });
-
-        Map<String, RemoteLoader> remoteLoaders = new HashMap<>();
-        remoteLoaders.put("auth", identifiers -> {
-            Map<BusinessContextIdentifier, BusinessContext> contexts = new HashMap<>();
-            contexts.put(
-                authNotLoggedIn,
-                BusinessContext.builder()
-                    .withIdentifier(authNotLoggedIn)
-                    .withPrecondition(
-                        Precondition.builder()
-                            .withName("userNotLoggedIn")
-                            .withCondition(new Equals<>(
-                                new VariableReference<>("loggedIn", BOOL),
-                                new Constant<>(false, BOOL)
-                            ))
-                            .build()
-                    )
-                    .withPostCondition(
-                        PostCondition.builder()
-                            .withName("hideUserEmail")
-                            .withType(PostConditionType.FILTER_OBJECT_FIELD)
-                            .withReferenceName("email")
-                            .withCondition(new Constant<>(true, BOOL))
-                            .build()
-                    )
-                    .build()
-            );
-
-            return identifiers.stream()
-                .map(contexts::get)
-                .collect(Collectors.toSet());
-        });
-        builder.withRemoteLoader(new RemoteBusinessContextLoader(remoteLoaders));
-
-        BusinessContextRegistry registry = builder.build();
+        BusinessContextRegistry registry = buildRegistry();
 
         GrpcBusinessContextServer server = new GrpcBusinessContextServer(registry, 5555);
         Thread t = new Thread(server);
         t.start();
 
         Set<BusinessContextIdentifier> identifiers = new HashSet<>();
-        identifiers.add(userValidEmail);
+        identifiers.add(USER_CREATE);
 
-        GrpcRemoteLoader client = new GrpcRemoteLoader(new RemoteServiceAddress("user", "localhost", 5555));
+        RemoteLoader client = new GrpcRemoteLoader(new RemoteServiceAddress("user", "localhost", 5555));
         Set<BusinessContext> contexts = client.loadContexts(identifiers);
 
-        t.interrupt();
         Assert.assertEquals(1, contexts.size());
 
         BusinessContext context = contexts.iterator().next();
@@ -125,6 +71,91 @@ public class GrpcBusinessOperationContextExchangeTest
         PostCondition rule3 = postConditionMap.get("hideUserEmail");
         Assert.assertTrue(rule3.getCondition() instanceof Constant);
         Assert.assertEquals("email", rule3.getReferenceName());
+
+        Set<BusinessContext> allContexts = ((GrpcRemoteLoader) client).loadAllContexts();
+
+        t.interrupt();
+        Assert.assertEquals(2, allContexts.size());
+    }
+
+    private BusinessContextRegistry buildRegistry()
+    {
+
+        BusinessContextRegistry.Builder builder = BusinessContextRegistry.builder();
+        builder.withLocalLoader(new TestLocalBusinessContextLoader());
+
+        Map<String, RemoteLoader> remoteLoaders = new HashMap<>();
+        remoteLoaders.put("auth", new RemoteLoader()
+        {
+
+            @Override
+            public Set<BusinessContext> loadContexts(final Set<BusinessContextIdentifier> identifiers)
+            {
+                Map<BusinessContextIdentifier, BusinessContext> contexts = new HashMap<>();
+                contexts.put(
+                    AUTH_NOT_LOGGED_IN,
+                    BusinessContext.builder()
+                        .withIdentifier(AUTH_NOT_LOGGED_IN)
+                        .withPrecondition(
+                            Precondition.builder()
+                                .withName("userNotLoggedIn")
+                                .withCondition(new Equals<>(
+                                    new VariableReference<>("loggedIn", BOOL),
+                                    new Constant<>(false, BOOL)
+                                ))
+                                .build()
+                        )
+                        .withPostCondition(
+                            PostCondition.builder()
+                                .withName("hideUserEmail")
+                                .withType(PostConditionType.FILTER_OBJECT_FIELD)
+                                .withReferenceName("email")
+                                .withCondition(new Constant<>(true, BOOL))
+                                .build()
+                        )
+                        .build()
+                );
+
+                return identifiers.stream()
+                    .map(contexts::get)
+                    .collect(Collectors.toSet());
+            }
+
+            @Override
+            public Set<BusinessContext> loadAllContexts()
+            {
+                return loadContexts(Collections.singleton(AUTH_NOT_LOGGED_IN));
+            }
+        });
+        builder.withRemoteLoader(new RemoteBusinessContextLoader(remoteLoaders));
+
+        return builder.build();
+    }
+
+    private static class TestLocalBusinessContextLoader extends LocalBusinessContextLoader
+    {
+
+        @Override
+        public Set<BusinessContext> load()
+        {
+            return new HashSet<>(Arrays.asList(
+                BusinessContext.builder()
+                    .withIdentifier(USER_VALID_EMAIL)
+                    .withPrecondition(
+                        Precondition.builder()
+                            .withName("userEmailNotEmpty")
+                            .withCondition(new IsNotNull<>(new ObjectPropertyReference<>("user", "email", ExpressionType.STRING)))
+                            .build()
+                    )
+                    .build(),
+                BusinessContext.builder()
+                    .withIdentifier(USER_CREATE)
+                    .withIncludedContext(AUTH_NOT_LOGGED_IN)
+                    .withIncludedContext(USER_VALID_EMAIL)
+                    .build()
+            ));
+        }
+
     }
 
 }

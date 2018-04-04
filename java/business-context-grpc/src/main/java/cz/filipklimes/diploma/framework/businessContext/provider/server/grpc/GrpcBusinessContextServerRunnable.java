@@ -10,6 +10,7 @@ import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
 import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.BusinessContextProtos.BusinessContextMessage;
 import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.BusinessContextProtos.BusinessContextRequestMessage;
 import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.BusinessContextProtos.BusinessContextsResponseMessage;
+import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.BusinessContextProtos.Empty;
 import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.BusinessContextProtos.ExpressionMessage;
 import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.BusinessContextProtos.ExpressionPropertyMessage;
 import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.BusinessContextProtos.PostConditionMessage;
@@ -94,6 +95,21 @@ public final class GrpcBusinessContextServerRunnable
 
             Set<BusinessContextMessage> contextMessages = registry.getContextsByIdentifiers(identifiers)
                 .values().stream()
+                .map(this::buildBusinessContextMessage)
+                .collect(Collectors.toSet());
+
+            BusinessContextsResponseMessage response = BusinessContextsResponseMessage.newBuilder()
+                .addAllContexts(contextMessages)
+                .build();
+
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
+        }
+
+        @Override
+        public void fetchAllContexts(final Empty request, final StreamObserver<BusinessContextsResponseMessage> responseObserver)
+        {
+            Set<BusinessContextMessage> contextMessages = registry.getAllContexts().stream()
                 .map(this::buildBusinessContextMessage)
                 .collect(Collectors.toSet());
 

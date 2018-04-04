@@ -86,3 +86,10 @@ def retrieve_contexts(identifiers: [Identifier], host: str, port: int) -> Set[Bu
     required_contexts = list(map(Identifier.__str__, identifiers))
     response = stub.FetchContexts(business_context_pb2.BusinessContextRequestMessage(requiredContexts=required_contexts))
     return set(map(build_context, response.contexts))
+
+
+def retrieve_all_contexts(host: str, port: int) -> Set[BusinessContext]:
+    channel = grpc.insecure_channel(host + ':' + port.__str__())
+    stub = business_context_pb2_grpc.BusinessContextServerStub(channel)
+    response = stub.FetchAllContexts(business_context_pb2.Empty())
+    return set(map(build_context, response.contexts))

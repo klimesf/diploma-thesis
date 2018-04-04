@@ -51,9 +51,24 @@ function fetchContexts(registry) {
     }
 }
 
+function fetchAllContexts(registry) {
+    return function (call, callback) {
+        const contexts = registry.getAllContexts()
+        const messages = buildContextMessages(contexts)
+
+        callback(null, {contexts: messages})
+    }
+}
+
 exports.serve = (port, registry) => {
     const server = new grpc.Server()
-    server.addService(businessContextProto.BusinessContextServer.service, {fetchContexts: fetchContexts(registry)})
+    server.addService(
+        businessContextProto.BusinessContextServer.service,
+        {
+            fetchContexts: fetchContexts(registry),
+            fetchAllContexts: fetchAllContexts(registry)
+        }
+    )
     server.bind('localhost:' + port, grpc.ServerCredentials.createInsecure())
     server.start()
     console.log("Business context server listening on port " + port)

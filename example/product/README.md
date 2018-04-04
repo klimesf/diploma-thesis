@@ -19,7 +19,7 @@ pip3 install -r requirements.txt
 And run the service
 
 ```bash
-pip3 product_service.py
+python3 product_service.py
 ```
 
 The service should welcome you with the following message:

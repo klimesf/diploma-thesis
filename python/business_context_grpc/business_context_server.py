@@ -99,3 +99,7 @@ class Server(business_context_pb2_grpc.BusinessContextServerServicer):
         identifiers = set(map(Identifier, request.requiredContexts))
         contexts = self._registry.get_contexts_by_identifiers(identifiers)
         return business_context_pb2.BusinessContextsResponseMessage(contexts=list(map(build_context_message, contexts)))
+
+    def FetchAllContexts(self, request, context):
+        contexts = self._registry.get_all_contexts()
+        return business_context_pb2.BusinessContextsResponseMessage(contexts=list(map(build_context_message, contexts)))

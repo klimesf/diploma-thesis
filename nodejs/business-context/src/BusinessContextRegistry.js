@@ -58,8 +58,13 @@ export default class BusinessContextRegistry {
         return identifiers.map(identifier => this.getContextByIdentifier(identifier))
     }
 
+    getAllContexts() {
+        return Object.values(this.contexts)
+    }
+
     saveOrUpdateBusinessContext(context) {
         // TODO: implement
         throw "not implemented yet"
     }
+
 }

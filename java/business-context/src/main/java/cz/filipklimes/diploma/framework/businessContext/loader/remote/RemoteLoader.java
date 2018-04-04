@@ -5,10 +5,11 @@ import cz.filipklimes.diploma.framework.businessContext.BusinessContextIdentifie
 
 import java.util.*;
 
-@FunctionalInterface
 public interface RemoteLoader
 {
 
     Set<BusinessContext> loadContexts(Set<BusinessContextIdentifier> identifiers);
+
+    Set<BusinessContext> loadAllContexts();
 
 }

@@ -99,6 +99,17 @@ class Registry:
             found.add(self._contexts[identifier])
         return found
 
+    def get_all_contexts(self) -> set:
+        """
+        Finds and returns all business contexts stored within the registry.
+
+        :return: the business contexts
+        """
+        contexts = set()
+        for _, context in self._contexts.items():
+            contexts.add(context)
+        return contexts
+
     def save_or_update_context(self, context: BusinessContext):
         # TODO: implement
         pass

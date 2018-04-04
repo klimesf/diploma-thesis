@@ -91,9 +91,18 @@ function buildContexts(messages) {
 
 exports.fetchContexts = async (identifiers, host, port) => {
     const client = new businessContextProto.BusinessContextServer(host + ':' + port, grpc.credentials.createInsecure())
-    grpcPromise.promisifyAll(client);
+    grpcPromise.promisifyAll(client)
     return client.fetchContexts()
         .sendMessage({requiredContexts: identifiers})
         .then(response => buildContexts(response.contexts))
-        .catch(err => console.error(err));
+        .catch(err => console.error(err))
+}
+
+exports.fetchAllContexts = async (host, port) => {
+    const client = new businessContextProto.BusinessContextServer(host + ':' + port, grpc.credentials.createInsecure())
+    grpcPromise.promisifyAll(client)
+    return client.fetchAllContexts()
+        .sendMessage({})
+        .then(response => buildContexts(response.contexts))
+        .catch(err => console.error(err))
 }

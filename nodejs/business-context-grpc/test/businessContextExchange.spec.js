@@ -27,15 +27,21 @@ describe('business context exchange', () => {
                 load: () => {
                     return [
                         new BusinessContext(
-                            BusinessContextIdentifier.of('user.create'),
-                            new Set().add(BusinessContextIdentifier.of('auth.loggedIn')),
+                            BusinessContextIdentifier.of('user.validEmail'),
+                            new Set(),
                             new Set().add(
                                 new Precondition('emailNotNull', new IsNotNull(new VariableReference('email', ExpressionType.STRING))),
                             ),
+                            new Set()
+                        ),
+                        new BusinessContext(
+                            BusinessContextIdentifier.of('user.create'),
+                            new Set().add(BusinessContextIdentifier.of('auth.loggedIn')).add(BusinessContextIdentifier.of('user.validEmail')),
+                            new Set(),
                             new Set().add(
                                 new PostCondition('hideEmail', PostConditionType.FILTER_OBJECT_FIELD, 'email', new Constant(true, ExpressionType.BOOL))
                             )
-                        )
+                        ),
                     ]
                 }
             },
@@ -77,10 +83,20 @@ describe('business context exchange', () => {
             500 // Wait 500ms before sending request so the server has time to start
         )
         setTimeout(
+            () => {
+                client.fetchAllContexts('0.0.0.0', port)
+                    .then(contexts => {
+                        contexts.length.should.equal(2)
+                    })
+                    .catch(err => console.log(err))
+            },
+            600 // Wait 600ms before sending request so the server has time to start
+        )
+        setTimeout(
             () => contextServer.tryShutdown((err) => {
                 if (err) console.log(err)
             }),
-            1000 // Wait 1000ms before shutting down the server
+            1100 // Wait 1000ms before shutting down the server
         )
     })
-});
+})

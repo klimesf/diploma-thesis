@@ -21,7 +21,22 @@ public class GrpcRemoteLoader implements RemoteLoader
     {
         GrpcBusinessContextClient client = new GrpcBusinessContextClient(serviceAddress);
         try {
-            return client.receiveContexts(identifiers);
+            return client.fetchContexts(identifiers);
+
+        } finally {
+            try {
+                client.shutdown();
+            } catch (InterruptedException ignored) {
+            }
+        }
+    }
+
+    @Override
+    public Set<BusinessContext> loadAllContexts()
+    {
+        GrpcBusinessContextClient client = new GrpcBusinessContextClient(serviceAddress);
+        try {
+            return client.fetchAllContexts();
 
         } finally {
             try {
