@@ -22,6 +22,14 @@ install:
 
 script:
   - cd ./java
+  - mvn clean install
+  - cd ./../example/billing
+  - mvn clean test
+  - cd ./../shipping
+  - mvn clean test
+  - cd ./../order
+  - mvn clean test
+  - cd ./../../central-administration
   - mvn clean test
   - cd ./../python
   - python -m pytest .
