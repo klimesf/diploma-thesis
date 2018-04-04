@@ -14,10 +14,10 @@ install:
   - protoc --version
   - pip install -r ./python/requirements.txt
   - cd nodejs/business-context
-  - npm install
+  - yarn install
   - cd ../../
   - cd nodejs/business-context-grpc
-  - npm install
+  - yarn install
   - cd ../../
 
 script:
