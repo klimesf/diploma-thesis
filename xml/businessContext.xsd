@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="businessContext" type="businessContextType"/>
+
+    <!-- Root -->
+    <xs:complexType name="businessContextType">
+        <xs:sequence>
+            <xs:element type="includedContextsType" name="includedContexts">
+                <xs:annotation>
+                    <xs:documentation>Included contexts</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element type="preconditionsType" name="preconditions">
+                <xs:annotation>
+                    <xs:documentation>Preconditions</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element type="postConditionsType" name="postConditions">
+                <xs:annotation>
+                    <xs:documentation>Post conditions</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="prefix" use="required"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
+    </xs:complexType>
+
+    <!-- Included contexts -->
+    <xs:complexType name="includedContextType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="prefix" use="required"/>
+                <xs:attribute type="xs:string" name="name" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="includedContextsType">
+        <xs:sequence>
+            <xs:element type="includedContextType" name="includedContext" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Conditions -->
+    <xs:complexType name="preconditionsType">
+        <xs:sequence>
+            <xs:element type="preconditionType" name="precondition"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="preconditionType">
+        <xs:sequence>
+            <xs:element type="conditionType" name="condition"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="name"/>
+    </xs:complexType>
+
+    <xs:complexType name="postConditionsType">
+        <xs:sequence>
+            <xs:element type="postConditionType" name="postCondition"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="postConditionType">
+        <xs:sequence>
+            <xs:element type="postConditionTypeType" name="type"/>
+            <xs:element type="xs:string" name="referenceName"/>
+            <xs:element type="conditionType" name="condition"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="name"/>
+    </xs:complexType>
+
+    <xs:simpleType name="postConditionTypeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="FILTER_OBJECT_FIELD"/>
+            <xs:enumeration value="FILTER_LIST_OF_OBJECTS"/>
+            <xs:enumeration value="FILTER_LIST_OF_OBJECTS_FIELD"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="conditionType">
+        <xs:sequence>
+            <xs:element type="isNotNullType" name="isNotNull" minOccurs="0"/>
+            <xs:element type="constantType" name="constant" minOccurs="0"/>
+            <xs:element type="variableReferenceType" name="variableReference" minOccurs="0"/>
+            <xs:element type="objectPropertyReferenceType" name="objectPropertyReference" minOccurs="0"/>
+            <xs:element type="logicalAndType" name="logicalAnd" minOccurs="0"/>
+            <xs:element type="logicalEqualsType" name="logicalEquals" minOccurs="0"/>
+            <xs:element type="logicalOrType" name="logicalOr" minOccurs="0"/>
+            <xs:element type="logicalNegateType" name="logicalNegate" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Expressions -->
+    <xs:complexType name="constantType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="expressionType" name="type"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="isNotNullType">
+        <xs:sequence>
+            <xs:element type="conditionType" name="argument" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="variableReferenceType">
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="expressionType" name="type" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="objectPropertyReferenceType">
+        <xs:attribute type="xs:string" name="objectName" use="required"/>
+        <xs:attribute type="xs:string" name="propertyName" use="required"/>
+        <xs:attribute type="expressionType" name="type" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="logicalAndType">
+        <xs:sequence>
+            <xs:element type="conditionType" name="left" minOccurs="1" maxOccurs="1"/>
+            <xs:element type="conditionType" name="right" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="logicalEqualsType">
+        <xs:sequence>
+            <xs:element type="conditionType" name="left" minOccurs="1" maxOccurs="1"/>
+            <xs:element type="conditionType" name="right" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="logicalNegateType">
+        <xs:sequence>
+            <xs:element type="conditionType" name="argument" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="logicalOrType">
+        <xs:sequence>
+            <xs:element type="conditionType" name="left"/>
+            <xs:element type="conditionType" name="right"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="expressionType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="NUMBER"/>
+            <xs:enumeration value="STRING"/>
+            <xs:enumeration value="BOOL"/>
+            <xs:enumeration value="VOID"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

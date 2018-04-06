@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<businessContext prefix="user" name="user.create"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:noNamespaceSchemaLocation="businessContext.xsd">
+    <!-- Included contexts -->
+    <includedContexts>
+        <includedContext prefix="auth" name="loggedIn"/>
+        <includedContext prefix="user" name="validEmail"/>
+    </includedContexts>
+
+    <!-- Preconditions -->
+    <preconditions>
+        <precondition name="userHasValidEmail">
+            <condition>
+                <isNotNull>
+                    <argument>
+                        <variableReference name="user" type="STRING"/>
+                    </argument>
+                </isNotNull>
+            </condition>
+        </precondition>
+    </preconditions>
+
+    <!-- Post conditions -->
+    <postConditions>
+        <postCondition name="hideUserEmail">
+            <type>FILTER_OBJECT_FIELD</type>
+            <referenceName>email</referenceName>
+            <condition>
+                <constant type="BOOL">true</constant>
+            </condition>
+        </postCondition>
+    </postConditions>
+</businessContext>
