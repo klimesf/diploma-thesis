@@ -13,7 +13,6 @@ import cz.filipklimes.diploma.framework.businessContext.expression.IsNotNull;
 import cz.filipklimes.diploma.framework.businessContext.expression.ObjectPropertyReference;
 import cz.filipklimes.diploma.framework.businessContext.expression.VariableReference;
 import cz.filipklimes.diploma.framework.businessContext.expression.logical.Equals;
-import cz.filipklimes.diploma.framework.businessContext.loader.LocalBusinessContextLoader;
 import cz.filipklimes.diploma.framework.businessContext.loader.RemoteBusinessContextLoader;
 import lombok.Getter;
 import org.junit.Assert;
@@ -22,8 +21,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.*;
 
-import static cz.filipklimes.diploma.framework.businessContext.expression.ExpressionType.BOOL;
-import static cz.filipklimes.diploma.framework.businessContext.expression.ExpressionType.STRING;
+import static cz.filipklimes.diploma.framework.businessContext.expression.ExpressionType.*;
 
 public class BusinessContextWeaverTest
 {
@@ -147,14 +145,7 @@ public class BusinessContextWeaverTest
             .build();
 
         return BusinessContextRegistry.builder()
-            .withLocalLoader(new LocalBusinessContextLoader()
-            {
-                @Override
-                public Set<BusinessContext> load()
-                {
-                    return new HashSet<>(Arrays.asList(userCreateContext, listAllProductsContext));
-                }
-            })
+            .withLocalLoader(() -> new HashSet<>(Arrays.asList(userCreateContext, listAllProductsContext)))
             .withRemoteLoader(new RemoteBusinessContextLoader(new HashMap<>()))
             .build();
     }

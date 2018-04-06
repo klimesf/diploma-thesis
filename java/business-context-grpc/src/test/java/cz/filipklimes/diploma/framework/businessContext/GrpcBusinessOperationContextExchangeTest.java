@@ -132,7 +132,7 @@ public class GrpcBusinessOperationContextExchangeTest
         return builder.build();
     }
 
-    private static class TestLocalBusinessContextLoader extends LocalBusinessContextLoader
+    private static class TestLocalBusinessContextLoader implements LocalBusinessContextLoader
     {
 
         @Override

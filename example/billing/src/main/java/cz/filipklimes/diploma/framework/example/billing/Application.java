@@ -8,7 +8,6 @@ import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionTyp
 import cz.filipklimes.diploma.framework.businessContext.expression.IsNotNull;
 import cz.filipklimes.diploma.framework.businessContext.expression.ObjectPropertyReference;
 import cz.filipklimes.diploma.framework.businessContext.expression.logical.And;
-import cz.filipklimes.diploma.framework.businessContext.loader.LocalBusinessContextLoader;
 import cz.filipklimes.diploma.framework.businessContext.loader.RemoteBusinessContextLoader;
 import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.GrpcBusinessContextServer;
 import org.springframework.boot.SpringApplication;
@@ -38,33 +37,26 @@ public class Application
     public static BusinessContextRegistry businessContextRegistry()
     {
         BusinessContextRegistry registry = BusinessContextRegistry.builder()
-            .withLocalLoader(new LocalBusinessContextLoader()
-            {
-                @Override
-                public Set<BusinessContext> load()
-                {
-                    return new HashSet<>(Collections.singletonList(
-                        BusinessContext.builder()
-                            .withIdentifier(BusinessContextIdentifier.parse("billing.correctAddress"))
-                            .withPrecondition(Precondition.builder()
-                                .withName("Billing address must contain a country, city, street and postal code")
-                                .withCondition(
-                                    new And(
-                                        new And(
-                                            new IsNotNull<>(new ObjectPropertyReference<>("billingAddress", "country", ExpressionType.STRING)),
-                                            new IsNotNull<>(new ObjectPropertyReference<>("billingAddress", "city", ExpressionType.STRING))
-                                        ),
-                                        new And(
-                                            new IsNotNull<>(new ObjectPropertyReference<>("billingAddress", "street", ExpressionType.STRING)),
-                                            new IsNotNull<>(new ObjectPropertyReference<>("billingAddress", "postal", ExpressionType.STRING))
-                                        )
-                                    )
+            .withLocalLoader(() -> new HashSet<>(Collections.singletonList(
+                BusinessContext.builder()
+                    .withIdentifier(BusinessContextIdentifier.parse("billing.correctAddress"))
+                    .withPrecondition(Precondition.builder()
+                        .withName("Billing address must contain a country, city, street and postal code")
+                        .withCondition(
+                            new And(
+                                new And(
+                                    new IsNotNull<>(new ObjectPropertyReference<>("billingAddress", "country", ExpressionType.STRING)),
+                                    new IsNotNull<>(new ObjectPropertyReference<>("billingAddress", "city", ExpressionType.STRING))
+                                ),
+                                new And(
+                                    new IsNotNull<>(new ObjectPropertyReference<>("billingAddress", "street", ExpressionType.STRING)),
+                                    new IsNotNull<>(new ObjectPropertyReference<>("billingAddress", "postal", ExpressionType.STRING))
                                 )
-                                .build())
-                            .build()
-                    ));
-                }
-            })
+                            )
+                        )
+                        .build())
+                    .build()
+            )))
             .withRemoteLoader(new RemoteBusinessContextLoader(new HashMap<>()))
             .build();
 

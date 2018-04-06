@@ -9,7 +9,6 @@ import cz.filipklimes.diploma.framework.businessContext.expression.Constant;
 import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionType;
 import cz.filipklimes.diploma.framework.businessContext.expression.ObjectPropertyReference;
 import cz.filipklimes.diploma.framework.businessContext.expression.numeric.LessThan;
-import cz.filipklimes.diploma.framework.businessContext.loader.LocalBusinessContextLoader;
 import cz.filipklimes.diploma.framework.businessContext.loader.RemoteBusinessContextLoader;
 import cz.filipklimes.diploma.framework.businessContext.loader.remote.RemoteLoader;
 import cz.filipklimes.diploma.framework.businessContext.loader.remote.RemoteServiceAddress;
@@ -57,51 +56,44 @@ public class Application
         remoteLoaders.put("billing", new GrpcRemoteLoader(new RemoteServiceAddress("billing", BILLING_SERVICE_HOST, BILLING_SERVICE_PORT)));
 
         BusinessContextRegistry registry = BusinessContextRegistry.builder()
-            .withLocalLoader(new LocalBusinessContextLoader()
-            {
-                @Override
-                public Set<BusinessContext> load()
-                {
-                    return new HashSet<>(Arrays.asList(
-                        BusinessContext.builder()
-                            .withIdentifier(BusinessContextIdentifier.parse("order.valid"))
-                            .withIncludedContext(BusinessContextIdentifier.parse("user.validEmail"))
-                            .withIncludedContext(BusinessContextIdentifier.parse("shipping.correctAddress"))
-                            .withIncludedContext(BusinessContextIdentifier.parse("billing.correctAddress"))
-                            .build(),
-                        BusinessContext.builder()
-                            .withIdentifier(BusinessContextIdentifier.parse("order.create"))
-                            .withIncludedContext(BusinessContextIdentifier.parse("auth.userLoggedIn"))
-                            .withIncludedContext(BusinessContextIdentifier.parse("order.valid"))
-                            // TODO: preconditions, postconditions
-                            .build(),
-                        BusinessContext.builder()
-                            .withIdentifier(BusinessContextIdentifier.parse("order.changeState"))
-                            .withIncludedContext(BusinessContextIdentifier.parse("auth.employeeLoggedIn"))
-                            .withIncludedContext(BusinessContextIdentifier.parse("order.valid"))
-                            // TODO: preconditions, postconditions
-                            .build(),
-                        BusinessContext.builder()
-                            .withIdentifier(BusinessContextIdentifier.parse("order.listAll"))
-                            .withIncludedContext(BusinessContextIdentifier.parse("auth.employeeLoggedIn"))
-                            // TODO: preconditions, postconditions
-                            .build(),
-                        BusinessContext.builder()
-                            .withIdentifier(BusinessContextIdentifier.parse("order.addToShoppingCart"))
-                            .withIncludedContext(BusinessContextIdentifier.parse("auth.userLoggedIn"))
-                            .withIncludedContext(BusinessContextIdentifier.parse("product.hidden"))
-                            .withIncludedContext(BusinessContextIdentifier.parse("product.stock"))
-                            .withPrecondition(Precondition.builder()
-                                .withName("Shopping cart must contain less than 10 items")
-                                .withCondition(new LessThan( // The rule is validated before the item is added
-                                    new ObjectPropertyReference<>("shoppingCart", "itemCount", ExpressionType.NUMBER),
-                                    new Constant<>(new BigDecimal("10"), ExpressionType.NUMBER)
-                                ))
-                                .build())
-                            .build()
-                    ));
-                }
-            })
+            .withLocalLoader(() -> new HashSet<>(Arrays.asList(
+                BusinessContext.builder()
+                    .withIdentifier(BusinessContextIdentifier.parse("order.valid"))
+                    .withIncludedContext(BusinessContextIdentifier.parse("user.validEmail"))
+                    .withIncludedContext(BusinessContextIdentifier.parse("shipping.correctAddress"))
+                    .withIncludedContext(BusinessContextIdentifier.parse("billing.correctAddress"))
+                    .build(),
+                BusinessContext.builder()
+                    .withIdentifier(BusinessContextIdentifier.parse("order.create"))
+                    .withIncludedContext(BusinessContextIdentifier.parse("auth.userLoggedIn"))
+                    .withIncludedContext(BusinessContextIdentifier.parse("order.valid"))
+                    // TODO: preconditions, postconditions
+                    .build(),
+                BusinessContext.builder()
+                    .withIdentifier(BusinessContextIdentifier.parse("order.changeState"))
+                    .withIncludedContext(BusinessContextIdentifier.parse("auth.employeeLoggedIn"))
+                    .withIncludedContext(BusinessContextIdentifier.parse("order.valid"))
+                    // TODO: preconditions, postconditions
+                    .build(),
+                BusinessContext.builder()
+                    .withIdentifier(BusinessContextIdentifier.parse("order.listAll"))
+                    .withIncludedContext(BusinessContextIdentifier.parse("auth.employeeLoggedIn"))
+                    // TODO: preconditions, postconditions
+                    .build(),
+                BusinessContext.builder()
+                    .withIdentifier(BusinessContextIdentifier.parse("order.addToShoppingCart"))
+                    .withIncludedContext(BusinessContextIdentifier.parse("auth.userLoggedIn"))
+                    .withIncludedContext(BusinessContextIdentifier.parse("product.hidden"))
+                    .withIncludedContext(BusinessContextIdentifier.parse("product.stock"))
+                    .withPrecondition(Precondition.builder()
+                        .withName("Shopping cart must contain less than 10 items")
+                        .withCondition(new LessThan( // The rule is validated before the item is added
+                            new ObjectPropertyReference<>("shoppingCart", "itemCount", ExpressionType.NUMBER),
+                            new Constant<>(new BigDecimal("10"), ExpressionType.NUMBER)
+                        ))
+                        .build())
+                    .build()
+            )))
             .withRemoteLoader(new RemoteBusinessContextLoader(remoteLoaders))
             .build();
 

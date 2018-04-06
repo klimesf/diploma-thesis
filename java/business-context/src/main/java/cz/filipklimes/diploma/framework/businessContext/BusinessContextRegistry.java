@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class BusinessContextRegistry
+public final class BusinessContextRegistry
 {
 
     private final LocalBusinessContextLoader localLoader;
@@ -103,6 +103,7 @@ public class BusinessContextRegistry
 
     /**
      * Saves business context.
+     *
      * @param businessContext The new or updated business context.
      * @return Set of remote services which should be notified about the change.
      */
