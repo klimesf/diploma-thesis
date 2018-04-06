@@ -25,7 +25,7 @@ public class UserClient
     {
         Objects.requireNonNull(userId);
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
-            HttpUriRequest request = new HttpGet(String.format("http://localhost:5503/users/%d", userId));
+            HttpUriRequest request = new HttpGet(String.format("http://user:5503/users/%d", userId));
 
             try (CloseableHttpResponse response = client.execute(request)) {
                 int statusCode = response.getStatusLine().getStatusCode();

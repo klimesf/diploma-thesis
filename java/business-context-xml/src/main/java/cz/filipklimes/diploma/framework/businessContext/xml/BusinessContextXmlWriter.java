@@ -22,11 +22,24 @@ import cz.filipklimes.diploma.framework.businessContext.expression.numeric.Multi
 import cz.filipklimes.diploma.framework.businessContext.expression.numeric.Subtract;
 import org.jdom2.Document;
 import org.jdom2.Element;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 
+import java.io.*;
 import java.util.*;
 
 public class BusinessContextXmlWriter
 {
+
+    public String writeToString(final BusinessContext businessContext) throws IOException
+    {
+        try (StringWriter out = new StringWriter()) {
+            XMLOutputter xmlOutput = new XMLOutputter();
+            xmlOutput.setFormat(Format.getPrettyFormat());
+            xmlOutput.output(createDocument(businessContext), out);
+            return out.getBuffer().toString();
+        }
+    }
 
     public Document createDocument(final BusinessContext businessContext)
     {

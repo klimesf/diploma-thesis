@@ -34,7 +34,7 @@ public class ProductClient
     public List<Product> listProducts()
     {
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
-            HttpUriRequest request = new HttpGet("http://localhost:5502/");
+            HttpUriRequest request = new HttpGet("http://product:5502/");
             if (signedUser.isAnyoneSignedIn()) {
                 request.addHeader("X-User-Id", String.valueOf(signedUser.getCurrentlyLoggedUser().getId()));
                 request.addHeader("X-User-Role", signedUser.getCurrentlyLoggedUser().getRole());
@@ -62,7 +62,7 @@ public class ProductClient
     {
         Objects.requireNonNull(productId);
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
-            HttpUriRequest request = new HttpGet(String.format("http://localhost:5502/%d", productId));
+            HttpUriRequest request = new HttpGet(String.format("http://product:5502/%d", productId));
             if (signedUser.isAnyoneSignedIn()) {
                 request.addHeader("X-User-Id", String.valueOf(signedUser.getCurrentlyLoggedUser().getId()));
                 request.addHeader("X-User-Role", signedUser.getCurrentlyLoggedUser().getRole());

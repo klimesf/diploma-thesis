@@ -11,7 +11,7 @@ app = Flask(__name__)
 registry = Registry(
     LocalLoader(),
     RemoteBusinessContextLoader(GrpcRemoteLoader({
-        'auth': {'host': 'localhost', 'port': 5553}
+        'auth': {'host': 'user', 'port': 5553}
     }))
 )
 weaver = Weaver(registry)
@@ -81,4 +81,4 @@ def get_product(id: int):
 if __name__ == '__main__':
     server = ServerThread(registry=registry, sleep_interval=60 * 60 * 24, port=5552)
     server.start()
-    app.run(port=5502)
+    app.run(host='0.0.0.0', port=5502)

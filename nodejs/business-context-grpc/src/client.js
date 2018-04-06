@@ -1,6 +1,6 @@
 "use strict";
 
-const PROTO_PATH = __dirname + '/../../../proto/business_context.proto'
+const PROTO_PATH = __dirname + '/../../proto/business_context.proto'
 
 const BusinessContext = require('../../business-context/src/BusinessContext').default
 const BusinessContextIdentifier = require('../../business-context/src/BusinessContextIdentifier').default

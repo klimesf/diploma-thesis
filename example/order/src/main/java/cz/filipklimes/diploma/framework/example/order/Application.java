@@ -25,19 +25,19 @@ import java.util.*;
 public class Application
 {
 
-    private static String AUTH_SERVICE_HOST = "localhost";
+    private static String AUTH_SERVICE_HOST = "user";
     private static int AUTH_SERVICE_PORT = 5553;
 
-    private static String PRODUCT_SERVICE_HOST = "localhost";
+    private static String PRODUCT_SERVICE_HOST = "product";
     private static int PRODUCT_SERVICE_PORT = 5552;
 
-    private static String USER_SERVICE_HOST = "localhost";
+    private static String USER_SERVICE_HOST = "user";
     private static int USER_SERVICE_PORT = 5553;
 
-    private static String SHIPPING_SERVICE_HOST = "localhost";
+    private static String SHIPPING_SERVICE_HOST = "shipping";
     private static int SHIPPING_SERVICE_PORT = 5554;
 
-    private static String BILLING_SERVICE_HOST = "localhost";
+    private static String BILLING_SERVICE_HOST = "billing";
     private static int BILLING_SERVICE_PORT = 5555;
 
     public static void main(String[] args)

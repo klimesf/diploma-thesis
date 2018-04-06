@@ -1,6 +1,6 @@
 "use strict";
 
-const PROTO_PATH = __dirname + '/../../../proto/business_context.proto'
+const PROTO_PATH = __dirname + '/../../proto/business_context.proto'
 
 const grpc = require('grpc')
 const businessContextProto = grpc.load(PROTO_PATH).businessContext
@@ -69,7 +69,7 @@ exports.serve = (port, registry) => {
             fetchAllContexts: fetchAllContexts(registry)
         }
     )
-    server.bind('localhost:' + port, grpc.ServerCredentials.createInsecure())
+    server.bind('0.0.0.0:' + port, grpc.ServerCredentials.createInsecure())
     server.start()
     console.log("Business context server listening on port " + port)
     return server

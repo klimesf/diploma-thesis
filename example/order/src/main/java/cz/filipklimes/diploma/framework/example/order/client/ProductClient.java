@@ -24,7 +24,7 @@ public class ProductClient
     public List<Product> listProducts()
     {
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
-            HttpUriRequest request = new HttpGet("http://localhost:5502/");
+            HttpUriRequest request = new HttpGet("http://product:5502/");
 
             try (CloseableHttpResponse response = client.execute(request)) {
                 int statusCode = response.getStatusLine().getStatusCode();
@@ -48,7 +48,7 @@ public class ProductClient
     {
         Objects.requireNonNull(productId);
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
-            HttpUriRequest request = new HttpGet(String.format("http://localhost:5502/%d", productId));
+            HttpUriRequest request = new HttpGet(String.format("http://product:5502/%d", productId));
 
             try (CloseableHttpResponse response = client.execute(request)) {
                 int statusCode = response.getStatusLine().getStatusCode();

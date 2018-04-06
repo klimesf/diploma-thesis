@@ -1,0 +1,47 @@
+version: '3'
+services:
+  order:
+    image: filipklimes-diploma/example-order-service
+    ports:
+      - "5501:5501"
+      - "5551:5551"
+    links:
+      - product
+      - user
+      - billing
+      - shipping
+
+  product:
+    image: filipklimes-diploma/example-product-service
+    ports:
+      - "5502:5502"
+      - "5552:5552"
+    links:
+      - user:user
+
+  user:
+    image: filipklimes-diploma/example-user-service
+    ports:
+      - "5503:5503"
+      - "5553:5553"
+
+  shipping:
+    image: filipklimes-diploma/example-shipping-service
+    ports:
+      - "5504:5504"
+      - "5554:5554"
+
+  billing:
+    image: filipklimes-diploma/example-billing-service
+    ports:
+      - "5505:5505"
+      - "5555:5555"
+
+  ui:
+    image: filipklimes-diploma/example-ui-service
+    ports:
+      - "8080:8080"
+    links:
+      - product:product
+      - order:order
+      - user:user

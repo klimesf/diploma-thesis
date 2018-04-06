@@ -34,7 +34,7 @@ class ServerThread(threading.Thread):
     def serve(self):
         server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
         business_context_pb2_grpc.add_BusinessContextServerServicer_to_server(Server(self._registry), server)
-        server.add_insecure_port('[::]:' + self._port.__str__())
+        server.add_insecure_port('0.0.0.0:' + self._port.__str__())
         print('BusinessContextServer listening on port ' + self._port.__str__())
         server.start()
         try:

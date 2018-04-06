@@ -42,7 +42,7 @@ public class OrderClient
     public List<ShoppingCartItem> listCartItems()
     {
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
-            HttpUriRequest request = new HttpGet("http://localhost:5501/shopping-cart");
+            HttpUriRequest request = new HttpGet("http://order:5501/shopping-cart");
             if (signedUser.isAnyoneSignedIn()) {
                 request.addHeader("X-User-Id", String.valueOf(signedUser.getCurrentlyLoggedUser().getId()));
                 request.addHeader("X-User-Role", signedUser.getCurrentlyLoggedUser().getRole());
@@ -69,7 +69,7 @@ public class OrderClient
     public void addItem(final Integer productId, final Integer quantity) throws CouldNotAddShoppingCartItemException
     {
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
-            HttpPost request = new HttpPost("http://localhost:5501/shopping-cart");
+            HttpPost request = new HttpPost("http://order:5501/shopping-cart");
             if (signedUser.isAnyoneSignedIn()) {
                 request.addHeader("X-User-Id", String.valueOf(signedUser.getCurrentlyLoggedUser().getId()));
                 request.addHeader("X-User-Role", signedUser.getCurrentlyLoggedUser().getRole());
@@ -102,7 +102,7 @@ public class OrderClient
     public List<Order> listOrders() throws CouldNotListOrdersException
     {
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
-            HttpUriRequest request = new HttpGet("http://localhost:5501/orders");
+            HttpUriRequest request = new HttpGet("http://order:5501/orders");
             if (signedUser.isAnyoneSignedIn()) {
                 request.addHeader("X-User-Id", String.valueOf(signedUser.getCurrentlyLoggedUser().getId()));
                 request.addHeader("X-User-Role", signedUser.getCurrentlyLoggedUser().getRole());
@@ -134,7 +134,7 @@ public class OrderClient
     public void createOrder(final Address shipping, final Address billing) throws CouldNotCreateOrderException
     {
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
-            HttpPost request = new HttpPost("http://localhost:5501/orders");
+            HttpPost request = new HttpPost("http://order:5501/orders");
             if (signedUser.isAnyoneSignedIn()) {
                 request.addHeader("X-User-Id", String.valueOf(signedUser.getCurrentlyLoggedUser().getId()));
                 request.addHeader("X-User-Role", signedUser.getCurrentlyLoggedUser().getRole());

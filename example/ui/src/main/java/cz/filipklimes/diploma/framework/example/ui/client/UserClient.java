@@ -38,7 +38,7 @@ public class UserClient
     public List<User> listUsers()
     {
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
-            HttpUriRequest request = new HttpGet("http://localhost:5503/users/");
+            HttpUriRequest request = new HttpGet("http://user:5503/users/");
             if (signedUser.isAnyoneSignedIn()) {
                 request.addHeader("X-User-Id", String.valueOf(signedUser.getCurrentlyLoggedUser().getId()));
                 request.addHeader("X-User-Role", signedUser.getCurrentlyLoggedUser().getRole());
@@ -66,7 +66,7 @@ public class UserClient
     {
         Objects.requireNonNull(userId);
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
-            HttpUriRequest request = new HttpGet(String.format("http://localhost:5503/users/%d", userId));
+            HttpUriRequest request = new HttpGet(String.format("http://user:5503/users/%d", userId));
             if (signedUser.isAnyoneSignedIn()) {
                 request.addHeader("X-User-Id", String.valueOf(signedUser.getCurrentlyLoggedUser().getId()));
                 request.addHeader("X-User-Role", signedUser.getCurrentlyLoggedUser().getRole());
@@ -94,7 +94,7 @@ public class UserClient
         Objects.requireNonNull(name);
         Objects.requireNonNull(email);
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
-            HttpPost request = new HttpPost("http://localhost:5503/users");
+            HttpPost request = new HttpPost("http://user:5503/users");
             if (signedUser.isAnyoneSignedIn()) {
                 request.addHeader("X-User-Id", String.valueOf(signedUser.getCurrentlyLoggedUser().getId()));
                 request.addHeader("X-User-Role", signedUser.getCurrentlyLoggedUser().getRole());
