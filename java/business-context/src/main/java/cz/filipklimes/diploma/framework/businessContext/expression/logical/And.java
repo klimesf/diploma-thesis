@@ -1,8 +1,9 @@
 package cz.filipklimes.diploma.framework.businessContext.expression.logical;
 
-import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 import cz.filipklimes.diploma.framework.businessContext.expression.BinaryOperator;
 import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
+import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionVisitor;
+import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 
 import java.util.*;
 
@@ -30,6 +31,12 @@ public final class And extends BinaryOperator<Boolean, Boolean, Boolean>
     public String getName()
     {
         return "logical-and";
+    }
+
+    @Override
+    public void accept(final ExpressionVisitor visitor)
+    {
+        visitor.visit(this);
     }
 
     @Override

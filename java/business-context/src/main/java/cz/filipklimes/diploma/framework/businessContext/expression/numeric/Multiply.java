@@ -1,5 +1,6 @@
 package cz.filipklimes.diploma.framework.businessContext.expression.numeric;
 
+import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionVisitor;
 import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 import cz.filipklimes.diploma.framework.businessContext.expression.BinaryOperator;
 import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
@@ -32,6 +33,12 @@ public class Multiply extends BinaryOperator<BigDecimal, BigDecimal, BigDecimal>
     public String getName()
     {
         return "numeric-multiply";
+    }
+
+    @Override
+    public void accept(final ExpressionVisitor visitor)
+    {
+        visitor.visit(this);
     }
 
     @Override

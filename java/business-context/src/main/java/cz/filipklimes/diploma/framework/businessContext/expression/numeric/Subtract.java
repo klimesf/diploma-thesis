@@ -1,8 +1,9 @@
 package cz.filipklimes.diploma.framework.businessContext.expression.numeric;
 
-import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 import cz.filipklimes.diploma.framework.businessContext.expression.BinaryOperator;
 import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
+import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionVisitor;
+import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -32,6 +33,12 @@ public class Subtract extends BinaryOperator<BigDecimal, BigDecimal, BigDecimal>
     public String getName()
     {
         return "numeric-subtract";
+    }
+
+    @Override
+    public void accept(final ExpressionVisitor visitor)
+    {
+        visitor.visit(this);
     }
 
     @Override

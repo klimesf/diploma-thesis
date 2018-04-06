@@ -38,6 +38,12 @@ public class Constant<T> implements Terminal<T>
     }
 
     @Override
+    public void accept(final ExpressionVisitor visitor)
+    {
+        visitor.visit(this);
+    }
+
+    @Override
     public String toString()
     {
         return String.format("%s", value);

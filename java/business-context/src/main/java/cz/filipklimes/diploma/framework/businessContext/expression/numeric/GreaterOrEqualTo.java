@@ -1,8 +1,9 @@
 package cz.filipklimes.diploma.framework.businessContext.expression.numeric;
 
-import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 import cz.filipklimes.diploma.framework.businessContext.expression.BinaryOperator;
 import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
+import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionVisitor;
+import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -32,6 +33,12 @@ public class GreaterOrEqualTo extends BinaryOperator<Boolean, BigDecimal, BigDec
     public String getName()
     {
         return "numeric-gte";
+    }
+
+    @Override
+    public void accept(final ExpressionVisitor visitor)
+    {
+        visitor.visit(this);
     }
 
     @Override

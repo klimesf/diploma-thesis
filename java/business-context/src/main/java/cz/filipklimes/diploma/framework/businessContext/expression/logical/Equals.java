@@ -1,8 +1,9 @@
 package cz.filipklimes.diploma.framework.businessContext.expression.logical;
 
-import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 import cz.filipklimes.diploma.framework.businessContext.expression.BinaryOperator;
 import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
+import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionVisitor;
+import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 
 import java.util.*;
 
@@ -32,6 +33,12 @@ public class Equals<L, R> extends BinaryOperator<Boolean, L, R>
     public String getName()
     {
         return "logical-equals";
+    }
+
+    @Override
+    public void accept(final ExpressionVisitor visitor)
+    {
+        visitor.visit(this);
     }
 
     @Override

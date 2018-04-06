@@ -1,5 +1,6 @@
 package cz.filipklimes.diploma.framework.businessContext.expression.numeric;
 
+import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionVisitor;
 import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 import cz.filipklimes.diploma.framework.businessContext.expression.BinaryOperator;
 import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
@@ -31,6 +32,12 @@ public class LessOrEqualTo extends BinaryOperator<Boolean, BigDecimal, BigDecima
     public String getName()
     {
         return "numeric-lte";
+    }
+
+    @Override
+    public void accept(final ExpressionVisitor visitor)
+    {
+        visitor.visit(this);
     }
 
     @Override

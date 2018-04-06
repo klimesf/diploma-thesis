@@ -15,4 +15,6 @@ public interface Expression<T>
 
     String getName();
 
+    void accept(ExpressionVisitor visitor);
+
 }

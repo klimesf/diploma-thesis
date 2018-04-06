@@ -54,6 +54,12 @@ public class FunctionCall<T> implements Expression<T>
     }
 
     @Override
+    public void accept(final ExpressionVisitor visitor)
+    {
+        visitor.visit(this);
+    }
+
+    @Override
     public String toString()
     {
         return String.format("call %s()", methodName);

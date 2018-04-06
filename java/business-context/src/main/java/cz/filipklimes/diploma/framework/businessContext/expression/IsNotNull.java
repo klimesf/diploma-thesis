@@ -31,6 +31,12 @@ public class IsNotNull<T> extends UnaryOperator<Boolean, T>
     }
 
     @Override
+    public void accept(final ExpressionVisitor visitor)
+    {
+        visitor.visit(this);
+    }
+
+    @Override
     public String toString()
     {
         return String.format("%s is not null", getArgument());
