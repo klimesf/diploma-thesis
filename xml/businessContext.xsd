@@ -5,17 +5,17 @@
     <!-- Root -->
     <xs:complexType name="businessContextType">
         <xs:sequence>
-            <xs:element type="includedContextsType" name="includedContexts">
+            <xs:element type="includedContextsType" name="includedContexts" minOccurs="1" maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation>Included contexts</xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <xs:element type="preconditionsType" name="preconditions">
+            <xs:element type="preconditionsType" name="preconditions" minOccurs="1" maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation>Preconditions</xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <xs:element type="postConditionsType" name="postConditions">
+            <xs:element type="postConditionsType" name="postConditions" minOccurs="1" maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation>Post conditions</xs:documentation>
                 </xs:annotation>
@@ -149,6 +149,7 @@
             <xs:enumeration value="NUMBER"/>
             <xs:enumeration value="STRING"/>
             <xs:enumeration value="BOOL"/>
+            <xs:enumeration value="OBJECT"/>
             <xs:enumeration value="VOID"/>
         </xs:restriction>
     </xs:simpleType>
