@@ -10,9 +10,7 @@ import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
 import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionType;
 import cz.filipklimes.diploma.framework.businessContext.expression.FunctionCall;
 import cz.filipklimes.diploma.framework.businessContext.expression.IsNotNull;
-import cz.filipklimes.diploma.framework.businessContext.expression.ObjectPropertyAssignment;
 import cz.filipklimes.diploma.framework.businessContext.expression.ObjectPropertyReference;
-import cz.filipklimes.diploma.framework.businessContext.expression.VariableAssignment;
 import cz.filipklimes.diploma.framework.businessContext.expression.VariableReference;
 import cz.filipklimes.diploma.framework.businessContext.expression.logical.And;
 import cz.filipklimes.diploma.framework.businessContext.expression.logical.Equals;
@@ -185,22 +183,11 @@ class GrpcBusinessContextClient
                 );
             case "is-not-null":
                 return (Expression<T>) new IsNotNull<>(buildExpression(message.getArguments(0)));
-            case "object-property-assignment":
-                return (Expression<T>) new ObjectPropertyAssignment<>(
-                    findPropertyByName("objectName", message),
-                    findPropertyByName("propertyName", message),
-                    buildExpression(message.getArguments(0))
-                );
             case "object-property-reference":
                 return (Expression<T>) new ObjectPropertyReference<>(
                     findPropertyByName("objectName", message),
                     findPropertyByName("propertyName", message),
                     ExpressionType.of(findPropertyByName("type", message))
-                );
-            case "variable-assignment":
-                return (Expression<T>) new VariableAssignment<>(
-                    findPropertyByName("name", message),
-                    buildExpression(message.getArguments(0))
                 );
             case "variable-reference":
                 return (Expression<T>) new VariableReference<>(
