@@ -9,7 +9,6 @@ class LocalBusinessContextLoader:
         pass
 
     def load(self) -> Set[BusinessContext]:
-        # TODO: implement
         return {
             BusinessContext(Identifier('user.create'), set(), set(), set()),
             BusinessContext(Identifier('user.create'), set(), set(), set()),

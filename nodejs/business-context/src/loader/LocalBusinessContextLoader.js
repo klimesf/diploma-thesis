@@ -4,7 +4,6 @@ export default class LocalBusinessContextLoader {
     }
 
     load() {
-        // TODO: implement
         throw "not implemented yet"
     }
 }
