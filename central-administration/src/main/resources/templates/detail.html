@@ -38,29 +38,29 @@
 
 <div class="container" style="margin-top: 30px" th:if="${context != null}">
     <h3 th:text="'Business context: ' + ${context.getIdentifier()}"></h3>
-    <div class="row" style="border-bottom: 1px solid gray; margin-bottom: 30px">
+    <div class="row" style="border-top: 1px solid darkgray; margin-bottom: 30px">
         <div class="col-md-2"><p><strong>Included contexts</strong></p></div>
         <div class="col-md-10">
-            <ul>
+            <ul th:unless="${context.getIncludedContexts().isEmpty()}">
                 <li th:each="included : ${context.getIncludedContexts()}" th:text="${included.toString()}"></li>
             </ul>
             <p th:if="${context.getIncludedContexts().isEmpty()}">No included contexts</p>
         </div>
     </div>
-    <div class="row" style="border-bottom: 1px solid gray; margin-bottom: 30px">
+    <div class="row" style="border-top: 1px solid darkgray; margin-bottom: 30px">
         <div class="col-md-2"><p><strong>Preconditions</strong></p></div>
         <div class="col-md-10">
-            <ul>
-                <li th:each="precondition : ${context.getPreconditions()}" th:text="${precondition.getName()}"></li>
+            <ul th:unless="${context.getPreconditions().isEmpty()}"">
+                <li th:each="precondition : ${context.getPreconditions()}" th:text="${precondition.getName()} + ' ' + ${precondition.getCondition().toString()}"></li>
             </ul>
             <p th:if="${context.getPreconditions().isEmpty()}">No preconditions</p>
         </div>
     </div>
-    <div class="row" style="border-bottom: 1px solid gray; margin-bottom: 30px">
+    <div class="row" style="border-top: 1px solid darkgray; margin-bottom: 30px">
         <div class="col-md-2"><p><strong>Postconditions</strong></p></div>
         <div class="col-md-10">
-            <ul>
-                <li th:each="postCondition : ${context.getPostConditions()}" th:text="${postCondition.getName()}"></li>
+            <ul th:unless="${context.getPostConditions().isEmpty()}">
+                <li th:each="postCondition : ${context.getPostConditions()}" th:text="${postCondition.getName()} + ' ' + ${postCondition.getCondition().toString()}"></li>
             </ul>
             <p th:if="${context.getPostConditions().isEmpty()}">No post-conditions</p>
         </div>
