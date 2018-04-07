@@ -206,7 +206,7 @@ public class BusinessContextXmlWriter
         @Override
         public void visit(final ObjectPropertyReference<?> objectPropertyReference)
         {
-            Element el = new Element("variableReference");
+            Element el = new Element("objectPropertyReference");
             objectPropertyReference.getProperties().forEach(el::setAttribute);
             content = el;
         }

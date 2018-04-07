@@ -4,6 +4,7 @@ import cz.filipklimes.diploma.centralAdministration.businessContext.BusinessCont
 import cz.filipklimes.diploma.framework.businessContext.loader.remote.RemoteLoader;
 import cz.filipklimes.diploma.framework.businessContext.loader.remote.RemoteServiceAddress;
 import cz.filipklimes.diploma.framework.businessContext.loader.remote.grpc.GrpcRemoteLoader;
+import cz.filipklimes.diploma.framework.businessContext.xml.BusinessContextXmlLoader;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -55,6 +56,12 @@ public class Application
             shippingRemoteLoader,
             billingRemoteLoader
         ));
+    }
+
+    @Bean
+    public BusinessContextXmlLoader createBusinessContextXmlLoader()
+    {
+        return new BusinessContextXmlLoader();
     }
 
 }

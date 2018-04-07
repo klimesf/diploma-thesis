@@ -21,12 +21,17 @@ import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.input.sax.SAXEngine;
+import org.jdom2.input.sax.XMLReaderJDOMFactory;
+import org.jdom2.input.sax.XMLReaderXSDFactory;
 
 import java.io.*;
+import java.net.*;
 import java.util.*;
 
 public class BusinessContextXmlLoader implements LocalBusinessContextLoader
 {
+
+    public static final String BUSINESS_CONTEXT_XSD_PATH = "/businessContext.xsd";
 
     @Override
     public Set<BusinessContext> load()
@@ -35,11 +40,30 @@ public class BusinessContextXmlLoader implements LocalBusinessContextLoader
         throw new UnsupportedOperationException("not implemented yet");
     }
 
-    @SuppressWarnings("unchecked")
-    BusinessContext loadFromFile(final File file) throws JDOMException, IOException
+    public BusinessContext loadFromFile(final File file) throws JDOMException, IOException
     {
-        SAXEngine saxBuilder = new SAXBuilder();
+        SAXEngine saxBuilder = createSaxEngine();
         Document doc = saxBuilder.build(file);
+        return parse(doc);
+    }
+
+    public BusinessContext loadFromString(final String string) throws JDOMException, IOException
+    {
+        SAXEngine saxBuilder = createSaxEngine();
+        Document doc = saxBuilder.build(new StringReader(string));
+        return parse(doc);
+    }
+
+    private SAXEngine createSaxEngine() throws JDOMException
+    {
+        URL xsd = BusinessContextXmlLoader.class.getResource(BUSINESS_CONTEXT_XSD_PATH);
+        XMLReaderJDOMFactory factory = new XMLReaderXSDFactory(xsd);
+        return new SAXBuilder(factory);
+    }
+
+    @SuppressWarnings("unchecked")
+    private BusinessContext parse(final Document doc)
+    {
         Element contextEl = doc.getRootElement();
 
         // Context Identifier

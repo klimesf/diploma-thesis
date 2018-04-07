@@ -13,9 +13,11 @@ import cz.filipklimes.diploma.framework.businessContext.loader.RemoteBusinessCon
 import cz.filipklimes.diploma.framework.businessContext.loader.remote.RemoteLoader;
 import cz.filipklimes.diploma.framework.businessContext.loader.remote.RemoteServiceAddress;
 import cz.filipklimes.diploma.framework.businessContext.loader.remote.grpc.GrpcRemoteLoader;
+import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.GrpcBusinessContextServer;
 import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessContextWeaver;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 import java.math.BigDecimal;
@@ -24,6 +26,8 @@ import java.util.*;
 @SpringBootApplication
 public class Application
 {
+
+    private static final int BUSINESS_CONTEXT_SERVER_PORT = 5551;
 
     private static String AUTH_SERVICE_HOST = "user";
     private static int AUTH_SERVICE_PORT = 5553;
@@ -42,7 +46,12 @@ public class Application
 
     public static void main(String[] args)
     {
-        SpringApplication.run(Application.class, args);
+        ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
+
+        // Business Context gRPC server
+        GrpcBusinessContextServer server = new GrpcBusinessContextServer(context.getBean(BusinessContextRegistry.class), BUSINESS_CONTEXT_SERVER_PORT);
+        Thread t = new Thread(server);
+        t.start();
     }
 
     @Bean

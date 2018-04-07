@@ -1,34 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<businessContext prefix="user" name="user.create"
+<businessContext prefix="user" name="createEmployee"
                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                  xsi:noNamespaceSchemaLocation="businessContext.xsd">
-    <!-- Included contexts -->
-    <includedContexts>
-        <includedContext prefix="auth" name="loggedIn"/>
-        <includedContext prefix="user" name="validEmail"/>
-    </includedContexts>
-
-    <!-- Preconditions -->
+    <includedContexts />
     <preconditions>
-        <precondition name="userHasValidEmail">
+        <precondition name="Cannot use hidden product">
             <condition>
-                <isNotNull>
-                    <argument>
-                        <variableReference name="user" type="STRING"/>
-                    </argument>
-                </isNotNull>
+                <logicalEquals>
+                    <left>
+                        <variableReference propertyName="hidden" objectName="product" type="bool" />
+                    </left>
+                    <right>
+                        <constant type="bool" value="false" />
+                    </right>
+                </logicalEquals>
             </condition>
         </precondition>
     </preconditions>
-
-    <!-- Post conditions -->
-    <postConditions>
-        <postCondition name="hideUserEmail">
-            <type>FILTER_OBJECT_FIELD</type>
-            <referenceName>email</referenceName>
-            <condition>
-                <constant type="BOOL">true</constant>
-            </condition>
-        </postCondition>
-    </postConditions>
+    <postConditions />
 </businessContext>

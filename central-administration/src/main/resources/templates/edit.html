@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+
+    <title>Business context administration</title>
+
+    <style type="text/css" media="screen">
+        body {
+            overflow: hidden;
+        }
+        #editor {
+            margin: 0;
+            width: 800px;
+            height: 600px;
+            border: 1px solid darkgray;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark navbar-expand-lg" style="margin-bottom: 0;">
+    <div class="container">
+        <a class="navbar-brand" href="/">Business Context Administration</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <!--<li class="nav-item">-->
+                <!--<a class="nav-link" href="#">Link</a>-->
+                <!--</li>-->
+                <!--<li class="nav-item"><a class="nav-link" href="#">Link</a></li>-->
+                <!--<li class="nav-item"><a class="nav-link disabled" href="#">Disabled</a></li>-->
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container" th:if="${successMessage != null || errorMessage != null || infoMessage != null}">
+    <div th:if="${successMessage != null}" th:text="${successMessage}" class="alert alert-success"></div>
+    <div th:if="${infoMessage != null}" th:text="${infoMessage}" class="alert alert-info"></div>
+    <div th:if="${errorMessage != null}" th:text="${errorMessage}" class="alert alert-danger"></div>
+</div>
+
+<div class="container" style="margin-top: 30px" th:if="${context != null}">
+    <h3 th:text="'Business context: ' + ${context.getIdentifier()}"></h3>
+
+    <form class="form" th:action="@{/edit/{identifier}(identifier=${context.getIdentifier().toString()})}" th:object="${contextForm}" method="post">
+        <textarea name="context" id="context" class="editor" th:field="*{xml}" cols="100" rows="50" style="display: none"></textarea>
+        <pre id="editor">XML here</pre>
+        <input type="submit" value="Save changes" class="btn btn-success center" style="margin-top: 20px"/>
+    </form>
+</div>
+
+<div class="container" style="margin-top: 30px" th:if="${context == null}">
+    <h1>Context not found</h1>
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="/js/ace-builds/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    var editor = ace.edit("editor")
+    editor.setTheme("ace/theme/xcode")
+    editor.session.setMode("ace/mode/xml")
+    var textarea = document.getElementById("context")
+    editor.getSession().setValue(textarea.innerText)
+    editor.getSession().on('change', function () {
+        textarea.innerText = editor.getSession().getValue()
+    })
+</script>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</body>
+</html>
