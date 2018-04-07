@@ -3,9 +3,10 @@ package cz.filipklimes.diploma.framework.businessContext;
 import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
 import lombok.Getter;
 
+import java.io.*;
 import java.util.*;
 
-public class PostCondition extends BusinessRule
+public class PostCondition extends BusinessRule implements Serializable
 {
 
     @Getter

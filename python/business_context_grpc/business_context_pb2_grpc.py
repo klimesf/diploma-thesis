@@ -24,6 +24,11 @@ class BusinessContextServerStub(object):
         request_serializer=business__context__pb2.Empty.SerializeToString,
         response_deserializer=business__context__pb2.BusinessContextsResponseMessage.FromString,
         )
+    self.UpdateContext = channel.unary_unary(
+        '/businessContext.BusinessContextServer/UpdateContext',
+        request_serializer=business__context__pb2.BusinessContextUpdateRequestMessage.SerializeToString,
+        response_deserializer=business__context__pb2.Empty.FromString,
+        )
 
 
 class BusinessContextServerServicer(object):
@@ -44,6 +49,13 @@ class BusinessContextServerServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
+  def UpdateContext(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
 
 def add_BusinessContextServerServicer_to_server(servicer, server):
   rpc_method_handlers = {
@@ -56,6 +68,11 @@ def add_BusinessContextServerServicer_to_server(servicer, server):
           servicer.FetchAllContexts,
           request_deserializer=business__context__pb2.Empty.FromString,
           response_serializer=business__context__pb2.BusinessContextsResponseMessage.SerializeToString,
+      ),
+      'UpdateContext': grpc.unary_unary_rpc_method_handler(
+          servicer.UpdateContext,
+          request_deserializer=business__context__pb2.BusinessContextUpdateRequestMessage.FromString,
+          response_serializer=business__context__pb2.Empty.SerializeToString,
       ),
   }
   generic_handler = grpc.method_handlers_generic_handler(

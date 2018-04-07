@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='business_context.proto',
   package='businessContext',
   syntax='proto2',
-  serialized_pb=_b('\n\x16\x62usiness_context.proto\x12\x0f\x62usinessContext\"7\n\x19\x45xpressionPropertyMessage\x12\x0b\n\x03key\x18\x01 \x02(\t\x12\r\n\x05value\x18\x02 \x02(\t\"\x98\x01\n\x11\x45xpressionMessage\x12\x0c\n\x04name\x18\x01 \x02(\t\x12>\n\nproperties\x18\x02 \x03(\x0b\x32*.businessContext.ExpressionPropertyMessage\x12\x35\n\targuments\x18\x03 \x03(\x0b\x32\".businessContext.ExpressionMessage\"Z\n\x13PreconditionMessage\x12\x0c\n\x04name\x18\x01 \x02(\t\x12\x35\n\tcondition\x18\x02 \x02(\x0b\x32\".businessContext.ExpressionMessage\"\xab\x01\n\x14PostConditionMessage\x12\x0c\n\x04name\x18\x01 \x02(\t\x12\x37\n\x04type\x18\x02 \x02(\x0e\x32).businessContext.PostConditionTypeMessage\x12\x15\n\rreferenceName\x18\x03 \x02(\t\x12\x35\n\tcondition\x18\x04 \x02(\x0b\x32\".businessContext.ExpressionMessage\"\xcc\x01\n\x16\x42usinessContextMessage\x12\x0e\n\x06prefix\x18\x01 \x02(\t\x12\x0c\n\x04name\x18\x02 \x02(\t\x12\x18\n\x10includedContexts\x18\x03 \x03(\t\x12;\n\rpreconditions\x18\x04 \x03(\x0b\x32$.businessContext.PreconditionMessage\x12=\n\x0epostConditions\x18\x05 \x03(\x0b\x32%.businessContext.PostConditionMessage\"\\\n\x1f\x42usinessContextsResponseMessage\x12\x39\n\x08\x63ontexts\x18\x01 \x03(\x0b\x32\'.businessContext.BusinessContextMessage\"9\n\x1d\x42usinessContextRequestMessage\x12\x18\n\x10requiredContexts\x18\x01 \x03(\t\"\x07\n\x05\x45mpty*~\n\x18PostConditionTypeMessage\x12\x0b\n\x07UNKNOWN\x10\x00\x12\x17\n\x13\x46ILTER_OBJECT_FIELD\x10\x01\x12\x1a\n\x16\x46ILTER_LIST_OF_OBJECTS\x10\x02\x12 \n\x1c\x46ILTER_LIST_OF_OBJECTS_FIELD\x10\x03\x32\xec\x01\n\x15\x42usinessContextServer\x12s\n\rFetchContexts\x12..businessContext.BusinessContextRequestMessage\x1a\x30.businessContext.BusinessContextsResponseMessage\"\x00\x12^\n\x10\x46\x65tchAllContexts\x12\x16.businessContext.Empty\x1a\x30.businessContext.BusinessContextsResponseMessage\"\x00\x42^\nEcz.filipklimes.diploma.framework.businessContext.provider.server.grpcB\x15\x42usinessContextProtos')
+  serialized_pb=_b('\n\x16\x62usiness_context.proto\x12\x0f\x62usinessContext\"7\n\x19\x45xpressionPropertyMessage\x12\x0b\n\x03key\x18\x01 \x02(\t\x12\r\n\x05value\x18\x02 \x02(\t\"\x98\x01\n\x11\x45xpressionMessage\x12\x0c\n\x04name\x18\x01 \x02(\t\x12>\n\nproperties\x18\x02 \x03(\x0b\x32*.businessContext.ExpressionPropertyMessage\x12\x35\n\targuments\x18\x03 \x03(\x0b\x32\".businessContext.ExpressionMessage\"Z\n\x13PreconditionMessage\x12\x0c\n\x04name\x18\x01 \x02(\t\x12\x35\n\tcondition\x18\x02 \x02(\x0b\x32\".businessContext.ExpressionMessage\"\xab\x01\n\x14PostConditionMessage\x12\x0c\n\x04name\x18\x01 \x02(\t\x12\x37\n\x04type\x18\x02 \x02(\x0e\x32).businessContext.PostConditionTypeMessage\x12\x15\n\rreferenceName\x18\x03 \x02(\t\x12\x35\n\tcondition\x18\x04 \x02(\x0b\x32\".businessContext.ExpressionMessage\"\xcc\x01\n\x16\x42usinessContextMessage\x12\x0e\n\x06prefix\x18\x01 \x02(\t\x12\x0c\n\x04name\x18\x02 \x02(\t\x12\x18\n\x10includedContexts\x18\x03 \x03(\t\x12;\n\rpreconditions\x18\x04 \x03(\x0b\x32$.businessContext.PreconditionMessage\x12=\n\x0epostConditions\x18\x05 \x03(\x0b\x32%.businessContext.PostConditionMessage\"\\\n\x1f\x42usinessContextsResponseMessage\x12\x39\n\x08\x63ontexts\x18\x01 \x03(\x0b\x32\'.businessContext.BusinessContextMessage\"9\n\x1d\x42usinessContextRequestMessage\x12\x18\n\x10requiredContexts\x18\x01 \x03(\t\"_\n#BusinessContextUpdateRequestMessage\x12\x38\n\x07\x63ontext\x18\x01 \x02(\x0b\x32\'.businessContext.BusinessContextMessage\"\x07\n\x05\x45mpty*~\n\x18PostConditionTypeMessage\x12\x0b\n\x07UNKNOWN\x10\x00\x12\x17\n\x13\x46ILTER_OBJECT_FIELD\x10\x01\x12\x1a\n\x16\x46ILTER_LIST_OF_OBJECTS\x10\x02\x12 \n\x1c\x46ILTER_LIST_OF_OBJECTS_FIELD\x10\x03\x32\xcd\x02\n\x15\x42usinessContextServer\x12s\n\rFetchContexts\x12..businessContext.BusinessContextRequestMessage\x1a\x30.businessContext.BusinessContextsResponseMessage\"\x00\x12^\n\x10\x46\x65tchAllContexts\x12\x16.businessContext.Empty\x1a\x30.businessContext.BusinessContextsResponseMessage\"\x00\x12_\n\rUpdateContext\x12\x34.businessContext.BusinessContextUpdateRequestMessage\x1a\x16.businessContext.Empty\"\x00\x42^\nEcz.filipklimes.diploma.framework.businessContext.provider.server.grpcB\x15\x42usinessContextProtos')
 )
 
 _POSTCONDITIONTYPEMESSAGE = _descriptor.EnumDescriptor(
@@ -48,8 +48,8 @@ _POSTCONDITIONTYPEMESSAGE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=890,
-  serialized_end=1016,
+  serialized_start=987,
+  serialized_end=1113,
 )
 _sym_db.RegisterEnumDescriptor(_POSTCONDITIONTYPEMESSAGE)
 
@@ -355,6 +355,37 @@ _BUSINESSCONTEXTREQUESTMESSAGE = _descriptor.Descriptor(
 )
 
 
+_BUSINESSCONTEXTUPDATEREQUESTMESSAGE = _descriptor.Descriptor(
+  name='BusinessContextUpdateRequestMessage',
+  full_name='businessContext.BusinessContextUpdateRequestMessage',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='context', full_name='businessContext.BusinessContextUpdateRequestMessage.context', index=0,
+      number=1, type=11, cpp_type=10, label=2,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=881,
+  serialized_end=976,
+)
+
+
 _EMPTY = _descriptor.Descriptor(
   name='Empty',
   full_name='businessContext.Empty',
@@ -374,8 +405,8 @@ _EMPTY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=881,
-  serialized_end=888,
+  serialized_start=978,
+  serialized_end=985,
 )
 
 _EXPRESSIONMESSAGE.fields_by_name['properties'].message_type = _EXPRESSIONPROPERTYMESSAGE
@@ -386,6 +417,7 @@ _POSTCONDITIONMESSAGE.fields_by_name['condition'].message_type = _EXPRESSIONMESS
 _BUSINESSCONTEXTMESSAGE.fields_by_name['preconditions'].message_type = _PRECONDITIONMESSAGE
 _BUSINESSCONTEXTMESSAGE.fields_by_name['postConditions'].message_type = _POSTCONDITIONMESSAGE
 _BUSINESSCONTEXTSRESPONSEMESSAGE.fields_by_name['contexts'].message_type = _BUSINESSCONTEXTMESSAGE
+_BUSINESSCONTEXTUPDATEREQUESTMESSAGE.fields_by_name['context'].message_type = _BUSINESSCONTEXTMESSAGE
 DESCRIPTOR.message_types_by_name['ExpressionPropertyMessage'] = _EXPRESSIONPROPERTYMESSAGE
 DESCRIPTOR.message_types_by_name['ExpressionMessage'] = _EXPRESSIONMESSAGE
 DESCRIPTOR.message_types_by_name['PreconditionMessage'] = _PRECONDITIONMESSAGE
@@ -393,6 +425,7 @@ DESCRIPTOR.message_types_by_name['PostConditionMessage'] = _POSTCONDITIONMESSAGE
 DESCRIPTOR.message_types_by_name['BusinessContextMessage'] = _BUSINESSCONTEXTMESSAGE
 DESCRIPTOR.message_types_by_name['BusinessContextsResponseMessage'] = _BUSINESSCONTEXTSRESPONSEMESSAGE
 DESCRIPTOR.message_types_by_name['BusinessContextRequestMessage'] = _BUSINESSCONTEXTREQUESTMESSAGE
+DESCRIPTOR.message_types_by_name['BusinessContextUpdateRequestMessage'] = _BUSINESSCONTEXTUPDATEREQUESTMESSAGE
 DESCRIPTOR.message_types_by_name['Empty'] = _EMPTY
 DESCRIPTOR.enum_types_by_name['PostConditionTypeMessage'] = _POSTCONDITIONTYPEMESSAGE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
@@ -446,6 +479,13 @@ BusinessContextRequestMessage = _reflection.GeneratedProtocolMessageType('Busine
   ))
 _sym_db.RegisterMessage(BusinessContextRequestMessage)
 
+BusinessContextUpdateRequestMessage = _reflection.GeneratedProtocolMessageType('BusinessContextUpdateRequestMessage', (_message.Message,), dict(
+  DESCRIPTOR = _BUSINESSCONTEXTUPDATEREQUESTMESSAGE,
+  __module__ = 'business_context_pb2'
+  # @@protoc_insertion_point(class_scope:businessContext.BusinessContextUpdateRequestMessage)
+  ))
+_sym_db.RegisterMessage(BusinessContextUpdateRequestMessage)
+
 Empty = _reflection.GeneratedProtocolMessageType('Empty', (_message.Message,), dict(
   DESCRIPTOR = _EMPTY,
   __module__ = 'business_context_pb2'
@@ -463,8 +503,8 @@ _BUSINESSCONTEXTSERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   options=None,
-  serialized_start=1019,
-  serialized_end=1255,
+  serialized_start=1116,
+  serialized_end=1449,
   methods=[
   _descriptor.MethodDescriptor(
     name='FetchContexts',
@@ -482,6 +522,15 @@ _BUSINESSCONTEXTSERVER = _descriptor.ServiceDescriptor(
     containing_service=None,
     input_type=_EMPTY,
     output_type=_BUSINESSCONTEXTSRESPONSEMESSAGE,
+    options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='UpdateContext',
+    full_name='businessContext.BusinessContextServer.UpdateContext',
+    index=2,
+    containing_service=None,
+    input_type=_BUSINESSCONTEXTUPDATEREQUESTMESSAGE,
+    output_type=_EMPTY,
     options=None,
   ),
 ])

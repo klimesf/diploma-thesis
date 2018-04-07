@@ -3,9 +3,10 @@ package cz.filipklimes.diploma.framework.businessContext;
 import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
 import lombok.Getter;
 
+import java.io.*;
 import java.util.*;
 
-abstract class BusinessRule
+abstract class BusinessRule implements Serializable
 {
 
     @Getter

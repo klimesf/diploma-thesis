@@ -45,7 +45,7 @@ class GrpcBusinessOperationContextExchangeTest(unittest.TestCase):
 
         server_registry = Registry(MockLocalLoader(), RemoteBusinessContextLoader(MockRemoteLoader()))
 
-        port = 5551
+        port = 5561
         host = 'localhost'
         server = ServerThread(registry=server_registry, sleep_interval=1, port=port)
         server.start()

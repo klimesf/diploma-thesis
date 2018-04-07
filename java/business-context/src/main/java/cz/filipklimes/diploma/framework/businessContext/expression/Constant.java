@@ -2,9 +2,10 @@ package cz.filipklimes.diploma.framework.businessContext.expression;
 
 import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 
+import java.io.*;
 import java.util.*;
 
-public class Constant<T> implements Terminal<T>
+public class Constant<T> implements Terminal<T>, Serializable
 {
 
     private final T value;

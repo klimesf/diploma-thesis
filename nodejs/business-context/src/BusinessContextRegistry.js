@@ -4,6 +4,7 @@ export default class BusinessContextRegistry {
         this.localLoader = localLoader
         this.remoteLoader = remoteLoader
         this.contexts = {}
+        this.localContexts = {}
         this.initialize()
     }
 
@@ -15,6 +16,10 @@ export default class BusinessContextRegistry {
                 throw "duplicate context: " + identifier
             }
             this.contexts[identifier] = context
+        })
+
+        Object.values(this.contexts).forEach(context => {
+            this.localContexts[context.identifier.toString()] = JSON.parse(JSON.stringify(context))
         })
 
         // Analyze and find out which contexts to fetch
@@ -59,12 +64,35 @@ export default class BusinessContextRegistry {
     }
 
     getAllContexts() {
-        return Object.values(this.contexts)
+        return Object.values(this.localContexts)
     }
 
     saveOrUpdateBusinessContext(context) {
-        // TODO: implement
-        throw "not implemented yet"
+        let identifier = context.identifier.toString()
+        this.localContexts[identifier] = JSON.parse(JSON.stringify(context))
+
+        const remoteContextsIdentifiers = new Set()
+        context.includedContexts
+            .forEach(identifier => {
+                if (!remoteContextsIdentifiers.hasOwnProperty(identifier) && !this.contexts.hasOwnProperty(identifier)) {
+                    remoteContextsIdentifiers.add(identifier)
+                }
+            })
+
+        const remoteContexts = this.remoteLoader.loadContextsByIdentifier(remoteContextsIdentifiers)
+
+        context.includedContexts.forEach(includedContextIdentifier => {
+            if (this.contexts.hasOwnProperty(includedContextIdentifier)) {
+                context.merge(this.contexts[includedContextIdentifier])
+                return
+            }
+
+            if (!remoteContexts.hasOwnProperty(includedContextIdentifier)) {
+                throw "unknown context: " + includedContextIdentifier
+            }
+
+            context.merge(remoteContexts[includedContextIdentifier])
+        })
     }
 
 }

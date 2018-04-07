@@ -5,10 +5,11 @@ import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
 import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionVisitor;
 import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 
+import java.io.*;
 import java.math.BigDecimal;
 import java.util.*;
 
-public class GreaterOrEqualTo extends BinaryOperator<Boolean, BigDecimal, BigDecimal>
+public class GreaterOrEqualTo extends BinaryOperator<Boolean, BigDecimal, BigDecimal> implements Serializable
 {
 
     public GreaterOrEqualTo(final Expression<BigDecimal> left, final Expression<BigDecimal> right)

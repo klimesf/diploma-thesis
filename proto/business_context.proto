@@ -8,6 +8,7 @@ option java_outer_classname = "BusinessContextProtos";
 service BusinessContextServer {
     rpc FetchContexts (BusinessContextRequestMessage) returns (BusinessContextsResponseMessage) {}
     rpc FetchAllContexts (Empty) returns (BusinessContextsResponseMessage) {}
+    rpc UpdateContext (BusinessContextUpdateRequestMessage) returns (Empty) {}
 }
 
 message ExpressionPropertyMessage {
@@ -54,6 +55,10 @@ message BusinessContextsResponseMessage {
 
 message BusinessContextRequestMessage {
     repeated string requiredContexts = 1;
+}
+
+message BusinessContextUpdateRequestMessage {
+    required BusinessContextMessage context = 1;
 }
 
 message Empty {}

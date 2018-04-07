@@ -1,6 +1,8 @@
 package cz.filipklimes.diploma.framework.businessContext;
 
-public enum PostConditionType
+import java.io.*;
+
+public enum PostConditionType implements Serializable
 {
 
     /**

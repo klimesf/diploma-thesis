@@ -2,11 +2,12 @@ package cz.filipklimes.diploma.framework.businessContext;
 
 import lombok.Getter;
 
+import java.io.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class BusinessContextIdentifier
+public class BusinessContextIdentifier implements Serializable
 {
 
     private static final Pattern PATTERN = Pattern.compile("^[a-zA-Z0-9]+$");

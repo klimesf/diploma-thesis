@@ -2,9 +2,10 @@ package cz.filipklimes.diploma.framework.businessContext;
 
 import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
 
+import java.io.*;
 import java.util.*;
 
-public class Precondition extends BusinessRule
+public class Precondition extends BusinessRule implements Serializable
 {
 
     Precondition(

@@ -2,9 +2,10 @@ package cz.filipklimes.diploma.framework.businessContext;
 
 import lombok.Getter;
 
+import java.io.*;
 import java.util.*;
 
-public class BusinessContext
+public class BusinessContext implements Serializable
 {
 
     @Getter
@@ -98,7 +99,6 @@ public class BusinessContext
         {
             return new BusinessContext(identifier, includedContexts, preConditions, postConditions);
         }
-
 
     }
 

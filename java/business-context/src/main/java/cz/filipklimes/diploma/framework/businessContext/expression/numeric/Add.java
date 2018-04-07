@@ -1,15 +1,16 @@
 package cz.filipklimes.diploma.framework.businessContext.expression.numeric;
 
-import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionVisitor;
-import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 import cz.filipklimes.diploma.framework.businessContext.expression.BinaryOperator;
 import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
+import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionVisitor;
+import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 
+import java.io.*;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.*;
 
-public class Add extends BinaryOperator<BigDecimal, BigDecimal, BigDecimal>
+public class Add extends BinaryOperator<BigDecimal, BigDecimal, BigDecimal> implements Serializable
 {
 
     public Add(final Expression<BigDecimal> left, final Expression<BigDecimal> right)

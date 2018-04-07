@@ -33,14 +33,14 @@ public class GrpcBusinessOperationContextExchangeTest
     {
         BusinessContextRegistry registry = buildRegistry();
 
-        GrpcBusinessContextServer server = new GrpcBusinessContextServer(registry, 5555);
+        GrpcBusinessContextServer server = new GrpcBusinessContextServer(registry, 5565);
         Thread t = new Thread(server);
         t.start();
 
         Set<BusinessContextIdentifier> identifiers = new HashSet<>();
         identifiers.add(USER_CREATE);
 
-        RemoteLoader client = new GrpcRemoteLoader(new RemoteServiceAddress("user", "localhost", 5555));
+        RemoteLoader client = new GrpcRemoteLoader(new RemoteServiceAddress("user", "localhost", 5565));
         Set<BusinessContext> contexts = client.loadContexts(identifiers);
 
         Assert.assertEquals(1, contexts.size());
@@ -72,7 +72,7 @@ public class GrpcBusinessOperationContextExchangeTest
         Assert.assertTrue(rule3.getCondition() instanceof Constant);
         Assert.assertEquals("email", rule3.getReferenceName());
 
-        Set<BusinessContext> allContexts = ((GrpcRemoteLoader) client).loadAllContexts();
+        Set<BusinessContext> allContexts = client.loadAllContexts();
 
         t.interrupt();
         Assert.assertEquals(2, allContexts.size());
@@ -125,6 +125,12 @@ public class GrpcBusinessOperationContextExchangeTest
             public Set<BusinessContext> loadAllContexts()
             {
                 return loadContexts(Collections.singleton(AUTH_NOT_LOGGED_IN));
+            }
+
+            @Override
+            public void updateContext(final BusinessContext context)
+            {
+                throw new UnsupportedOperationException("not implemented yet");
             }
         });
         builder.withRemoteLoader(new RemoteBusinessContextLoader(remoteLoaders));

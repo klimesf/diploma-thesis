@@ -4,12 +4,13 @@ import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperation
 import cz.filipklimes.diploma.framework.businessContext.exception.BadObjectPropertyTypeException;
 import cz.filipklimes.diploma.framework.businessContext.exception.UndefinedObjectPropertyException;
 
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.*;
 
-public class ObjectPropertyReference<T> implements Terminal<T>
+public class ObjectPropertyReference<T> implements Terminal<T>, Serializable
 {
 
     private final String objectName;

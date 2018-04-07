@@ -5,9 +5,10 @@ import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
 import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionVisitor;
 import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 
+import java.io.*;
 import java.util.*;
 
-public final class Or extends BinaryOperator<Boolean, Boolean, Boolean>
+public final class Or extends BinaryOperator<Boolean, Boolean, Boolean> implements Serializable
 {
 
     public Or(final Expression<Boolean> left, final Expression<Boolean> right)

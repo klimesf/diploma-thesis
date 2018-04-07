@@ -2,9 +2,10 @@ package cz.filipklimes.diploma.framework.businessContext.expression;
 
 import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 
+import java.io.*;
 import java.util.*;
 
-public class IsNotNull<T> extends UnaryOperator<Boolean, T>
+public class IsNotNull<T> extends UnaryOperator<Boolean, T> implements Serializable
 {
 
     public IsNotNull(final Expression<T> argument)

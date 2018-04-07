@@ -15,6 +15,7 @@ import java.util.*;
 public class Application
 {
 
+    // Static service discovery, this is only for the prototype purposes
     private static String ORDER_SERVICE_HOST = "localhost";
     private static int ORDER_SERVICE_PORT = 5551;
 
@@ -41,21 +42,15 @@ public class Application
     @Bean
     public BusinessContextEditor createBusinessContextEditor()
     {
-        RemoteLoader orderRemoteLoader = new GrpcRemoteLoader(new RemoteServiceAddress("order", ORDER_SERVICE_HOST, ORDER_SERVICE_PORT));
-        RemoteLoader authRemoteLoader = new GrpcRemoteLoader(new RemoteServiceAddress("auth", AUTH_SERVICE_HOST, AUTH_SERVICE_PORT));
-        RemoteLoader productRemoteLoader = new GrpcRemoteLoader(new RemoteServiceAddress("product", PRODUCT_SERVICE_HOST, PRODUCT_SERVICE_PORT));
-        RemoteLoader userRemoteLoader = new GrpcRemoteLoader(new RemoteServiceAddress("user", USER_SERVICE_HOST, USER_SERVICE_PORT));
-        RemoteLoader shippingRemoteLoader = new GrpcRemoteLoader(new RemoteServiceAddress("shipping", SHIPPING_SERVICE_HOST, SHIPPING_SERVICE_PORT));
-        RemoteLoader billingRemoteLoader = new GrpcRemoteLoader(new RemoteServiceAddress("billing", BILLING_SERVICE_HOST, BILLING_SERVICE_PORT));
+        Map<String, RemoteLoader> loaderMap = new HashMap<>();
+        loaderMap.put("order", new GrpcRemoteLoader(new RemoteServiceAddress("order", ORDER_SERVICE_HOST, ORDER_SERVICE_PORT)));
+        loaderMap.put("auth", new GrpcRemoteLoader(new RemoteServiceAddress("auth", AUTH_SERVICE_HOST, AUTH_SERVICE_PORT)));
+        loaderMap.put("product", new GrpcRemoteLoader(new RemoteServiceAddress("product", PRODUCT_SERVICE_HOST, PRODUCT_SERVICE_PORT)));
+        loaderMap.put("user", new GrpcRemoteLoader(new RemoteServiceAddress("user", USER_SERVICE_HOST, USER_SERVICE_PORT)));
+        loaderMap.put("shipping", new GrpcRemoteLoader(new RemoteServiceAddress("shipping", SHIPPING_SERVICE_HOST, SHIPPING_SERVICE_PORT)));
+        loaderMap.put("billing", new GrpcRemoteLoader(new RemoteServiceAddress("billing", BILLING_SERVICE_HOST, BILLING_SERVICE_PORT)));
 
-        return new BusinessContextEditor(Arrays.asList(
-            orderRemoteLoader,
-            authRemoteLoader,
-            productRemoteLoader,
-            userRemoteLoader,
-            shippingRemoteLoader,
-            billingRemoteLoader
-        ));
+        return new BusinessContextEditor(loaderMap);
     }
 
     @Bean

@@ -5,9 +5,10 @@ import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
 import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionVisitor;
 import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 
+import java.io.*;
 import java.util.*;
 
-public final class And extends BinaryOperator<Boolean, Boolean, Boolean>
+public final class And extends BinaryOperator<Boolean, Boolean, Boolean> implements Serializable
 {
 
     public And(final Expression<Boolean> left, final Expression<Boolean> right)

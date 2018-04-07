@@ -1,6 +1,8 @@
 package cz.filipklimes.diploma.centralAdministration.controller;
 
 import cz.filipklimes.diploma.centralAdministration.businessContext.BusinessContextEditor;
+import cz.filipklimes.diploma.centralAdministration.businessContext.exception.CyclicDependencyException;
+import cz.filipklimes.diploma.centralAdministration.businessContext.exception.MissingIncludedBusinessContextsException;
 import cz.filipklimes.diploma.framework.businessContext.BusinessContext;
 import cz.filipklimes.diploma.framework.businessContext.BusinessContextIdentifier;
 import cz.filipklimes.diploma.framework.businessContext.xml.BusinessContextXmlLoader;
@@ -102,10 +104,12 @@ public class ContextController
                 return new RedirectView(String.format("/edit/%s", context.getIdentifier().toString()));
             }
 
+            editor.updateContext(context);
+
             attributes.addFlashAttribute("success", "Business context edited successfully");
             return new RedirectView(String.format("/detail/%s", context.getIdentifier().toString()));
 
-        } catch (JDOMException e) {
+        } catch (JDOMException | CyclicDependencyException | MissingIncludedBusinessContextsException e) {
             attributes.addFlashAttribute("error", e.getMessage());
             return new RedirectView(String.format("/edit/%s", identifier));
         }

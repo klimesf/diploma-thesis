@@ -5,9 +5,10 @@ import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionVis
 import cz.filipklimes.diploma.framework.businessContext.expression.UnaryOperator;
 import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 
+import java.io.*;
 import java.util.*;
 
-public class Negate extends UnaryOperator<Boolean, Boolean>
+public class Negate extends UnaryOperator<Boolean, Boolean> implements Serializable
 {
 
     public Negate(final Expression<Boolean> argument)

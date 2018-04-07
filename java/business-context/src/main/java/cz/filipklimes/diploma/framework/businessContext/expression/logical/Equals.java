@@ -5,9 +5,10 @@ import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
 import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionVisitor;
 import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 
+import java.io.*;
 import java.util.*;
 
-public class Equals<L, R> extends BinaryOperator<Boolean, L, R>
+public class Equals<L, R> extends BinaryOperator<Boolean, L, R> implements Serializable
 {
 
     public Equals(final Expression<L> left, final Expression<R> right)

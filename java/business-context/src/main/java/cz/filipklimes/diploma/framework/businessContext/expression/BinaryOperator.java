@@ -2,9 +2,10 @@ package cz.filipklimes.diploma.framework.businessContext.expression;
 
 import lombok.Getter;
 
+import java.io.*;
 import java.util.*;
 
-public abstract class BinaryOperator<T, L, R> implements Expression<T>
+public abstract class BinaryOperator<T, L, R> implements Expression<T>, Serializable
 {
 
     @Getter

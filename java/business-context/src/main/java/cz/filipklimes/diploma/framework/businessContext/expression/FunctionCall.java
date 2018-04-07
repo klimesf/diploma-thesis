@@ -3,9 +3,10 @@ package cz.filipklimes.diploma.framework.businessContext.expression;
 import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessOperationContext;
 import cz.filipklimes.diploma.framework.businessContext.Function;
 
+import java.io.*;
 import java.util.*;
 
-public class FunctionCall<T> implements Expression<T>
+public class FunctionCall<T> implements Expression<T>, Serializable
 {
 
     private final String methodName;

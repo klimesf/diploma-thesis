@@ -12,4 +12,6 @@ public interface RemoteLoader
 
     Set<BusinessContext> loadAllContexts();
 
+    void updateContext(BusinessContext context);
+
 }
