@@ -55,6 +55,24 @@ services:
       - "user"
       - "order"
     links:
-      - product:product
-      - order:order
-      - user:user
+      - product
+      - order
+      - user
+
+  central-administration:
+    image: filipklimes-diploma/central-administration
+    ports:
+      - "5600:5600"
+    depends_on:
+      - "product"
+      - "billing"
+      - "shipping"
+      - "user"
+      - "order"
+      - "ui"
+    links:
+      - product
+      - order
+      - user
+      - billing
+      - shipping

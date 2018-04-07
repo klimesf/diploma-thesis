@@ -7,6 +7,9 @@ cd ./../python
 docker build -t filipklimes-diploma/python .
 cd ../
 docker build -f nodejs/Dockerfile -t filipklimes-diploma/nodejs .
+cd ./central-administration/
+mvn clean package dockerfile:build
+cd ../
 
 # Build & Run example system
 cd ./example
