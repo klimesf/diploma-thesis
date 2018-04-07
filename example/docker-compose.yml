@@ -5,6 +5,11 @@ services:
     ports:
       - "5501:5501"
       - "5551:5551"
+    depends_on:
+      - "product"
+      - "billing"
+      - "shipping"
+      - "user"
     links:
       - product
       - user
@@ -16,6 +21,8 @@ services:
     ports:
       - "5502:5502"
       - "5552:5552"
+    depends_on:
+      - "user"
     links:
       - user:user
 
@@ -41,6 +48,12 @@ services:
     image: filipklimes-diploma/example-ui-service
     ports:
       - "8080:8080"
+    depends_on:
+      - "product"
+      - "billing"
+      - "shipping"
+      - "user"
+      - "order"
     links:
       - product:product
       - order:order
