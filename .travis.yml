@@ -15,9 +15,11 @@ install:
   - pip install -r ./python/requirements.txt
   - cd nodejs/business-context
   - yarn install
+  - npm run-script build
   - cd ../../
   - cd nodejs/business-context-grpc
   - yarn install
+  - npm run-script build
   - cd ../../
 
 script:
