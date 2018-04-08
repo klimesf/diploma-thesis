@@ -16,10 +16,7 @@ export default class BusinessContextRegistry {
                 throw "duplicate context: " + identifier
             }
             this.contexts[identifier] = context
-        })
-
-        Object.values(this.contexts).forEach(context => {
-            this.localContexts[context.identifier.toString()] = JSON.parse(JSON.stringify(context))
+            this.localContexts[identifier] = context
         })
 
         // Analyze and find out which contexts to fetch
@@ -69,7 +66,7 @@ export default class BusinessContextRegistry {
 
     saveOrUpdateBusinessContext(context) {
         let identifier = context.identifier.toString()
-        this.localContexts[identifier] = JSON.parse(JSON.stringify(context))
+        this.localContexts[identifier] = context
 
         const remoteContextsIdentifiers = new Set()
         context.includedContexts

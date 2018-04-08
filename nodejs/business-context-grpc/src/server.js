@@ -4,7 +4,7 @@ const PROTO_PATH = __dirname + '/../../proto/business_context.proto'
 
 const grpc = require('grpc')
 const businessContextProto = grpc.load(PROTO_PATH).businessContext
-const buildContext = require('./helpers').buildContext
+const buildContexts = require('./helpers').buildContexts
 const buildContextMessages = require('./helpers').buildContextMessages
 
 function fetchContexts(registry) {
@@ -19,6 +19,7 @@ function fetchContexts(registry) {
 function fetchAllContexts(registry) {
     return function (call, callback) {
         const contexts = registry.getAllContexts()
+        console.log(contexts)
         const messages = buildContextMessages(contexts)
 
         callback(null, {contexts: messages})
@@ -27,7 +28,7 @@ function fetchAllContexts(registry) {
 
 function updateContext(registry) {
     return function (call, callback) {
-        const contexts = registry.updateContext(buildContext(call.request.context))
+        const contexts = registry.updateContext(buildContexts([call.request.context]).pop())
         callback(null, {})
     }
 }
