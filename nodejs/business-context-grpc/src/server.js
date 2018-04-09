@@ -19,7 +19,6 @@ function fetchContexts(registry) {
 function fetchAllContexts(registry) {
     return function (call, callback) {
         const contexts = registry.getAllContexts()
-        console.log(contexts)
         const messages = buildContextMessages(contexts)
 
         callback(null, {contexts: messages})

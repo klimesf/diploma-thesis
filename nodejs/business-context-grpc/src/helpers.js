@@ -1,20 +1,20 @@
 "use strict"
 
-const BusinessContext = require('../../business-context/dist/BusinessContext').default
-const BusinessContextIdentifier = require('../../business-context/dist/BusinessContextIdentifier').default
-const Precondition = require('../../business-context/dist/Precondition').default
-const PostCondition = require('../../business-context/dist/PostCondition').default
-const PostConditionType = require('../../business-context/dist/PostConditionType').default
-const IsNotNull = require('../../business-context/dist/expression/IsNotNull').default
-const ExpressionType = require('../../business-context/dist/expression/ExpressionType').default
-const VariableReference = require('../../business-context/dist/expression/VariableReference').default
-const FunctionCall = require('../../business-context/dist/expression/FunctionCall').default
-const ObjectPropertyReference = require('../../business-context/dist/expression/ObjectPropertyReference').default
-const Constant = require('../../business-context/dist/expression/Constant').default
-const LogicalAnd = require('../../business-context/dist/expression/logical/And').default
-const LogicalEquals = require('../../business-context/dist/expression/logical/Equals').default
-const LogicalNegate = require('../../business-context/dist/expression/logical/Negate').default
-const LogicalOr = require('../../business-context/dist/expression/logical/Or').default
+const BusinessContext = require('business-context/dist/BusinessContext').default
+const BusinessContextIdentifier = require('business-context/dist/BusinessContextIdentifier').default
+const Precondition = require('business-context/dist/Precondition').default
+const PostCondition = require('business-context/dist/PostCondition').default
+const PostConditionType = require('business-context/dist/PostConditionType').default
+const IsNotNull = require('business-context/dist/expression/IsNotNull').default
+const ExpressionType = require('business-context/dist/expression/ExpressionType').default
+const VariableReference = require('business-context/dist/expression/VariableReference').default
+const FunctionCall = require('business-context/dist/expression/FunctionCall').default
+const ObjectPropertyReference = require('business-context/dist/expression/ObjectPropertyReference').default
+const Constant = require('business-context/dist/expression/Constant').default
+const LogicalAnd = require('business-context/dist/expression/logical/And').default
+const LogicalEquals = require('business-context/dist/expression/logical/Equals').default
+const LogicalNegate = require('business-context/dist/expression/logical/Negate').default
+const LogicalOr = require('business-context/dist/expression/logical/Or').default
 
 function convertExpressionType(type) {
     switch (type) {

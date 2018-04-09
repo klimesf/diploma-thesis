@@ -1,20 +1,20 @@
 "use strict";
 
-const client = require('./../src/client')
-const server = require('./../src/server')
+const client = require('./../dist/client')
+const server = require('./../dist/server')
 
 const chai = require('chai')
 
-const BusinessContextRegistry = require('../../business-context/src/BusinessContextRegistry').default
-const BusinessContext = require('../../business-context/src/BusinessContext').default
-const BusinessContextIdentifier = require('../../business-context/src/BusinessContextIdentifier').default
-const Precondition = require('../../business-context/src/Precondition').default
-const PostCondition = require('../../business-context/src/PostCondition').default
-const PostConditionType = require('../../business-context/src/PostConditionType').default
-const IsNotNull = require('../../business-context/src/expression/IsNotNull').default
-const ExpressionType = require('../../business-context/src/expression/ExpressionType').default
-const VariableReference = require('../../business-context/src/expression/VariableReference').default
-const Constant = require('../../business-context/src/expression/Constant').default
+const BusinessContextRegistry = require('business-context/dist/BusinessContextRegistry').default
+const BusinessContext = require('business-context/dist/BusinessContext').default
+const BusinessContextIdentifier = require('business-context/dist/BusinessContextIdentifier').default
+const Precondition = require('business-context/dist/Precondition').default
+const PostCondition = require('business-context/dist/PostCondition').default
+const PostConditionType = require('business-context/dist/PostConditionType').default
+const IsNotNull = require('business-context/dist/expression/IsNotNull').default
+const ExpressionType = require('business-context/dist/expression/ExpressionType').default
+const VariableReference = require('business-context/dist/expression/VariableReference').default
+const Constant = require('business-context/dist/expression/Constant').default
 
 chai.should()
 

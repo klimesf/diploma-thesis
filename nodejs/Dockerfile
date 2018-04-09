@@ -11,5 +11,6 @@ RUN cd ./business-context \
     && npm run-script build \
     && cd ../business-context-grpc \
     && yarn install \
+    && yarn link business-context-framework \
     && yarn link \
     && npm run-script build
