@@ -88,6 +88,14 @@
             <xs:element type="logicalEqualsType" name="logicalEquals" minOccurs="0"/>
             <xs:element type="logicalOrType" name="logicalOr" minOccurs="0"/>
             <xs:element type="logicalNegateType" name="logicalNegate" minOccurs="0"/>
+            <xs:element type="numericAddType" name="numericAdd" minOccurs="0"/>
+            <xs:element type="numericDivideType" name="numericDivide" minOccurs="0"/>
+            <xs:element type="numericGreaterOrEqualToType" name="numericGreaterOrEqualTo" minOccurs="0"/>
+            <xs:element type="numericGreaterThanType" name="numericGreaterThan" minOccurs="0"/>
+            <xs:element type="numericLessOrEqualToType" name="numericLessOrEqualTo" minOccurs="0"/>
+            <xs:element type="numericLessThanType" name="numericLessThan" minOccurs="0"/>
+            <xs:element type="numericMultiplyType" name="numericMultiply" minOccurs="0"/>
+            <xs:element type="numericSubtractType" name="numericSubtract" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -139,6 +147,62 @@
     </xs:complexType>
 
     <xs:complexType name="logicalOrType">
+        <xs:sequence>
+            <xs:element type="conditionType" name="left"/>
+            <xs:element type="conditionType" name="right"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="numericAddType">
+        <xs:sequence>
+            <xs:element type="conditionType" name="left"/>
+            <xs:element type="conditionType" name="right"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="numericDivideType">
+        <xs:sequence>
+            <xs:element type="conditionType" name="left"/>
+            <xs:element type="conditionType" name="right"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="numericGreaterOrEqualToType">
+        <xs:sequence>
+            <xs:element type="conditionType" name="left"/>
+            <xs:element type="conditionType" name="right"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="numericGreaterThanType">
+        <xs:sequence>
+            <xs:element type="conditionType" name="left"/>
+            <xs:element type="conditionType" name="right"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="numericLessOrEqualToType">
+        <xs:sequence>
+            <xs:element type="conditionType" name="left"/>
+            <xs:element type="conditionType" name="right"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="numericLessThanType">
+        <xs:sequence>
+            <xs:element type="conditionType" name="left"/>
+            <xs:element type="conditionType" name="right"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="numericMultiplyType">
+        <xs:sequence>
+            <xs:element type="conditionType" name="left"/>
+            <xs:element type="conditionType" name="right"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="numericSubtractType">
         <xs:sequence>
             <xs:element type="conditionType" name="left"/>
             <xs:element type="conditionType" name="right"/>

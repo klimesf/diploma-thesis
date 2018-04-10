@@ -141,16 +141,16 @@ public class OrderClient
             }
 
             String json = String.format(
-                "{\"billing\":{\"country\":%s,\"city\":%s,\"street\":%s,\"postal\":%s}," +
-                    "\"shipping\":{\"country\":%s,\"city\":%s,\"street\":%s,\"postal\":%s}}",
+                "{\"shipping\":{\"country\":%s,\"city\":%s,\"street\":%s,\"postal\":%s}," +
+                    "\"billing\":{\"country\":%s,\"city\":%s,\"street\":%s,\"postal\":%s}}",
                 ClientHelper.jsonField(shipping.getCountry()),
                 ClientHelper.jsonField(shipping.getCity()),
                 ClientHelper.jsonField(shipping.getStreet()),
                 ClientHelper.jsonField(shipping.getPostal()),
                 ClientHelper.jsonField(billing.getCountry()),
-                ClientHelper.jsonField(shipping.getCity()),
-                ClientHelper.jsonField(shipping.getStreet()),
-                ClientHelper.jsonField(shipping.getPostal())
+                ClientHelper.jsonField(billing.getCity()),
+                ClientHelper.jsonField(billing.getStreet()),
+                ClientHelper.jsonField(billing.getPostal())
             );
             request.setEntity(new StringEntity(json));
             request.setHeader("Content-type", "application/json");

@@ -1,5 +1,7 @@
 "use strict";
 
+import IsNotNull from '../src/expression/IsNotNull'
+
 let chai = require('chai');
 
 chai.should();
@@ -16,7 +18,7 @@ describe('BusinessContext', () => {
             const userCreate = new BusinessContext(
                 BusinessContextIdentifier.of('user.create'),
                 new Set().add(BusinessContextIdentifier.of('auth.loggedIn')),
-                new Set().add(new Precondition('emailFilled'), null),
+                new Set().add(new Precondition('emailFilled', null)),
                 new Set().add(new PostCondition('filterEmailField', PostConditionType.FILTER_OBJECT_FIELD, 'email', null))
             )
 

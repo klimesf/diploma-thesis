@@ -26,6 +26,8 @@ function convertExpressionType(type) {
             return ExpressionType.BOOL;
         case ExpressionType.VOID.name:
             return ExpressionType.VOID;
+        case ExpressionType.OBJECT.name:
+            return ExpressionType.OBJECT;
         default:
             throw "unknown expression type " + type
     }
@@ -71,14 +73,14 @@ exports.buildContexts = messages => {
     return messages.map(message => {
         return new BusinessContext(
             new BusinessContextIdentifier(message.prefix, message.name),
-            message.includedContexts,
-            message.preconditions.map(precondition => new Precondition(precondition.name, buildExpression(precondition.condition))),
-            message.postConditions.map(postCondition => new PostCondition(
+            new Set(message.includedContexts.map(included => BusinessContextIdentifier.of(included))),
+            new Set(message.preconditions.map(precondition => new Precondition(precondition.name, buildExpression(precondition.condition)))),
+            new Set(message.postConditions.map(postCondition => new PostCondition(
                 postCondition.name,
                 PostConditionType[postCondition.type],
                 postCondition.referenceName,
                 buildExpression(postCondition.condition)
-            ))
+            )))
         )
     })
 }

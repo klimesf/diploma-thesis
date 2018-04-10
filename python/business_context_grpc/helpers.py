@@ -13,6 +13,7 @@ def convert_expression_type(name: str) -> ExpressionType:
         'number': ExpressionType.NUMBER,
         'bool': ExpressionType.BOOL,
         'void': ExpressionType.VOID,
+        'object': ExpressionType.OBJECT,
     }
     if name not in converter:
         raise Exception('Unknown expression type ' + name)
