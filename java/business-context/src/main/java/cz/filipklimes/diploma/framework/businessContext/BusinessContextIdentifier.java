@@ -63,7 +63,7 @@ public class BusinessContextIdentifier implements Serializable
         Objects.requireNonNull(s);
         Matcher matcher = PREFIXED_PATTERN.matcher(s);
         if (!matcher.matches()) {
-            throw new IllegalArgumentException("Cannot parse BusinessContextIdentifier");
+            throw new IllegalArgumentException(String.format("Cannot parse BusinessContextIdentifier: %s", s));
         }
 
         return new BusinessContextIdentifier(matcher.group(1), matcher.group(2));

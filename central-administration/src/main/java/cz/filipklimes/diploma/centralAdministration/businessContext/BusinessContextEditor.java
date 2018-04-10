@@ -67,18 +67,23 @@ public class BusinessContextEditor
 
     private void refresh()
     {
-        contexts = loaders.values().stream()
-            .map(RemoteLoader::loadAllContexts)
-            .flatMap(Set::stream)
-            .collect(Collectors.toMap(
-                BusinessContext::getIdentifier,
-                Function.identity(),
-                (c1, c2) -> c1 // Ignore conflicts
-            ));
+        try {
+            contexts = loaders.values().stream()
+                .map(RemoteLoader::loadAllContexts)
+                .flatMap(Set::stream)
+                .collect(Collectors.toMap(
+                    BusinessContext::getIdentifier,
+                    Function.identity(),
+                    (c1, c2) -> c1 // Ignore conflicts
+                ));
 
-        contexts.forEach((key, value) -> value.getIncludedContexts().forEach(included -> {
-            includedBy.computeIfAbsent(included, x -> new HashSet<>()).add(key);
-        }));
+            contexts.forEach((key, value) -> value.getIncludedContexts().forEach(included -> {
+                includedBy.computeIfAbsent(included, x -> new HashSet<>()).add(key);
+            }));
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
 
 }

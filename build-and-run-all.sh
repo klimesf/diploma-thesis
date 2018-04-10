@@ -13,7 +13,6 @@ cd ../
 
 # Build & Run example system
 cd ./example
-docker-compose down # cleanup
 cd ./billing
 mvn clean package dockerfile:build
 cd ../shipping
@@ -27,6 +26,7 @@ docker build -t filipklimes-diploma/example-product-service .
 cd ../user
 docker build -t filipklimes-diploma/example-user-service .
 cd ../
+docker-compose down # cleanup
 docker-compose up -d billing shipping user
 sleep 10s
 docker-compose up -d product

@@ -17,7 +17,7 @@ export default class BusinessContext {
     clone() {
         return new BusinessContext(
             new BusinessContextIdentifier(JSON.parse(JSON.stringify(this.identifier.prefix)), JSON.parse(JSON.stringify(this.identifier.name))),
-            new Set([...this.includedContexts].map(included => JSON.parse(JSON.stringify(included)))),
+            new Set([...this.includedContexts].map(included => BusinessContextIdentifier.of(included.toString()))),
             new Set([...this.preconditions].map(precondition => precondition.clone())),
             new Set([...this.postConditions].map(postcondition => postcondition.clone()))
         )
