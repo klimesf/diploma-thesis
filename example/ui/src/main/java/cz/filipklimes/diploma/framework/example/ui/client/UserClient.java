@@ -91,8 +91,6 @@ public class UserClient
 
     public User register(final String name, final String email) throws CouldNotCreateUserException
     {
-        Objects.requireNonNull(name);
-        Objects.requireNonNull(email);
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
             HttpPost request = new HttpPost("http://user:5503/users");
             if (signedUser.isAnyoneSignedIn()) {
@@ -100,7 +98,11 @@ public class UserClient
                 request.addHeader("X-User-Role", signedUser.getCurrentlyLoggedUser().getRole());
             }
 
-            String json = String.format("{\"name\":\"%s\", \"email\":\"%s\"}", name, email);
+            String json = String.format(
+                "{\"name\":%s, \"email\":%s}",
+                ClientHelper.jsonField(name),
+                ClientHelper.jsonField(email)
+            );
             request.setEntity(new StringEntity(json));
             request.setHeader("Content-type", "application/json");
 

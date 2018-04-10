@@ -27,4 +27,10 @@ docker build -t filipklimes-diploma/example-product-service .
 cd ../user
 docker build -t filipklimes-diploma/example-user-service .
 cd ../
-docker-compose up -d
+docker-compose up -d billing shipping user
+sleep 10s
+docker-compose up -d product
+sleep 10s
+docker-compose up -d order
+sleep 20s
+docker-compose up -d ui central-administration

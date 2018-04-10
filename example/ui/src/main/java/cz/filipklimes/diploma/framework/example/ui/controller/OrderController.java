@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.util.*;
+
 @Controller
 public class OrderController
 {
@@ -116,20 +118,20 @@ public class OrderController
         private Address createShippingAddress()
         {
             return new Address(
-                getShippingCountry(),
-                getShippingCity(),
-                getShippingStreet(),
-                getShippingPostal()
+                Optional.of(getShippingCountry()).filter(s -> !s.isEmpty()).orElse(null),
+                Optional.of(getShippingCity()).filter(s -> !s.isEmpty()).orElse(null),
+                Optional.of(getShippingStreet()).filter(s -> !s.isEmpty()).orElse(null),
+                Optional.of(getShippingPostal()).filter(s -> !s.isEmpty()).orElse(null)
             );
         }
 
         private Address createBillingAddress()
         {
             return new Address(
-                getBillingCountry(),
-                getBillingCity(),
-                getBillingStreet(),
-                getBillingPostal()
+                Optional.of(getBillingCountry()).filter(s -> !s.isEmpty()).orElse(null),
+                Optional.of(getBillingCity()).filter(s -> !s.isEmpty()).orElse(null),
+                Optional.of(getBillingStreet()).filter(s -> !s.isEmpty()).orElse(null),
+                Optional.of(getBillingPostal()).filter(s -> !s.isEmpty()).orElse(null)
             );
         }
 

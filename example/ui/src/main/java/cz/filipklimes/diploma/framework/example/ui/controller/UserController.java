@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.util.*;
+
 @Controller
 public class UserController
 {
@@ -73,14 +75,17 @@ public class UserController
         model.addAttribute("user", signedUser.getCurrentlyLoggedUser());
         model.addAttribute("userForm", new UserForm());
 
-        return "/register";
+        return "register";
     }
 
     @PostMapping("/register")
     public RedirectView handleRegister(@ModelAttribute UserForm userForm, RedirectAttributes attributes)
     {
         try {
-            User user = userFacade.register(userForm.getName(), userForm.getEmail());
+            User user = userFacade.register(
+                Optional.of(userForm.getName()).filter(s -> !s.isEmpty()).orElse(null),
+                Optional.of(userForm.getEmail()).filter(s -> !s.isEmpty()).orElse(null)
+            );
             signedUser.signIn(user);
             attributes.addFlashAttribute("success", String.format("Registered new user %s", user.getName()));
 

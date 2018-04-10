@@ -11,9 +11,7 @@ exports.getUser = (req, res) => {
     users.getUser(req.params.userId)
         .then(user => res.json(user))
         .catch(err => {
-            res.json({message: err})
-            res.status(404)
-            res.send()
+            res.status(404).json({message: err})
         })
 }
 
@@ -21,8 +19,6 @@ exports.register = (req, res) => {
     users.register(req.body.name, req.body.email)
         .then(user => res.json(user))
         .catch(err => {
-            res.json({message: err})
-            res.status(422)
-            res.send()
+            res.status(422).json({message: err})
         })
 }

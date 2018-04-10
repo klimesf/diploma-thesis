@@ -29,7 +29,10 @@
             <div class="form-inline my-2 my-lg-0 text-light">
                 <div class="form-inline my-2 my-lg-0 text-light">
                     <a href="/users" th:if="${isUserLoggedIn}" style="color: white;" th:text="'User: ' + ${user.name} + '&nbsp;|&nbsp;'"></a>
-                    <a href="/users" th:if="${!isUserLoggedIn}" style="color: white;">Sign in&nbsp;|&nbsp;</a>
+                    <a href="/users" th:if="${!isUserLoggedIn}" style="color: white;">Sign in</a>
+                    <span th:if="${!isUserLoggedIn}">&nbsp;or&nbsp;</span>
+                    <a href="/register" th:if="${!isUserLoggedIn}" style="color: white;">register</a>
+                    <span th:if="${!isUserLoggedIn}">&nbsp;|&nbsp;</span>
                     <a href="/shopping-cart" style="color: white;">Shopping cart has&nbsp;<span th:text="${cartCount}"></span>&nbsp;items</a>
                 </div>
             </div>
