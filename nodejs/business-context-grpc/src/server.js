@@ -27,7 +27,7 @@ function fetchAllContexts(registry) {
 
 function updateContext(registry) {
     return function (call, callback) {
-        const contexts = registry.updateContext(buildContexts([call.request.context]).pop())
+        registry.saveOrUpdateBusinessContext(buildContexts([call.request.context]).pop())
         callback(null, {})
     }
 }

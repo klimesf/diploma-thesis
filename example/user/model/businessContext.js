@@ -59,7 +59,7 @@ exports.setUp = () => {
                         BusinessContextIdentifier.of('user.validEmail'),
                         new Set(),
                         new Set()
-                            .add(new Precondition('Email must not be null', new IsNotNull(new VariableReference('email', ExpressionType.STRING))),),
+                            .add(new Precondition('Email must not be null', new IsNotNull(new VariableReference('email', ExpressionType.STRING)))),
                         new Set()
                     ),
                     new BusinessContext(
@@ -74,13 +74,15 @@ exports.setUp = () => {
                         new Set()
                             .add(BusinessContextIdentifier.of('auth.adminLoggedIn'))
                             .add(BusinessContextIdentifier.of('user.validEmail')),
-                        new Set(),
+                        new Set()
+                            .add(new Precondition('Name must not be null', new IsNotNull(new VariableReference('name', ExpressionType.STRING)))),
                         new Set()
                     ),
                     new BusinessContext(
                         BusinessContextIdentifier.of('user.register'),
                         new Set().add(BusinessContextIdentifier.of('user.validEmail')),
-                        new Set(),
+                        new Set()
+                            .add(new Precondition('Name must not be null', new IsNotNull(new VariableReference('name', ExpressionType.STRING)))),
                         new Set()
                     ),
                     new BusinessContext(

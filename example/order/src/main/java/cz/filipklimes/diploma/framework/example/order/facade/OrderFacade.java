@@ -41,7 +41,7 @@ public class OrderFacade
     {
         Order order = orderService.create(
             user,
-            user.getEmail(),
+            Optional.ofNullable(user).map(User::getEmail).orElse(null),
             shippingAddress,
             billingAddres
         );
