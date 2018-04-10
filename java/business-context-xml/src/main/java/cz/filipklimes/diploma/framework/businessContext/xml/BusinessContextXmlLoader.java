@@ -15,6 +15,14 @@ import cz.filipklimes.diploma.framework.businessContext.expression.logical.And;
 import cz.filipklimes.diploma.framework.businessContext.expression.logical.Equals;
 import cz.filipklimes.diploma.framework.businessContext.expression.logical.Negate;
 import cz.filipklimes.diploma.framework.businessContext.expression.logical.Or;
+import cz.filipklimes.diploma.framework.businessContext.expression.numeric.Add;
+import cz.filipklimes.diploma.framework.businessContext.expression.numeric.Divide;
+import cz.filipklimes.diploma.framework.businessContext.expression.numeric.GreaterOrEqualTo;
+import cz.filipklimes.diploma.framework.businessContext.expression.numeric.GreaterThan;
+import cz.filipklimes.diploma.framework.businessContext.expression.numeric.LessOrEqualTo;
+import cz.filipklimes.diploma.framework.businessContext.expression.numeric.LessThan;
+import cz.filipklimes.diploma.framework.businessContext.expression.numeric.Multiply;
+import cz.filipklimes.diploma.framework.businessContext.expression.numeric.Subtract;
 import cz.filipklimes.diploma.framework.businessContext.loader.LocalBusinessContextLoader;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -25,6 +33,7 @@ import org.jdom2.input.sax.XMLReaderJDOMFactory;
 import org.jdom2.input.sax.XMLReaderXSDFactory;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.net.*;
 import java.util.*;
 
@@ -112,6 +121,46 @@ public class BusinessContextXmlLoader implements LocalBusinessContextLoader
         ExpressionType type;
 
         switch (expressionEl.getName()) {
+            case "numericAdd":
+                return new Add(
+                    (Expression<BigDecimal>) buildExpression(expressionEl.getChild("left").getChildren().get(0)),
+                    (Expression<BigDecimal>) buildExpression(expressionEl.getChild("right").getChildren().get(0))
+                );
+            case "numericDivide":
+                return new Divide(
+                    (Expression<BigDecimal>) buildExpression(expressionEl.getChild("left").getChildren().get(0)),
+                    (Expression<BigDecimal>) buildExpression(expressionEl.getChild("right").getChildren().get(0))
+                );
+            case "numericGreaterThan":
+                return new GreaterThan(
+                    (Expression<BigDecimal>) buildExpression(expressionEl.getChild("left").getChildren().get(0)),
+                    (Expression<BigDecimal>) buildExpression(expressionEl.getChild("right").getChildren().get(0))
+                );
+            case "numericGreaterOrEqualTo":
+                return new GreaterOrEqualTo(
+                    (Expression<BigDecimal>) buildExpression(expressionEl.getChild("left").getChildren().get(0)),
+                    (Expression<BigDecimal>) buildExpression(expressionEl.getChild("right").getChildren().get(0))
+                );
+            case "numericLessThan":
+                return new LessThan(
+                    (Expression<BigDecimal>) buildExpression(expressionEl.getChild("left").getChildren().get(0)),
+                    (Expression<BigDecimal>) buildExpression(expressionEl.getChild("right").getChildren().get(0))
+                );
+            case "numericLessOrEqualTo":
+                return new LessOrEqualTo(
+                    (Expression<BigDecimal>) buildExpression(expressionEl.getChild("left").getChildren().get(0)),
+                    (Expression<BigDecimal>) buildExpression(expressionEl.getChild("right").getChildren().get(0))
+                );
+            case "numericMultiply":
+                return new Multiply(
+                    (Expression<BigDecimal>) buildExpression(expressionEl.getChild("left").getChildren().get(0)),
+                    (Expression<BigDecimal>) buildExpression(expressionEl.getChild("right").getChildren().get(0))
+                );
+            case "numericSubtract":
+                return new Subtract(
+                    (Expression<BigDecimal>) buildExpression(expressionEl.getChild("left").getChildren().get(0)),
+                    (Expression<BigDecimal>) buildExpression(expressionEl.getChild("right").getChildren().get(0))
+                );
             case "logicalAnd":
                 return new And(
                     (Expression<Boolean>) buildExpression(expressionEl.getChild("left").getChildren().get(0)),
