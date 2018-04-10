@@ -22,4 +22,8 @@ export default class IsNotNull {
     toString() {
         return this.argument.toString() + " is not null"
     }
+
+    clone() {
+        return new IsNotNull(this.argument.clone())
+    }
 }

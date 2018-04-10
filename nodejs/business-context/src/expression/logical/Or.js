@@ -23,4 +23,11 @@ export default class Or {
     toString() {
         return this.left.toString() + " anor " + this.right.toString()
     }
+
+    clone() {
+        return new Or(
+            this.left.clone(),
+            this.right.clone(),
+        )
+    }
 }

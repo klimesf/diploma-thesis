@@ -26,4 +26,11 @@ export default class VariableReference {
     toString() {
         return '$' + this.name
     }
+
+    clone() {
+        return new VariableReference(
+            JSON.parse(JSON.stringify(this.name)),
+            this.type,
+        )
+    }
 }

@@ -29,4 +29,12 @@ export default class FunctionCall {
     toString() {
         return 'call ' + this.methodName + '()'
     }
+
+    clone() {
+        return new FunctionCall(
+            JSON.parse(JSON.stringify(this.methodName)),
+            this.type,
+            this.args.map(arg => arg.clone()).slice(0)
+        )
+    }
 }

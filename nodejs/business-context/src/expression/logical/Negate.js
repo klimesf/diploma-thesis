@@ -1,7 +1,6 @@
 export default class Negate {
-    constructor(arg, right) {
+    constructor(arg) {
         this.arg = arg
-        this.right = right
     }
 
     interpret(context) {
@@ -22,5 +21,11 @@ export default class Negate {
 
     toString() {
         return 'not ' + this.arg.toString()
+    }
+
+    clone() {
+        return new Negate(
+            this.arg.clone()
+        )
     }
 }

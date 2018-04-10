@@ -1,3 +1,5 @@
+import Constant from './Constant'
+
 export default class ObjectPropertyReference {
     constructor(objectName, propertyName, type) {
         this.objectName = objectName
@@ -31,5 +33,13 @@ export default class ObjectPropertyReference {
 
     toString() {
         return '$' + this.objectName + '.' + this.propertyName
+    }
+
+    clone() {
+        return new ObjectPropertyReference(
+            JSON.parse(JSON.stringify(this.objectName)),
+            JSON.parse(JSON.stringify(this.propertyName)),
+            this.type,
+        )
     }
 }

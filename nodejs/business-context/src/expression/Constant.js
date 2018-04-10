@@ -26,4 +26,11 @@ export default class Constant {
     toString() {
         return this.value
     }
+
+    clone() {
+        return new Constant(
+            JSON.parse(JSON.stringify(this.value)),
+            this.type,
+        )
+    }
 }

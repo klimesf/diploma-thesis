@@ -23,4 +23,11 @@ export default class Equals {
     toString() {
         return this.left.toString() + " equals " + this.right.toString()
     }
+
+    clone() {
+        return new Equals(
+            this.left.clone(),
+            this.right.clone(),
+        )
+    }
 }

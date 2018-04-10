@@ -23,4 +23,11 @@ export default class And {
     toString() {
         return this.left.toString() + " and " + this.right.toString()
     }
+
+    clone() {
+        return new And(
+            this.left.clone(),
+            this.right.clone(),
+        )
+    }
 }
