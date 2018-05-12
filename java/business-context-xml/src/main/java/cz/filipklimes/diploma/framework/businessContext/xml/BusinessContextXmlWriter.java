@@ -5,6 +5,7 @@ import cz.filipklimes.diploma.framework.businessContext.expression.Constant;
 import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
 import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionVisitor;
 import cz.filipklimes.diploma.framework.businessContext.expression.FunctionCall;
+import cz.filipklimes.diploma.framework.businessContext.expression.IsNotBlank;
 import cz.filipklimes.diploma.framework.businessContext.expression.IsNotNull;
 import cz.filipklimes.diploma.framework.businessContext.expression.ObjectPropertyReference;
 import cz.filipklimes.diploma.framework.businessContext.expression.VariableReference;
@@ -201,6 +202,12 @@ public class BusinessContextXmlWriter
         public void visit(final IsNotNull<?> isNotNull)
         {
             content = buildUnaryExpression("isNotNull", isNotNull.getArgument());
+        }
+
+        @Override
+        public void visit(final IsNotBlank isNotBlank)
+        {
+            content = buildUnaryExpression("isNotBlank", isNotBlank.getArgument());
         }
 
         @Override

@@ -46,6 +46,8 @@ public interface ExpressionVisitor
 
     void visit(IsNotNull<?> isNotNull);
 
+    void visit(IsNotBlank isNotBlank);
+
     void visit(ObjectPropertyReference<?> objectPropertyReference);
 
     void visit(VariableReference<?> variableReference);

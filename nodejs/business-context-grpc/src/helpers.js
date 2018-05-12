@@ -6,6 +6,7 @@ const Precondition = require('business-context/dist/Precondition').default
 const PostCondition = require('business-context/dist/PostCondition').default
 const PostConditionType = require('business-context/dist/PostConditionType').default
 const IsNotNull = require('business-context/dist/expression/IsNotNull').default
+const IsNotBlank = require('business-context/dist/expression/IsNotBlank').default
 const ExpressionType = require('business-context/dist/expression/ExpressionType').default
 const VariableReference = require('business-context/dist/expression/VariableReference').default
 const FunctionCall = require('business-context/dist/expression/FunctionCall').default
@@ -47,6 +48,8 @@ function buildExpression(message) {
             return new Constant(type.deserialize(findPropertyByName(message.properties, 'value')), type)
         case 'is-not-null':
             return new IsNotNull(buildExpression(message['arguments'].pop()))
+        case 'is-not-blank':
+            return new IsNotBlank(buildExpression(message['arguments'].pop()))
         case 'function-call':
             type = convertExpressionType(findPropertyByName(message.properties, 'type'))
             return new FunctionCall(findPropertyByName(message.properties, 'methodName'), type, message['arguments'].map(arg => buildExpression(arg)))

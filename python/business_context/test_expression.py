@@ -22,6 +22,17 @@ class IsNotNullTest(unittest.TestCase):
         self.assertFalse(expr.interpret(context))
 
 
+class IsNotBlankTest(unittest.TestCase):
+    def test(self):
+        context = OperationContext('user.create')
+        expr = IsNotBlank(Constant(value="Hello", type=ExpressionType.STRING))
+        self.assertTrue(expr.interpret(context))
+        expr = IsNotBlank(Constant(value="", type=ExpressionType.STRING))
+        self.assertFalse(expr.interpret(context))
+        expr = IsNotBlank(Constant(value=None, type=ExpressionType.STRING))
+        self.assertFalse(expr.interpret(context))
+
+
 class ObjectPropertyReferenceTest(unittest.TestCase):
     class User:
         name: str

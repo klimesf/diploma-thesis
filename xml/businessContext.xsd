@@ -81,6 +81,7 @@
     <xs:complexType name="conditionType">
         <xs:sequence>
             <xs:element type="isNotNullType" name="isNotNull" minOccurs="0"/>
+            <xs:element type="isNotBlankType" name="isNotBlank" minOccurs="0"/>
             <xs:element type="constantType" name="constant" minOccurs="0"/>
             <xs:element type="variableReferenceType" name="variableReference" minOccurs="0"/>
             <xs:element type="objectPropertyReferenceType" name="objectPropertyReference" minOccurs="0"/>
@@ -110,6 +111,12 @@
     </xs:complexType>
 
     <xs:complexType name="isNotNullType">
+        <xs:sequence>
+            <xs:element type="conditionType" name="argument" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="isNotBlankType">
         <xs:sequence>
             <xs:element type="conditionType" name="argument" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>

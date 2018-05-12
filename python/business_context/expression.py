@@ -98,6 +98,27 @@ class IsNotNull(Expression):
         return self.argument.__str__() + ' is not null'
 
 
+class IsNotBlank(Expression):
+    def __init__(self, argument):
+        self.argument = argument
+
+    def interpret(self, context: OperationContext):
+        string = self.argument.interpret(context)
+        return string is not None and len(string) > 0
+
+    def get_name(self):
+        return 'is-not-blank'
+
+    def get_arguments(self) -> List[Expression]:
+        return [self.argument]
+
+    def get_properties(self) -> Dict[str, str]:
+        return {}
+
+    def __str__(self) -> str:
+        return self.argument.__str__() + ' is not blank'
+
+
 class ObjectPropertyReference(Expression):
     def __init__(self, object_name: str, property_name: str, type: ExpressionType):
         self.object_name = object_name

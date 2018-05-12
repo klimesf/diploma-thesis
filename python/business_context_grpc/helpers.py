@@ -1,5 +1,5 @@
 from typing import List, Dict
-from business_context.expression import Expression, Constant, ExpressionType, FunctionCall, IsNotNull, ObjectPropertyReference, VariableReference, LogicalAnd, LogicalOr, LogicalEquals, LogicalNegate
+from business_context.expression import Expression, Constant, ExpressionType, FunctionCall, IsNotNull, IsNotBlank, ObjectPropertyReference, VariableReference, LogicalAnd, LogicalOr, LogicalEquals, LogicalNegate
 from business_context.context import BusinessContext
 from business_context.expression import Expression
 from business_context.identifier import Identifier
@@ -36,6 +36,7 @@ def build_expression(message: ExpressionMessage) -> Expression:
                                                 type=convert_expression_type(find_property_by_name('type', m.properties)),
                                                 arguments=list(map(build_expression, m.arguments))),
         'is-not-null': lambda m: IsNotNull(argument=build_expression(m.arguments[0])),
+        'is-not-blank': lambda m: IsNotBlank(argument=build_expression(m.arguments[0])),
         'object-property-reference': lambda m: ObjectPropertyReference(object_name=find_property_by_name('objectName', m.properties),
                                                                        property_name=find_property_by_name('propertyName', m.properties),
                                                                        type=convert_expression_type(find_property_by_name('type', m.properties))),
