@@ -8,7 +8,7 @@
             <condition>
                 <logicalEquals>
                     <left>
-                        <variableReference propertyName="hidden" objectName="product" type="bool" />
+                        <objectPropertyReference propertyName="hidden" objectName="product" type="bool" />
                     </left>
                     <right>
                         <constant type="bool" value="false" />
