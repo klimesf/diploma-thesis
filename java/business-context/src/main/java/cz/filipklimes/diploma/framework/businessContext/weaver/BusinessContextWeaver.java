@@ -32,6 +32,7 @@ public class BusinessContextWeaver
     public void evaluatePreconditions(final BusinessOperationContext operationContext)
     {
         BusinessContextIdentifier businessContextidentifier = BusinessContextIdentifier.parse(operationContext.getName());
+        registry.waitForTransaction();
         BusinessContext businessContext = registry.getContextByIdentifier(businessContextidentifier);
 
         Set<EvaluationResult> failedRules = businessContext.getPreconditions().stream()
@@ -51,6 +52,7 @@ public class BusinessContextWeaver
         }
 
         BusinessContextIdentifier businessContextidentifier = BusinessContextIdentifier.parse(operationContext.getName());
+        registry.waitForTransaction();
         BusinessContext businessContext = registry.getContextByIdentifier(businessContextidentifier);
 
         businessContext.getPostConditions().forEach(postCondition -> {

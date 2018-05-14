@@ -29,6 +29,21 @@ class BusinessContextServerStub(object):
         request_serializer=business__context__pb2.BusinessContextUpdateRequestMessage.SerializeToString,
         response_deserializer=business__context__pb2.Empty.FromString,
         )
+    self.BeginTransaction = channel.unary_unary(
+        '/businessContext.BusinessContextServer/BeginTransaction',
+        request_serializer=business__context__pb2.Empty.SerializeToString,
+        response_deserializer=business__context__pb2.Empty.FromString,
+        )
+    self.CommitTransaction = channel.unary_unary(
+        '/businessContext.BusinessContextServer/CommitTransaction',
+        request_serializer=business__context__pb2.Empty.SerializeToString,
+        response_deserializer=business__context__pb2.Empty.FromString,
+        )
+    self.RollbackTransaction = channel.unary_unary(
+        '/businessContext.BusinessContextServer/RollbackTransaction',
+        request_serializer=business__context__pb2.Empty.SerializeToString,
+        response_deserializer=business__context__pb2.Empty.FromString,
+        )
 
 
 class BusinessContextServerServicer(object):
@@ -56,6 +71,27 @@ class BusinessContextServerServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
+  def BeginTransaction(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def CommitTransaction(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def RollbackTransaction(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
 
 def add_BusinessContextServerServicer_to_server(servicer, server):
   rpc_method_handlers = {
@@ -72,6 +108,21 @@ def add_BusinessContextServerServicer_to_server(servicer, server):
       'UpdateContext': grpc.unary_unary_rpc_method_handler(
           servicer.UpdateContext,
           request_deserializer=business__context__pb2.BusinessContextUpdateRequestMessage.FromString,
+          response_serializer=business__context__pb2.Empty.SerializeToString,
+      ),
+      'BeginTransaction': grpc.unary_unary_rpc_method_handler(
+          servicer.BeginTransaction,
+          request_deserializer=business__context__pb2.Empty.FromString,
+          response_serializer=business__context__pb2.Empty.SerializeToString,
+      ),
+      'CommitTransaction': grpc.unary_unary_rpc_method_handler(
+          servicer.CommitTransaction,
+          request_deserializer=business__context__pb2.Empty.FromString,
+          response_serializer=business__context__pb2.Empty.SerializeToString,
+      ),
+      'RollbackTransaction': grpc.unary_unary_rpc_method_handler(
+          servicer.RollbackTransaction,
+          request_deserializer=business__context__pb2.Empty.FromString,
           response_serializer=business__context__pb2.Empty.SerializeToString,
       ),
   }

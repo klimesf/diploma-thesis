@@ -6,23 +6,21 @@ import cz.filipklimes.diploma.framework.businessContext.loader.RemoteBusinessCon
 import org.apache.commons.lang3.SerializationUtils;
 
 import java.util.*;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Function;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public final class BusinessContextRegistry
 {
 
-    private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
-    private final Lock readLock = readWriteLock.readLock();
-    private final Lock writeLock = readWriteLock.writeLock();
+    private static final Logger logger = Logger.getLogger(BusinessContextRegistry.class.getName());
+    private boolean transactionInProgress = false;
 
     private final LocalBusinessContextLoader localLoader;
     private final RemoteBusinessContextLoader remoteLoader;
     private Map<BusinessContextIdentifier, BusinessContext> localContexts;
     private Map<BusinessContextIdentifier, BusinessContext> contexts;
+    private final List<BusinessContext> transactionChanges = new ArrayList<>();
 
     private BusinessContextRegistry(
         final LocalBusinessContextLoader localLoader,
@@ -41,42 +39,36 @@ public final class BusinessContextRegistry
      */
     public final void initialize()
     {
-        writeLock.lock();
-        try {
-            // Load local contexts
-            localContexts = localLoader.load()
-                .stream()
-                .collect(Collectors.toMap(
-                    BusinessContext::getIdentifier,
-                    Function.identity(),
-                    (c1, c2) -> {
-                        throw new IllegalStateException(String.format("Two local business contexts with same identifier: %s", c1.toString()));
-                    }
-                ));
+        // Load local contexts
+        localContexts = localLoader.load()
+            .stream()
+            .collect(Collectors.toMap(
+                BusinessContext::getIdentifier,
+                Function.identity(),
+                (c1, c2) -> {
+                    throw new IllegalStateException(String.format("Two local business contexts with same identifier: %s", c1.toString()));
+                }
+            ));
 
-            localContexts.forEach((key, value) -> {
-                contexts.put(key, SerializationUtils.clone(value));
-            });
+        localContexts.forEach((key, value) -> {
+            contexts.put(key, SerializationUtils.clone(value));
+        });
 
-            // Analyze and find out which contexts to fetch
-            Set<BusinessContextIdentifier> includedRemoteContexts = contexts.values()
-                .stream()
-                .map(BusinessContext::getIncludedContexts)
-                .flatMap(Set::stream)
-                .filter(contextName -> !contexts.containsKey(contextName))
-                .collect(Collectors.toSet());
+        // Analyze and find out which contexts to fetch
+        Set<BusinessContextIdentifier> includedRemoteContexts = contexts.values()
+            .stream()
+            .map(BusinessContext::getIncludedContexts)
+            .flatMap(Set::stream)
+            .filter(contextName -> !contexts.containsKey(contextName))
+            .collect(Collectors.toSet());
 
-            // Load remote contexts
-            Map<BusinessContextIdentifier, BusinessContext> remoteContexts = remoteLoader.loadContextsByIdentifier(includedRemoteContexts);
+        // Load remote contexts
+        Map<BusinessContextIdentifier, BusinessContext> remoteContexts = remoteLoader.loadContextsByIdentifier(includedRemoteContexts);
 
-            // Include remote contexts into the local ones
-            contexts.forEach((name, context) -> {
-                mergeRemoteContexts(context, remoteContexts);
-            });
-
-        } finally {
-            writeLock.unlock();
-        }
+        // Include remote contexts into the local ones
+        contexts.forEach((name, context) -> {
+            mergeRemoteContexts(context, remoteContexts);
+        });
     }
 
     /**
@@ -88,45 +80,27 @@ public final class BusinessContextRegistry
      */
     public BusinessContext getContextByIdentifier(final BusinessContextIdentifier identifier)
     {
-        readLock.lock();
-        try {
-            if (!contexts.containsKey(identifier)) {
-                throw new UndefinedBusinessContextException(identifier);
-            }
-            return contexts.get(identifier);
-
-        } finally {
-            readLock.unlock();
+        if (!contexts.containsKey(identifier)) {
+            throw new UndefinedBusinessContextException(identifier);
         }
+        return contexts.get(identifier);
     }
 
     public Map<BusinessContextIdentifier, BusinessContext> getContextsByIdentifiers(final Set<BusinessContextIdentifier> identifiers)
     {
-        readLock.lock();
-        try {
-            return Objects.requireNonNull(identifiers).stream()
-                .map(this::getContextByIdentifier)
-                .collect(Collectors.toMap(
-                    BusinessContext::getIdentifier,
-                    Function.identity()
-                ));
-
-        } finally {
-            readLock.unlock();
-        }
+        return Objects.requireNonNull(identifiers).stream()
+            .map(this::getContextByIdentifier)
+            .collect(Collectors.toMap(
+                BusinessContext::getIdentifier,
+                Function.identity()
+            ));
     }
 
     public Set<BusinessContext> getAllContexts()
     {
-        readLock.lock();
-        try {
-            return localContexts.entrySet().stream()
-                .map(Map.Entry::getValue)
-                .collect(Collectors.toSet());
-
-        } finally {
-            readLock.unlock();
-        }
+        return localContexts.entrySet().stream()
+            .map(Map.Entry::getValue)
+            .collect(Collectors.toSet());
     }
 
     /**
@@ -136,8 +110,37 @@ public final class BusinessContextRegistry
      */
     public void saveOrUpdateBusinessContext(final BusinessContext businessContext)
     {
-        writeLock.lock();
-        try {
+        if (!transactionInProgress) {
+            throw new RuntimeException("There must be a transaction in progress");
+        }
+        transactionChanges.add(businessContext);
+    }
+
+    private void mergeRemoteContexts(final BusinessContext businessContext, final Map<BusinessContextIdentifier, BusinessContext> remoteContexts)
+    {
+        businessContext.getIncludedContexts().forEach(included -> {
+            if (contexts.containsKey(included)) {
+                businessContext.merge(contexts.get(included));
+                return;
+            }
+            if (!remoteContexts.containsKey(included)) {
+                throw new RuntimeException(String.format("Could not fetch remote business context %s", included));
+            }
+            businessContext.merge(remoteContexts.get(included));
+        });
+    }
+
+    public void beginTransaction()
+    {
+        logger.info("Starting transaction");
+        transactionInProgress = true;
+        transactionChanges.clear();
+    }
+
+    public void commitTransaction()
+    {
+        logger.info("Commiting transaction");
+        for (BusinessContext businessContext : transactionChanges) {
             BusinessContextIdentifier identifier = businessContext.getIdentifier();
             localContexts.put(identifier, SerializationUtils.clone(businessContext));
 
@@ -153,24 +156,28 @@ public final class BusinessContextRegistry
             // Include remote contexts into the local ones
             mergeRemoteContexts(businessContext, remoteContexts);
             contexts.put(identifier, businessContext);
-
-        } finally {
-            writeLock.unlock();
         }
+
+        transactionChanges.clear();
+        transactionInProgress = false;
     }
 
-    private void mergeRemoteContexts(final BusinessContext businessContext, final Map<BusinessContextIdentifier, BusinessContext> remoteContexts)
+    public void rollbackTransaction()
     {
-        businessContext.getIncludedContexts().forEach(included -> {
-            if (contexts.containsKey(included)) {
-                businessContext.merge(contexts.get(included));
-                return;
+        logger.info("Rolling back transaction");
+        transactionChanges.clear();
+        transactionInProgress = false;
+    }
+
+    public void waitForTransaction()
+    {
+        while (transactionInProgress) {
+            try {
+                Thread.sleep(100); // Spin lock
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
-            if (!remoteContexts.containsKey(included)) {
-                throw new RuntimeException(String.format("Could not fetch remote business context %s", included));
-            }
-            businessContext.merge(remoteContexts.get(included));
-        });
+        }
     }
 
     public static Builder builder()

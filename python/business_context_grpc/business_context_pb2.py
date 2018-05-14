@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='business_context.proto',
   package='businessContext',
   syntax='proto2',
-  serialized_pb=_b('\n\x16\x62usiness_context.proto\x12\x0f\x62usinessContext\"7\n\x19\x45xpressionPropertyMessage\x12\x0b\n\x03key\x18\x01 \x02(\t\x12\r\n\x05value\x18\x02 \x02(\t\"\x98\x01\n\x11\x45xpressionMessage\x12\x0c\n\x04name\x18\x01 \x02(\t\x12>\n\nproperties\x18\x02 \x03(\x0b\x32*.businessContext.ExpressionPropertyMessage\x12\x35\n\targuments\x18\x03 \x03(\x0b\x32\".businessContext.ExpressionMessage\"Z\n\x13PreconditionMessage\x12\x0c\n\x04name\x18\x01 \x02(\t\x12\x35\n\tcondition\x18\x02 \x02(\x0b\x32\".businessContext.ExpressionMessage\"\xab\x01\n\x14PostConditionMessage\x12\x0c\n\x04name\x18\x01 \x02(\t\x12\x37\n\x04type\x18\x02 \x02(\x0e\x32).businessContext.PostConditionTypeMessage\x12\x15\n\rreferenceName\x18\x03 \x02(\t\x12\x35\n\tcondition\x18\x04 \x02(\x0b\x32\".businessContext.ExpressionMessage\"\xcc\x01\n\x16\x42usinessContextMessage\x12\x0e\n\x06prefix\x18\x01 \x02(\t\x12\x0c\n\x04name\x18\x02 \x02(\t\x12\x18\n\x10includedContexts\x18\x03 \x03(\t\x12;\n\rpreconditions\x18\x04 \x03(\x0b\x32$.businessContext.PreconditionMessage\x12=\n\x0epostConditions\x18\x05 \x03(\x0b\x32%.businessContext.PostConditionMessage\"\\\n\x1f\x42usinessContextsResponseMessage\x12\x39\n\x08\x63ontexts\x18\x01 \x03(\x0b\x32\'.businessContext.BusinessContextMessage\"9\n\x1d\x42usinessContextRequestMessage\x12\x18\n\x10requiredContexts\x18\x01 \x03(\t\"_\n#BusinessContextUpdateRequestMessage\x12\x38\n\x07\x63ontext\x18\x01 \x02(\x0b\x32\'.businessContext.BusinessContextMessage\"\x07\n\x05\x45mpty*~\n\x18PostConditionTypeMessage\x12\x0b\n\x07UNKNOWN\x10\x00\x12\x17\n\x13\x46ILTER_OBJECT_FIELD\x10\x01\x12\x1a\n\x16\x46ILTER_LIST_OF_OBJECTS\x10\x02\x12 \n\x1c\x46ILTER_LIST_OF_OBJECTS_FIELD\x10\x03\x32\xcd\x02\n\x15\x42usinessContextServer\x12s\n\rFetchContexts\x12..businessContext.BusinessContextRequestMessage\x1a\x30.businessContext.BusinessContextsResponseMessage\"\x00\x12^\n\x10\x46\x65tchAllContexts\x12\x16.businessContext.Empty\x1a\x30.businessContext.BusinessContextsResponseMessage\"\x00\x12_\n\rUpdateContext\x12\x34.businessContext.BusinessContextUpdateRequestMessage\x1a\x16.businessContext.Empty\"\x00\x42^\nEcz.filipklimes.diploma.framework.businessContext.provider.server.grpcB\x15\x42usinessContextProtos')
+  serialized_pb=_b('\n\x16\x62usiness_context.proto\x12\x0f\x62usinessContext\"7\n\x19\x45xpressionPropertyMessage\x12\x0b\n\x03key\x18\x01 \x02(\t\x12\r\n\x05value\x18\x02 \x02(\t\"\x98\x01\n\x11\x45xpressionMessage\x12\x0c\n\x04name\x18\x01 \x02(\t\x12>\n\nproperties\x18\x02 \x03(\x0b\x32*.businessContext.ExpressionPropertyMessage\x12\x35\n\targuments\x18\x03 \x03(\x0b\x32\".businessContext.ExpressionMessage\"Z\n\x13PreconditionMessage\x12\x0c\n\x04name\x18\x01 \x02(\t\x12\x35\n\tcondition\x18\x02 \x02(\x0b\x32\".businessContext.ExpressionMessage\"\xab\x01\n\x14PostConditionMessage\x12\x0c\n\x04name\x18\x01 \x02(\t\x12\x37\n\x04type\x18\x02 \x02(\x0e\x32).businessContext.PostConditionTypeMessage\x12\x15\n\rreferenceName\x18\x03 \x02(\t\x12\x35\n\tcondition\x18\x04 \x02(\x0b\x32\".businessContext.ExpressionMessage\"\xcc\x01\n\x16\x42usinessContextMessage\x12\x0e\n\x06prefix\x18\x01 \x02(\t\x12\x0c\n\x04name\x18\x02 \x02(\t\x12\x18\n\x10includedContexts\x18\x03 \x03(\t\x12;\n\rpreconditions\x18\x04 \x03(\x0b\x32$.businessContext.PreconditionMessage\x12=\n\x0epostConditions\x18\x05 \x03(\x0b\x32%.businessContext.PostConditionMessage\"\\\n\x1f\x42usinessContextsResponseMessage\x12\x39\n\x08\x63ontexts\x18\x01 \x03(\x0b\x32\'.businessContext.BusinessContextMessage\"9\n\x1d\x42usinessContextRequestMessage\x12\x18\n\x10requiredContexts\x18\x01 \x03(\t\"_\n#BusinessContextUpdateRequestMessage\x12\x38\n\x07\x63ontext\x18\x01 \x02(\x0b\x32\'.businessContext.BusinessContextMessage\"\x07\n\x05\x45mpty*~\n\x18PostConditionTypeMessage\x12\x0b\n\x07UNKNOWN\x10\x00\x12\x17\n\x13\x46ILTER_OBJECT_FIELD\x10\x01\x12\x1a\n\x16\x46ILTER_LIST_OF_OBJECTS\x10\x02\x12 \n\x1c\x46ILTER_LIST_OF_OBJECTS_FIELD\x10\x03\x32\xa3\x04\n\x15\x42usinessContextServer\x12s\n\rFetchContexts\x12..businessContext.BusinessContextRequestMessage\x1a\x30.businessContext.BusinessContextsResponseMessage\"\x00\x12^\n\x10\x46\x65tchAllContexts\x12\x16.businessContext.Empty\x1a\x30.businessContext.BusinessContextsResponseMessage\"\x00\x12_\n\rUpdateContext\x12\x34.businessContext.BusinessContextUpdateRequestMessage\x1a\x16.businessContext.Empty\"\x00\x12\x44\n\x10\x42\x65ginTransaction\x12\x16.businessContext.Empty\x1a\x16.businessContext.Empty\"\x00\x12\x45\n\x11\x43ommitTransaction\x12\x16.businessContext.Empty\x1a\x16.businessContext.Empty\"\x00\x12G\n\x13RollbackTransaction\x12\x16.businessContext.Empty\x1a\x16.businessContext.Empty\"\x00\x42^\nEcz.filipklimes.diploma.framework.businessContext.provider.server.grpcB\x15\x42usinessContextProtos')
 )
 
 _POSTCONDITIONTYPEMESSAGE = _descriptor.EnumDescriptor(
@@ -504,7 +504,7 @@ _BUSINESSCONTEXTSERVER = _descriptor.ServiceDescriptor(
   index=0,
   options=None,
   serialized_start=1116,
-  serialized_end=1449,
+  serialized_end=1663,
   methods=[
   _descriptor.MethodDescriptor(
     name='FetchContexts',
@@ -530,6 +530,33 @@ _BUSINESSCONTEXTSERVER = _descriptor.ServiceDescriptor(
     index=2,
     containing_service=None,
     input_type=_BUSINESSCONTEXTUPDATEREQUESTMESSAGE,
+    output_type=_EMPTY,
+    options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='BeginTransaction',
+    full_name='businessContext.BusinessContextServer.BeginTransaction',
+    index=3,
+    containing_service=None,
+    input_type=_EMPTY,
+    output_type=_EMPTY,
+    options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='CommitTransaction',
+    full_name='businessContext.BusinessContextServer.CommitTransaction',
+    index=4,
+    containing_service=None,
+    input_type=_EMPTY,
+    output_type=_EMPTY,
+    options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='RollbackTransaction',
+    full_name='businessContext.BusinessContextServer.RollbackTransaction',
+    index=5,
+    containing_service=None,
+    input_type=_EMPTY,
     output_type=_EMPTY,
     options=None,
   ),

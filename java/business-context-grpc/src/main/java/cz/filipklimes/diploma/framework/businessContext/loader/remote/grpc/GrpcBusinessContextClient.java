@@ -72,4 +72,19 @@ class GrpcBusinessContextClient
             .build());
     }
 
+    public void beginTransaction()
+    {
+        blockingStub.beginTransaction(BusinessContextProtos.Empty.newBuilder().build());
+    }
+
+    public void commitTransaction()
+    {
+        blockingStub.commitTransaction(BusinessContextProtos.Empty.newBuilder().build());
+    }
+
+    public void rollbackTransaction()
+    {
+        blockingStub.rollbackTransaction(BusinessContextProtos.Empty.newBuilder().build());
+    }
+
 }

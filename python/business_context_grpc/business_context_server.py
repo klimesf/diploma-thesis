@@ -57,3 +57,15 @@ class Server(business_context_pb2_grpc.BusinessContextServerServicer):
     def UpdateContext(self, request, context):
         self._registry.save_or_update_context(helpers.build_context(request.context))
         return business_context_pb2.Empty()
+
+    def BeginTransaction(self, request, context):
+        self._registry.begin_transaction()
+        return business_context_pb2.Empty()
+
+    def CommitTransaction(self, request, context):
+        self._registry.commit_transaction()
+        return business_context_pb2.Empty()
+
+    def RollbackTransaction(self, request, context):
+        self._registry.rollback_transaction()
+        return business_context_pb2.Empty()

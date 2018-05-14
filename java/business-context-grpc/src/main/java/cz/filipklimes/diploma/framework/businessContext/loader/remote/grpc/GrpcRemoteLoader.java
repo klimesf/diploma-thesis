@@ -61,4 +61,49 @@ public class GrpcRemoteLoader implements RemoteLoader
         }
     }
 
+    @Override
+    public void beginTransaction()
+    {
+        GrpcBusinessContextClient client = new GrpcBusinessContextClient(serviceAddress);
+        try {
+            client.beginTransaction();
+
+        } finally {
+            try {
+                client.shutdown();
+            } catch (InterruptedException ignored) {
+            }
+        }
+    }
+
+    @Override
+    public void commitTransaction()
+    {
+        GrpcBusinessContextClient client = new GrpcBusinessContextClient(serviceAddress);
+        try {
+            client.commitTransaction();
+
+        } finally {
+            try {
+                client.shutdown();
+            } catch (InterruptedException ignored) {
+            }
+        }
+    }
+
+    @Override
+    public void rollbackTransaction()
+    {
+        GrpcBusinessContextClient client = new GrpcBusinessContextClient(serviceAddress);
+        try {
+            client.rollbackTransaction();
+
+        } finally {
+            try {
+                client.shutdown();
+            } catch (InterruptedException ignored) {
+            }
+        }
+    }
+
 }

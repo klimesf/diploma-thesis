@@ -8,6 +8,7 @@ export default class BusinessContextWeaver {
     }
 
     evaluatePreconditions(operationContext) {
+        this.registry.waitForTransaction()
         const businessContext = this.registry.getContextByIdentifier(operationContext.name)
         const failed = []
         businessContext.preconditions.forEach(precondition => {
@@ -21,6 +22,7 @@ export default class BusinessContextWeaver {
     }
 
     applyPostConditions(operationContext) {
+        this.registry.waitForTransaction()
         const businessContext = this.registry.getContextByIdentifier(operationContext.name)
         businessContext.postConditions.forEach(postCondition => {
             switch (postCondition.type) {

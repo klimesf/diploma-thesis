@@ -9,9 +9,9 @@ service BusinessContextServer {
     rpc FetchContexts (BusinessContextRequestMessage) returns (BusinessContextsResponseMessage) {}
     rpc FetchAllContexts (Empty) returns (BusinessContextsResponseMessage) {}
     rpc UpdateContext (BusinessContextUpdateRequestMessage) returns (Empty) {}
-//    rpc BeginTransaction (Empty) returns (Empty) {}
-//    rpc CommitTransaction (Empty) returns (Empty) {}
-//    rpc RollbackTransaction (Empty) returns (Empty) {}
+    rpc BeginTransaction (Empty) returns (Empty) {}
+    rpc CommitTransaction (Empty) returns (Empty) {}
+    rpc RollbackTransaction (Empty) returns (Empty) {}
 }
 
 message ExpressionPropertyMessage {

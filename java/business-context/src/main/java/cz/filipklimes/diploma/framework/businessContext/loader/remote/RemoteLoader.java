@@ -14,4 +14,10 @@ public interface RemoteLoader
 
     void updateContext(BusinessContext context);
 
+    void beginTransaction();
+
+    void commitTransaction();
+
+    void rollbackTransaction();
+
 }

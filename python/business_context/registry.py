@@ -2,6 +2,7 @@ from typing import Set, Dict
 from business_context.context import BusinessContext
 from business_context.identifier import Identifier
 import copy
+import time
 
 
 class LocalBusinessContextLoader:
@@ -38,6 +39,8 @@ class Registry:
         self._contexts = {}
         self._local_contexts = {}
         self._included_by = {}
+        self._transaction_changes = []
+        self._transaction_in_progress = False
         self.initialize()
 
     def initialize(self):
@@ -116,23 +119,44 @@ class Registry:
         return contexts
 
     def save_or_update_context(self, context: BusinessContext):
-        identifier = context.identifier
-        self._local_contexts[identifier] = copy.deepcopy(context)
+        if not self._transaction_in_progress:
+            raise TransactionNotInProgress
+        self._transaction_changes.append(context)
 
-        required_contexts = set()
-        for included_identifier in context.included_contexts:
-            if included_identifier not in self._contexts:
-                required_contexts.add(included_identifier)
+    def begin_transaction(self):
+        self._transaction_in_progress = True
+        self._transaction_changes = []
 
-        remote_contexts = self._remote_loader.load_contexts_by_identifier(required_contexts)
-        for included_identifier in context.included_contexts:
-            if included_identifier in self._contexts:
-                context.merge(self._contexts[included_identifier])
-                continue
-            if included_identifier not in remote_contexts:
-                raise BusinessContextNotFound(included_identifier)
-            context.merge(remote_contexts[included_identifier])
-        self._contexts[context.identifier] = context
+    def commit_transaction(self):
+        for context in self._transaction_changes:
+            identifier = context.identifier
+            self._local_contexts[identifier] = copy.deepcopy(context)
+
+            required_contexts = set()
+            for included_identifier in context.included_contexts:
+                if included_identifier not in self._contexts:
+                    required_contexts.add(included_identifier)
+
+            remote_contexts = self._remote_loader.load_contexts_by_identifier(required_contexts)
+            for included_identifier in context.included_contexts:
+                if included_identifier in self._contexts:
+                    context.merge(self._contexts[included_identifier])
+                    continue
+                if included_identifier not in remote_contexts:
+                    raise BusinessContextNotFound(included_identifier)
+                context.merge(remote_contexts[included_identifier])
+            self._contexts[context.identifier] = context
+
+        self._transaction_in_progress = False
+        self._transaction_changes = []
+
+    def rollback_transaction(self):
+        self._transaction_in_progress = False
+        self._transaction_changes = []
+
+    def wait_for_transaction(self):
+        while self._transaction_in_progress:
+            time.sleep(0.1)  # spin lock
 
 
 class DuplicatedBusinessContext(BaseException):
@@ -143,3 +167,7 @@ class DuplicatedBusinessContext(BaseException):
 class BusinessContextNotFound(BaseException):
     def __init__(self, identifier: Identifier):
         self.identifier = identifier
+
+
+class TransactionNotInProgress(BaseException):
+    pass

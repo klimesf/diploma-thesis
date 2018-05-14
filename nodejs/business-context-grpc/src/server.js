@@ -32,6 +32,27 @@ function updateContext(registry) {
     }
 }
 
+function beginTransaction(registry) {
+    return function (call, callback) {
+        registry.beginTransaction()
+        callback(null, {})
+    }
+}
+
+function commitTransaction(registry) {
+    return function (call, callback) {
+        registry.commitTransaction()
+        callback(null, {})
+    }
+}
+
+function rollbackTransaction(registry) {
+    return function (call, callback) {
+        registry.rollbackTransaction()
+        callback(null, {})
+    }
+}
+
 exports.serve = (port, registry) => {
     const server = new grpc.Server()
     server.addService(
@@ -39,7 +60,10 @@ exports.serve = (port, registry) => {
         {
             fetchContexts: fetchContexts(registry),
             fetchAllContexts: fetchAllContexts(registry),
-            updateContext: updateContext(registry)
+            updateContext: updateContext(registry),
+            beginTransaction: beginTransaction(registry),
+            commitTransaction: commitTransaction(registry),
+            rollbackTransaction: rollbackTransaction(registry),
         }
     )
     server.bind('0.0.0.0:' + port, grpc.ServerCredentials.createInsecure())

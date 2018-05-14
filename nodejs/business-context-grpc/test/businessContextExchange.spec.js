@@ -65,15 +65,15 @@ describe('business context exchange', () => {
                     .then(contexts => {
                         contexts.length.should.equal(1)
                         const context = contexts.pop()
-                        context.preconditions.length.should.equal(1)
-                        context.postConditions.length.should.equal(1)
+                        context.preconditions.size.should.equal(1)
+                        context.postConditions.size.should.equal(1)
 
-                        const precondition = context.preconditions.pop()
+                        const precondition = context.preconditions.values().next().value
                         precondition.name.should.equal('emailNotNull')
                         precondition.condition.argument.name.should.equal('email')
                         precondition.condition.argument.type.should.equal(ExpressionType.STRING)
 
-                        const postCondition = context.postConditions.pop()
+                        const postCondition = context.postConditions.values().next().value
                         postCondition.name.should.equal('hideEmail')
                         postCondition.type.should.equal(PostConditionType.FILTER_OBJECT_FIELD)
                         postCondition.referenceName.should.equal('email')

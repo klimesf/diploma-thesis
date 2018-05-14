@@ -38,9 +38,9 @@ exports.init = (registry) => {
         weaver = new BusinessContextWeaver(registry)
 
     const wrapCall = (context, func) => {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             try {
-                weaver.evaluatePreconditions(context)
+                await weaver.evaluatePreconditions(context)
                 console.log("# Evaluated preconditions of " + context.name)
                 resolve()
             } catch (error) {
@@ -49,9 +49,9 @@ exports.init = (registry) => {
             }
         })
             .then(_ => func())
-            .then(result => {
+            .then(async result => {
                 context.setOutput(result)
-                weaver.applyPostConditions(context)
+                await weaver.applyPostConditions(context)
                 console.log("# Applied post-conditions of " + context.name)
                 return new Promise((resolve, reject) => resolve(context.getOutput()))
             })

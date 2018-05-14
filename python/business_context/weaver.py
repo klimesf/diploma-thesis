@@ -12,6 +12,7 @@ class Weaver:
 
     def evaluate_preconditions(self, operation_context: OperationContext):
         identifier = Identifier(operation_context.name)
+        self._registry.wait_for_transaction()
         context = self._registry.get_context_by_identifier(identifier)
 
         failed = set()
@@ -24,6 +25,7 @@ class Weaver:
 
     def apply_post_conditions(self, operation_context: OperationContext):
         identifier = Identifier(operation_context.name)
+        self._registry.wait_for_transaction()
         context = self._registry.get_context_by_identifier(identifier)
         for post_condition in context.post_conditions:
             self._apply_post_condition(post_condition, operation_context)

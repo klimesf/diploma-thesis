@@ -5,6 +5,8 @@ export default class BusinessContextRegistry {
         this.remoteLoader = remoteLoader
         this.contexts = {}
         this.localContexts = {}
+        this.transactionChanges = []
+        this.transactionInProgress = false
         this.initialize()
     }
 
@@ -68,31 +70,58 @@ export default class BusinessContextRegistry {
     }
 
     saveOrUpdateBusinessContext(context) {
-        let identifier = context.identifier.toString()
-        this.localContexts[identifier] = context.clone()
+        if (!this.transactionInProgress) {
+            throw "transaction not in progress, cannot save or update business context"
+        }
+        this.transactionChanges.push(context)
+    }
 
-        const remoteContextsIdentifiers = new Set()
-        context.includedContexts
-            .forEach(identifier => {
-                if (!remoteContextsIdentifiers.hasOwnProperty(identifier) && !this.contexts.hasOwnProperty(identifier)) {
-                    remoteContextsIdentifiers.add(identifier)
+    beginTransaction() {
+        this.transactionInProgress = true
+        this.transactionChanges = []
+    }
+
+    commitTransaction() {
+        this.transactionChanges.forEach(context => {
+            let identifier = context.identifier.toString()
+            this.localContexts[identifier] = context.clone()
+
+            const remoteContextsIdentifiers = new Set()
+            context.includedContexts
+                .forEach(identifier => {
+                    if (!remoteContextsIdentifiers.hasOwnProperty(identifier) && !this.contexts.hasOwnProperty(identifier)) {
+                        remoteContextsIdentifiers.add(identifier)
+                    }
+                })
+
+            const remoteContexts = this.remoteLoader.loadContextsByIdentifier(remoteContextsIdentifiers)
+
+            context.includedContexts.forEach(includedContextIdentifier => {
+                if (this.contexts.hasOwnProperty(includedContextIdentifier)) {
+                    context.merge(this.contexts[includedContextIdentifier])
+                    return
                 }
+
+                if (!remoteContexts.hasOwnProperty(includedContextIdentifier)) {
+                    throw "unknown context: " + includedContextIdentifier
+                }
+
+                context.merge(remoteContexts[includedContextIdentifier])
             })
-
-        const remoteContexts = this.remoteLoader.loadContextsByIdentifier(remoteContextsIdentifiers)
-
-        context.includedContexts.forEach(includedContextIdentifier => {
-            if (this.contexts.hasOwnProperty(includedContextIdentifier)) {
-                context.merge(this.contexts[includedContextIdentifier])
-                return
-            }
-
-            if (!remoteContexts.hasOwnProperty(includedContextIdentifier)) {
-                throw "unknown context: " + includedContextIdentifier
-            }
-
-            context.merge(remoteContexts[includedContextIdentifier])
         })
+        this.transactionChanges = []
+        this.transactionInProgress = false
+    }
+
+    rollbackTransaction() {
+        this.transactionChanges = []
+        this.transactionInProgress = false
+    }
+
+    waitForTransaction() {
+        while (this.transactionInProgress) {
+            // spin lock
+        }
     }
 
 }

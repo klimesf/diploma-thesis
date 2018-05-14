@@ -132,6 +132,24 @@ public class GrpcBusinessOperationContextExchangeTest
             {
                 throw new UnsupportedOperationException("not implemented yet");
             }
+
+            @Override
+            public void beginTransaction()
+            {
+
+            }
+
+            @Override
+            public void commitTransaction()
+            {
+
+            }
+
+            @Override
+            public void rollbackTransaction()
+            {
+
+            }
         });
         builder.withRemoteLoader(new RemoteBusinessContextLoader(remoteLoaders));
 

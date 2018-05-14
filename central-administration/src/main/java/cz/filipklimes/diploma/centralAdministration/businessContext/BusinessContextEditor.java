@@ -59,10 +59,16 @@ public class BusinessContextEditor
             throw new RuntimeException(String.format("No remote loader for prefix %s", businessContext.getIdentifier().getPrefix()));
         }
 
+        remoteLoader.beginTransaction();
         remoteLoader.updateContext(businessContext);
-
-        includedBy.getOrDefault(businessContext.getIdentifier(), Collections.emptySet())
-            .forEach(affected -> requestRemoteUpdate(contexts.get(affected)));
+        try {
+            includedBy.getOrDefault(businessContext.getIdentifier(), Collections.emptySet())
+                .forEach(affected -> requestRemoteUpdate(contexts.get(affected)));
+            remoteLoader.commitTransaction();
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            remoteLoader.rollbackTransaction();
+        }
     }
 
     private void refresh()

@@ -121,6 +121,30 @@ public final class GrpcBusinessContextServerRunnable
             responseObserver.onCompleted();
         }
 
+        @Override
+        public void beginTransaction(final Empty request, final StreamObserver<Empty> responseObserver)
+        {
+            registry.beginTransaction();
+            responseObserver.onNext(Empty.newBuilder().build());
+            responseObserver.onCompleted();
+        }
+
+        @Override
+        public void commitTransaction(final Empty request, final StreamObserver<Empty> responseObserver)
+        {
+            registry.commitTransaction();
+            responseObserver.onNext(Empty.newBuilder().build());
+            responseObserver.onCompleted();
+        }
+
+        @Override
+        public void rollbackTransaction(final Empty request, final StreamObserver<Empty> responseObserver)
+        {
+            registry.rollbackTransaction();
+            responseObserver.onNext(Empty.newBuilder().build());
+            responseObserver.onCompleted();
+        }
+
     }
 
 }

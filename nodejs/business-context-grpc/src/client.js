@@ -9,7 +9,7 @@ const grpc = require('grpc')
 const grpcPromise = require('grpc-promise');
 const businessContextProto = grpc.load(PROTO_PATH).businessContext
 
-exports.fetchContexts = async (identifiers, host, port) => {
+exports.fetchContexts = (identifiers, host, port) => {
     const client = new businessContextProto.BusinessContextServer(host + ':' + port, grpc.credentials.createInsecure())
     grpcPromise.promisifyAll(client)
     return client.fetchContexts()
@@ -18,7 +18,7 @@ exports.fetchContexts = async (identifiers, host, port) => {
         .catch(err => console.error(err))
 }
 
-exports.fetchAllContexts = async (host, port) => {
+exports.fetchAllContexts = (host, port) => {
     const client = new businessContextProto.BusinessContextServer(host + ':' + port, grpc.credentials.createInsecure())
     grpcPromise.promisifyAll(client)
     return client.fetchAllContexts()
@@ -27,7 +27,7 @@ exports.fetchAllContexts = async (host, port) => {
         .catch(err => console.error(err))
 }
 
-exports.updateContext = async (context, host, port) => {
+exports.updateContext = (context, host, port) => {
     const client = new businessContextProto.BusinessContextServer(host + ':' + port, grpc.credentials.createInsecure())
     grpcPromise.promisifyAll(client)
     return client.updateContext()
