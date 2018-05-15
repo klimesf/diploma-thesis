@@ -29,7 +29,7 @@ export default class XmlReader {
             new BusinessContextIdentifier(businessContext.getAttribute("prefix"), businessContext.getAttribute("name")),
             this.readIncludedContexts(businessContext),
             this.readPreconditions(businessContext),
-            new Set()
+            this.readPostConditions(businessContext)
         )
     }
 
