@@ -32,7 +32,7 @@ public class Application
     public static BusinessContextRegistry businessContextRegistry()
     {
         List<InputStream> streams = new ArrayList<>();
-        streams.add(Application.class.getResourceAsStream("/business-contexts/create.xml"));
+        streams.add(Application.class.getResourceAsStream("/business-contexts/correctAddress.xml"));
 
         return BusinessContextRegistry.builder()
             .withLocalLoader(new BusinessContextXmlLoader(streams))
