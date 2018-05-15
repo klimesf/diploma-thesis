@@ -1,6 +1,6 @@
 # Model
 
-![Model](https://github.com/klimesf/diploma-thesis-images/blob/master/class-diagrams/example-model.png?raw=true)
+![Model](https://github.com/klimesf/diploma-thesis-images/blob/master/class-diagrams/example-model.pdf?raw=true)
 
 - Uživatel
   - identifikátor
@@ -72,7 +72,7 @@ K tomu se budou vázat business rules:
 
 # Komponenty systému
 
-![Components](https://github.com/klimesf/diploma-thesis-images/blob/master/component-diagrams/example-system.png?raw=true)
+![Components](https://github.com/klimesf/diploma-thesis-images/blob/master/component-diagrams/example-system.pdf?raw=true)
 
 - Product
 - User
@@ -84,33 +84,31 @@ K tomu se budou vázat business rules:
 
 # Sdílená business pravidla
 
-![Hirearchy](https://github.com/klimesf/diploma-thesis-images/blob/master/misc/example-system-context-hierarchy.png?raw=true)
+![Hirearchy](https://github.com/klimesf/diploma-thesis-images/blob/master/misc/example-system-context-hierarchy.pdf?raw=true)
 
 - Product definuje BR02, ale aplikuje se v UI
 - Shipping definuje BR04 a BR09, ale aplikuje se v Order a v UI
 - Billing definuje BR05, ale aplikuje se v Order a v UI
 - Mailing definuje BR06, ale aplikuje se v User, Order a v UI
 
-atd., myslím že se tam toho dá vymyslet spoustu.
-
 # Join-points
 
-![Join-points](https://github.com/klimesf/diploma-thesis-images/blob/master/activity-diagrams/join-points.png?raw=true)
+![Join-points](https://github.com/klimesf/diploma-thesis-images/blob/master/activity-diagrams/join-points.pdf?raw=true)
 
 # Aspect weaving
 
-![Weaving](https://github.com/klimesf/diploma-thesis-images/blob/master/activity-diagrams/business-rules-weaver.png?raw=true)
+![Weaving](https://github.com/klimesf/diploma-thesis-images/blob/master/activity-diagrams/business-rules-weaver.pdf?raw=true)
 
 # Načítání business pravidel
 
-![Business rules loading](https://github.com/klimesf/diploma-thesis-images/blob/master/activity-diagrams/business-context-loading.png?raw=true)
+![Business rules loading](https://github.com/klimesf/diploma-thesis-images/blob/master/activity-diagrams/business-context-loading.pdf?raw=true)
 
 # Administrace business pravidel
 
-![Business rules administration](https://github.com/klimesf/diploma-thesis-images/blob/master/activity-diagrams/business-context-management.png?raw=true)
-![Business rules administration](https://github.com/klimesf/diploma-thesis-images/blob/master/sequence-diagrams/business-context-administration.png?raw=true)
-![Business rules administration](https://github.com/klimesf/diploma-thesis-images/blob/master/sequence-diagrams/business-context-administration-update.png?raw=true)
+![Business rules administration](https://github.com/klimesf/diploma-thesis-images/blob/master/activity-diagrams/business-context-management.pdf?raw=true)
+![Business rules administration](https://github.com/klimesf/diploma-thesis-images/blob/master/sequence-diagrams/business-context-administration.pdf?raw=true)
+![Business rules administration](https://github.com/klimesf/diploma-thesis-images/blob/master/sequence-diagrams/business-context-administration-update.pdf?raw=true)
 
 # Business Context Metamodel
 
-![Business Context Metamodel](https://github.com/klimesf/diploma-thesis-images/blob/master/class-diagrams/business-context-metamodel.png) 
+![Business Context Metamodel](https://github.com/klimesf/diploma-thesis-images/blob/master/class-diagrams/business-context-metamodel.pdf) 
