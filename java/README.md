@@ -13,10 +13,18 @@ You can build projects with dependency on the library.
 
 ## Usage
 
-First, you need to setup your `BusinessContextRegistry`:
+First, you need to setup your `BusinessContextRegistry`.
+You must provide input streams of the XML files where your business contexts are stored (you can for example store them in your classpath):
 
 ```java
+List<InputStream> streams = new ArrayList<>();
+streams.add(Application.class.getResourceAsStream("/business-contexts/create.xml"));
+// ...
 
+BusinessContextRegistry registry = BusinessContextRegistry.builder()
+    .withLocalLoader(new BusinessContextXmlLoader(streams))
+    .withRemoteLoader(new RemoteBusinessContextLoader(remoteLoaders))
+    .build();
 ```
 
 Then, you need to register AspectJ with your DI container. This step is specific to the framework you use.

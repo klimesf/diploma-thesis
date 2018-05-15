@@ -16,6 +16,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.*;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class BusinessContextXmlTest
 {
@@ -55,7 +57,8 @@ public class BusinessContextXmlTest
             xmlOutput.output(document, new OutputStreamWriter(out));
         }
 
-        BusinessContextXmlLoader loader = new BusinessContextXmlLoader();
+        List<InputStream> streams = new ArrayList<>();
+        BusinessContextXmlLoader loader = new BusinessContextXmlLoader(streams);
         BusinessContext loadedContext = loader.loadFromFile(file);
 
         Assert.assertEquals(context.getIdentifier(), loadedContext.getIdentifier());
@@ -63,6 +66,21 @@ public class BusinessContextXmlTest
         Assert.assertTrue(loadedContext.getIncludedContexts().contains(BusinessContextIdentifier.parse("user.validEmail")));
         Assert.assertEquals(context.getPreconditions().size(), loadedContext.getPreconditions().size());
         Assert.assertEquals(context.getPostConditions().size(), loadedContext.getPostConditions().size());
+    }
+
+    @Test
+    public void testLoadFromResources() throws Exception
+    {
+        List<InputStream> streams = new ArrayList<>();
+        streams.add(getClass().getResourceAsStream("/business-contexts/adminLoggedIn.xml"));
+        streams.add(getClass().getResourceAsStream("/business-contexts/correctAddress.xml"));
+        BusinessContextXmlLoader loader = new BusinessContextXmlLoader(streams);
+        Set<BusinessContext> contexts = loader.load();
+
+        Assert.assertEquals(2, contexts.size());
+        Set<BusinessContextIdentifier> identifiers = contexts.stream().map(BusinessContext::getIdentifier).collect(Collectors.toSet());
+        Assert.assertTrue(identifiers.contains(new BusinessContextIdentifier("auth", "adminLoggedIn")));
+        Assert.assertTrue(identifiers.contains(new BusinessContextIdentifier("billing", "correctAddress")));
     }
 
 }

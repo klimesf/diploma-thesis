@@ -8,6 +8,7 @@ import cz.filipklimes.diploma.framework.businessContext.Precondition;
 import cz.filipklimes.diploma.framework.businessContext.expression.Constant;
 import cz.filipklimes.diploma.framework.businessContext.expression.Expression;
 import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionType;
+import cz.filipklimes.diploma.framework.businessContext.expression.IsNotBlank;
 import cz.filipklimes.diploma.framework.businessContext.expression.IsNotNull;
 import cz.filipklimes.diploma.framework.businessContext.expression.ObjectPropertyReference;
 import cz.filipklimes.diploma.framework.businessContext.expression.VariableReference;
@@ -36,17 +37,44 @@ import java.io.*;
 import java.math.BigDecimal;
 import java.net.*;
 import java.util.*;
+import java.util.logging.Logger;
 
 public class BusinessContextXmlLoader implements LocalBusinessContextLoader
 {
 
     public static final String BUSINESS_CONTEXT_XSD_PATH = "/businessContext.xsd";
 
+    private static final Logger logger = Logger.getLogger(BusinessContextXmlLoader.class.getName());
+    private List<InputStream> streams;
+
+    /**
+     * @param inputStreams List of input streams of the XML files.
+     */
+    public BusinessContextXmlLoader(final List<InputStream> inputStreams)
+    {
+        this.streams = Collections.unmodifiableList(inputStreams);
+    }
+
     @Override
     public Set<BusinessContext> load()
     {
-        // TODO: implement loading files from resources
-        throw new UnsupportedOperationException("not implemented yet");
+        if (streams.isEmpty()) {
+            logger.warning("No contexts in classpath");
+            return Collections.emptySet();
+        }
+
+        Set<BusinessContext> contexts = new HashSet<>();
+        for (InputStream inputStream : streams) {
+            try {
+                contexts.add(loadFromInputStream(inputStream));
+            } catch (JDOMException | IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        logger.info(String.format("Loaded %d contexts from classpath", contexts.size()));
+
+        return contexts;
     }
 
     public BusinessContext loadFromFile(final File file) throws JDOMException, IOException
@@ -60,6 +88,13 @@ public class BusinessContextXmlLoader implements LocalBusinessContextLoader
     {
         SAXEngine saxBuilder = createSaxEngine();
         Document doc = saxBuilder.build(new StringReader(string));
+        return parse(doc);
+    }
+
+    public BusinessContext loadFromInputStream(final InputStream inputStream) throws JDOMException, IOException
+    {
+        SAXEngine saxBuilder = createSaxEngine();
+        Document doc = saxBuilder.build(inputStream);
         return parse(doc);
     }
 
@@ -199,6 +234,8 @@ public class BusinessContextXmlLoader implements LocalBusinessContextLoader
                 );
             case "isNotNull":
                 return new IsNotNull<>(buildExpression(expressionEl.getChild("argument").getChildren().get(0)));
+            case "isNotBlank":
+                return new IsNotBlank((Expression<String>) buildExpression(expressionEl.getChild("argument").getChildren().get(0)));
             default:
                 throw new RuntimeException(String.format("Unsupported expression type: %s", expressionEl.getName()));
         }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<businessContext prefix="order" name="changeState">
+    <includedContexts>
+        <includedContext prefix="order" name="valid" />
+        <includedContext prefix="auth" name="employeeLoggedIn" />
+    </includedContexts>
+    <preconditions />
+    <postConditions />
+</businessContext>

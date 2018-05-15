@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<businessContext prefix="billing" name="correctAddress">
+    <includedContexts />
+    <preconditions>
+        <precondition name="Billing address must contain a country, city, street and postal code">
+            <condition>
+                <logicalAnd>
+                    <left>
+                        <logicalAnd>
+                            <left>
+                                <isNotBlank>
+                                    <argument>
+                                        <objectPropertyReference propertyName="country" objectName="billingAddress" type="string" />
+                                    </argument>
+                                </isNotBlank>
+                            </left>
+                            <right>
+                                <isNotBlank>
+                                    <argument>
+                                        <objectPropertyReference propertyName="city" objectName="billingAddress" type="string" />
+                                    </argument>
+                                </isNotBlank>
+                            </right>
+                        </logicalAnd>
+                    </left>
+                    <right>
+                        <logicalAnd>
+                            <left>
+                                <isNotBlank>
+                                    <argument>
+                                        <objectPropertyReference propertyName="street" objectName="billingAddress" type="string" />
+                                    </argument>
+                                </isNotBlank>
+                            </left>
+                            <right>
+                                <isNotBlank>
+                                    <argument>
+                                        <objectPropertyReference propertyName="postal" objectName="billingAddress" type="string" />
+                                    </argument>
+                                </isNotBlank>
+                            </right>
+                        </logicalAnd>
+                    </right>
+                </logicalAnd>
+            </condition>
+        </precondition>
+    </preconditions>
+    <postConditions />
+</businessContext>

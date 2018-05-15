@@ -1,26 +1,20 @@
 package cz.filipklimes.diploma.framework.example.order;
 
-import cz.filipklimes.diploma.framework.businessContext.BusinessContext;
-import cz.filipklimes.diploma.framework.businessContext.BusinessContextIdentifier;
 import cz.filipklimes.diploma.framework.businessContext.BusinessContextRegistry;
-import cz.filipklimes.diploma.framework.businessContext.Precondition;
 import cz.filipklimes.diploma.framework.businessContext.aop.BusinessContextAspect;
-import cz.filipklimes.diploma.framework.businessContext.expression.Constant;
-import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionType;
-import cz.filipklimes.diploma.framework.businessContext.expression.ObjectPropertyReference;
-import cz.filipklimes.diploma.framework.businessContext.expression.numeric.LessThan;
 import cz.filipklimes.diploma.framework.businessContext.loader.RemoteBusinessContextLoader;
 import cz.filipklimes.diploma.framework.businessContext.loader.remote.RemoteLoader;
 import cz.filipklimes.diploma.framework.businessContext.loader.remote.RemoteServiceAddress;
 import cz.filipklimes.diploma.framework.businessContext.loader.remote.grpc.GrpcRemoteLoader;
 import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.GrpcBusinessContextServer;
 import cz.filipklimes.diploma.framework.businessContext.weaver.BusinessContextWeaver;
+import cz.filipklimes.diploma.framework.businessContext.xml.BusinessContextXmlLoader;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 
-import java.math.BigDecimal;
+import java.io.*;
 import java.util.*;
 
 @SpringBootApplication
@@ -64,51 +58,17 @@ public class Application
         remoteLoaders.put("shipping", new GrpcRemoteLoader(new RemoteServiceAddress("shipping", SHIPPING_SERVICE_HOST, SHIPPING_SERVICE_PORT)));
         remoteLoaders.put("billing", new GrpcRemoteLoader(new RemoteServiceAddress("billing", BILLING_SERVICE_HOST, BILLING_SERVICE_PORT)));
 
-        BusinessContextRegistry registry = BusinessContextRegistry.builder()
-            .withLocalLoader(() -> new HashSet<>(Arrays.asList(
-                BusinessContext.builder()
-                    .withIdentifier(BusinessContextIdentifier.parse("order.valid"))
-                    .withIncludedContext(BusinessContextIdentifier.parse("user.validEmail"))
-                    .withIncludedContext(BusinessContextIdentifier.parse("shipping.correctAddress"))
-                    .withIncludedContext(BusinessContextIdentifier.parse("billing.correctAddress"))
-                    .build(),
-                BusinessContext.builder()
-                    .withIdentifier(BusinessContextIdentifier.parse("order.create"))
-                    .withIncludedContext(BusinessContextIdentifier.parse("auth.userLoggedIn"))
-                    .withIncludedContext(BusinessContextIdentifier.parse("order.valid"))
-                    // TODO: preconditions, postconditions
-                    .build(),
-                BusinessContext.builder()
-                    .withIdentifier(BusinessContextIdentifier.parse("order.changeState"))
-                    .withIncludedContext(BusinessContextIdentifier.parse("auth.employeeLoggedIn"))
-                    .withIncludedContext(BusinessContextIdentifier.parse("order.valid"))
-                    // TODO: preconditions, postconditions
-                    .build(),
-                BusinessContext.builder()
-                    .withIdentifier(BusinessContextIdentifier.parse("order.listAll"))
-                    .withIncludedContext(BusinessContextIdentifier.parse("auth.employeeLoggedIn"))
-                    // TODO: preconditions, postconditions
-                    .build(),
-                BusinessContext.builder()
-                    .withIdentifier(BusinessContextIdentifier.parse("order.addToShoppingCart"))
-                    .withIncludedContext(BusinessContextIdentifier.parse("auth.userLoggedIn"))
-                    .withIncludedContext(BusinessContextIdentifier.parse("product.hidden"))
-                    .withIncludedContext(BusinessContextIdentifier.parse("product.stock"))
-                    .withPrecondition(Precondition.builder()
-                        .withName("Shopping cart must contain less than 10 items")
-                        .withCondition(new LessThan( // The rule is validated before the item is added
-                            new ObjectPropertyReference<>("shoppingCart", "itemCount", ExpressionType.NUMBER),
-                            new Constant<>(new BigDecimal("10"), ExpressionType.NUMBER)
-                        ))
-                        .build())
-                    .build()
-            )))
+        List<InputStream> streams = new ArrayList<>();
+        streams.add(Application.class.getResourceAsStream("/business-contexts/addToShoppingCart.xml"));
+        streams.add(Application.class.getResourceAsStream("/business-contexts/changeState.xml"));
+        streams.add(Application.class.getResourceAsStream("/business-contexts/create.xml"));
+        streams.add(Application.class.getResourceAsStream("/business-contexts/listAll.xml"));
+        streams.add(Application.class.getResourceAsStream("/business-contexts/valid.xml"));
+
+        return BusinessContextRegistry.builder()
+            .withLocalLoader(new BusinessContextXmlLoader(streams))
             .withRemoteLoader(new RemoteBusinessContextLoader(remoteLoaders))
             .build();
-
-        registry.initialize();
-
-        return registry;
     }
 
     @Bean

@@ -1,9 +1,11 @@
+from typing import Set
+
 from xml.dom.minidom import parseString
 from business_context.context import BusinessContext
 from business_context.rule import Precondition, PostCondition, PostConditionType
 from business_context.expression import Constant, ExpressionType, IsNotNull, VariableReference, LogicalAnd, FunctionCall, IsNotBlank, ObjectPropertyReference, LogicalEquals, LogicalNegate, LogicalOr
 from business_context.identifier import Identifier
-
+from business_context.registry import LocalBusinessContextLoader
 
 def load_included_contexts(root):
     included = set()
@@ -110,3 +112,8 @@ def load_xml(document: str) -> BusinessContext:
         load_preconditions(root),
         load_post_conditions(root)
     )
+
+class XmlBusinessContextLoader(LocalBusinessContextLoader):
+
+    def load(self) -> Set[BusinessContext]:
+        return super().load()

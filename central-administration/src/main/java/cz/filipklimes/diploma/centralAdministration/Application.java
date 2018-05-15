@@ -56,7 +56,7 @@ public class Application
     @Bean
     public BusinessContextXmlLoader createBusinessContextXmlLoader()
     {
-        return new BusinessContextXmlLoader();
+        return new BusinessContextXmlLoader(Collections.emptyList());
     }
 
 }

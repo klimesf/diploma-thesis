@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<businessContext prefix="order" name="valid">
+    <includedContexts>
+        <includedContext prefix="billing" name="correctAddress" />
+        <includedContext prefix="user" name="validEmail" />
+        <includedContext prefix="shipping" name="correctAddress" />
+    </includedContexts>
+    <preconditions />
+    <postConditions />
+</businessContext>

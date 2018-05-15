@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<businessContext prefix="order" name="addToShoppingCart">
+    <includedContexts>
+        <includedContext prefix="auth" name="userLoggedIn" />
+        <includedContext prefix="product" name="hidden" />
+        <includedContext prefix="product" name="stock" />
+    </includedContexts>
+    <preconditions>
+        <precondition name="Shopping cart must contain less than 10 items">
+            <condition>
+                <numericLessThan>
+                    <left>
+                        <objectPropertyReference propertyName="itemCount" objectName="shoppingCart" type="number" />
+                    </left>
+                    <right>
+                        <constant type="number" value="22" />
+                    </right>
+                </numericLessThan>
+            </condition>
+        </precondition>
+    </preconditions>
+    <postConditions />
+</businessContext>

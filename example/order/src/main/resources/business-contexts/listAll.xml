@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<businessContext prefix="order" name="listAll">
+    <includedContexts>
+        <includedContext prefix="auth" name="employeeLoggedIn" />
+    </includedContexts>
+    <preconditions />
+    <postConditions />
+</businessContext>
