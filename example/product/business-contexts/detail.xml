@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<businessContext prefix="product" name="detail">
+    <includedContexts />
+    <preconditions />
+    <postConditions>
+        <postCondition name="filterProductBuyingPrice">
+            <type>FILTER_OBJECT_FIELD</type>
+            <referenceName>buyingPrice</referenceName>
+            <condition>
+                <constant type="bool" value="true" />
+            </condition>
+        </postCondition>
+    </postConditions>
+</businessContext>

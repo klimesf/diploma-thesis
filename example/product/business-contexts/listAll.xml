@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<businessContext prefix="product" name="listAll">
+    <includedContexts />
+    <preconditions />
+    <postConditions>
+        <postCondition name="filterProductsBuyingPrices">
+            <type>FILTER_LIST_OF_OBJECTS_FIELD</type>
+            <referenceName>buyingPrice</referenceName>
+            <condition>
+                <constant type="bool" value="true" />
+            </condition>
+        </postCondition>
+        <postCondition name="filterHiddenProducts">
+            <type>FILTER_LIST_OF_OBJECTS</type>
+            <referenceName>item</referenceName>
+            <condition>
+                <logicalEquals>
+                    <left>
+                        <objectPropertyReference propertyName="hidden" objectName="item" type="bool" />
+                    </left>
+                    <right>
+                        <constant type="bool" value="true" />
+                    </right>
+                </logicalEquals>
+            </condition>
+        </postCondition>
+    </postConditions>
+</businessContext>

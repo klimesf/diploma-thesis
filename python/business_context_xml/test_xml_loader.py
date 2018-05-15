@@ -1,5 +1,5 @@
-import unittest
-from business_context_xml.xml_loader import load_xml
+import unittest, os
+from business_context_xml.xml_loader import load_xml, XmlBusinessContextLoader
 from business_context.identifier import Identifier
 
 document = """\
@@ -51,3 +51,9 @@ class XmlLoaderTest(unittest.TestCase):
 
         # Post-conditions
         self.assertEquals(1, len(business_context.post_conditions))
+
+    def test_load_file(self):
+        file_path = os.path.dirname(__file__)
+        loader = XmlBusinessContextLoader([file_path + '/contexts/test.xml'])
+        contexts = loader.load()
+        self.assertEquals(1, len(contexts))

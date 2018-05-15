@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<businessContext prefix="product" name="create">
+    <includedContexts>
+        <includedContext prefix="auth" name="employeeLoggedIn" />
+    </includedContexts>
+    <preconditions>
+        <precondition name="Product name must be at least 5 characters long">
+            <condition>
+                <isNotNull>
+                    <argument>
+                        <variableReference name="name" type="string" />
+                    </argument>
+                </isNotNull>
+            </condition>
+        </precondition>
+    </preconditions>
+    <postConditions />
+</businessContext>

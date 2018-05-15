@@ -4,12 +4,20 @@ from business_context.registry import *
 from business_context.weaver import *
 from business_context.operation_context import *
 from business_context_grpc.business_context_server import *
-from business_contexts import LocalLoader, GrpcRemoteLoader
+from business_context_grpc.business_context_client import GrpcRemoteLoader
+from business_context_xml.xml_loader import XmlBusinessContextLoader
 
 app = Flask(__name__)
 
 registry = Registry(
-    LocalLoader(),
+    XmlBusinessContextLoader([
+        'business-contexts/changePrice.xml',
+        'business-contexts/create.xml',
+        'business-contexts/detail.xml',
+        'business-contexts/hidden.xml',
+        'business-contexts/listAll.xml',
+        'business-contexts/stock.xml',
+    ]),
     RemoteBusinessContextLoader(GrpcRemoteLoader({
         'auth': {'host': 'user', 'port': 5553}
     }))

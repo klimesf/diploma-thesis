@@ -2,6 +2,7 @@ import grpc
 from typing import Set
 from business_context.context import BusinessContext
 from business_context.identifier import Identifier
+from business_context.registry import RemoteLoader
 from . import business_context_pb2
 from . import business_context_pb2_grpc
 from . import helpers
@@ -26,3 +27,25 @@ def update_context(context: BusinessContext, host: str, port: int):
     channel = grpc.insecure_channel(host + ':' + port.__str__())
     stub = business_context_pb2_grpc.BusinessContextServerStub(channel)
     stub.UpdateContext(business_context_pb2.BusinessContextUpdateRequestMessage(context=helpers.build_context_message(context)))
+
+
+class GrpcRemoteLoader(RemoteLoader):
+    def __init__(self, addresses):
+        self._addresses = addresses
+
+    def load_contexts(self, identifiers: Set[Identifier]) -> Set[BusinessContext]:
+        result = set()
+
+        prefixes = {}
+        for identifier in identifiers:
+            if identifier.prefix not in prefixes:
+                prefixes[identifier.prefix] = []
+            prefixes[identifier.prefix].append(identifier)
+
+        for prefix, identifiers in prefixes.items():
+            if prefix not in self._addresses:
+                raise BaseException("Could not find service for prefix " + prefix)
+            for retrieved in retrieve_contexts(identifiers, self._addresses[prefix]['host'], self._addresses[prefix]['port']):
+                result.add(retrieved)
+
+        return result

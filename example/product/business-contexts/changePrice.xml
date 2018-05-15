@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<businessContext prefix="product" name="changePrice">
+    <includedContexts>
+        <includedContext prefix="auth" name="adminLoggedIn" />
+    </includedContexts>
+    <preconditions />
+    <postConditions />
+</businessContext>

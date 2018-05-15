@@ -7,6 +7,7 @@ from business_context.expression import Constant, ExpressionType, IsNotNull, Var
 from business_context.identifier import Identifier
 from business_context.registry import LocalBusinessContextLoader
 
+
 def load_included_contexts(root):
     included = set()
     for identifier in root.getElementsByTagName('includedContext'):
@@ -60,19 +61,19 @@ def build_expression(el):
         'constant': lambda el: Constant(value=el.attributes['value'].value,
                                         type=convert_expression_type(el.attributes['type'].value)),
         'functionCall': lambda el: FunctionCall(method_name=el.attributes['methodName'].value,
-                                                 type=convert_expression_type(el.attributes['type'].value),
-                                                 arguments=list(map(build_expression, get_non_text(el.childNodes)))),
+                                                type=convert_expression_type(el.attributes['type'].value),
+                                                arguments=list(map(build_expression, get_non_text(el.childNodes)))),
         'isNotNull': lambda el: IsNotNull(argument=build_expression(get_non_text(get_non_text(el.getElementsByTagName('argument'))[0].childNodes)[0])),
         'isNotBlank': lambda el: IsNotBlank(argument=build_expression(get_non_text(get_non_text(el.getElementsByTagName('argument'))[0].childNodes)[0])),
         'objectPropertyReference': lambda el: ObjectPropertyReference(object_name=el.attributes['objectName'].value,
-                                                                        property_name=el.attributes['propertyName'].value,
-                                                                        type=convert_expression_type(el.attributes['type'].value)),
+                                                                      property_name=el.attributes['propertyName'].value,
+                                                                      type=convert_expression_type(el.attributes['type'].value)),
         'variableReference': lambda el: VariableReference(name=el.attributes['name'].value,
-                                                           type=convert_expression_type(el.attributes['type'].value)),
-        'logicalAnd': lambda el: LogicalAnd(left=build_expression(get_non_text(el.getElementsByTagName('left'))[0]), right=build_expression(get_non_text(el.getElementsByTagName('right'))[1])),
-        'logicalEquals': lambda el: LogicalEquals(left=build_expression(get_non_text(el.getElementsByTagName('argument'))[0]), right=build_expression(get_non_text(el.getElementsByTagName('argument'))[1])),
-        'logicalNegate': lambda el: LogicalNegate(argument=build_expression(get_non_text(el.getElementsByTagName('argument'))[0])),
-        'logicalOr': lambda el: LogicalOr(left=build_expression(get_non_text(el.getElementsByTagName('left'))[0]), right=build_expression(get_non_text(el.getElementsByTagName('right'))[1])),
+                                                          type=convert_expression_type(el.attributes['type'].value)),
+        'logicalAnd': lambda el: LogicalAnd(left=build_expression(get_non_text(el.getElementsByTagName('left')[0].childNodes)[0]), right=build_expression(get_non_text(el.getElementsByTagName('right')[0].childNodes)[0])),
+        'logicalEquals': lambda el: LogicalEquals(left=build_expression(get_non_text(el.getElementsByTagName('left')[0].childNodes)[0]), right=build_expression(get_non_text(el.getElementsByTagName('right')[0].childNodes)[0])),
+        'logicalNegate': lambda el: LogicalNegate(argument=build_expression(get_non_text(el.getElementsByTagName('argument')[0].childNodes)[0])),
+        'logicalOr': lambda el: LogicalOr(left=build_expression(get_non_text(el.getElementsByTagName('left')[0].childNodes)[0]), right=build_expression(get_non_text(el.getElementsByTagName('right')[0].childNodes)[0])),
     }
     expression_name = el.tagName
     if expression_name not in matcher:
@@ -113,7 +114,16 @@ def load_xml(document: str) -> BusinessContext:
         load_post_conditions(root)
     )
 
+
 class XmlBusinessContextLoader(LocalBusinessContextLoader):
 
+    def __init__(self, files: list):
+        super().__init__()
+        self._files = files
+
     def load(self) -> Set[BusinessContext]:
-        return super().load()
+        contexts = set()
+        for file in self._files:
+            with open(file, 'r') as xml:
+                contexts.add(load_xml(xml.read()))
+        return contexts
