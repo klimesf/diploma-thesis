@@ -82,3 +82,9 @@ Finally, describe your business contexts in the XML and place them wherever you 
     <postConditions />
 </businessContext>
 ```
+
+## Testing
+
+You can use [Maven](https://maven.apache.org/) for testing.
+Run `mvn test` command in this directory.
+

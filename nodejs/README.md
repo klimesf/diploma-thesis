@@ -91,3 +91,21 @@ Finally, you can describe your business contexts in the XML and place them where
     <postConditions />
 </businessContext>
 ```
+
+## Testing
+
+To test the Node.js library, refer to each specific module and run these commands (make sure you have [npm](https://www.npmjs.com/) and [yarn](https://yarnpkg.com/en/) installed)
+
+```bash
+yarn install
+yarn link
+npm run-script build
+npm test
+```
+
+In `grpc` and `xml` modules, you also need to link the core module, so before building, you need to run
+
+```bash
+yarn link business-context-framework
+```
+

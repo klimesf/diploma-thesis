@@ -72,3 +72,14 @@ Make sure your Docker deamon is running and has enough RAM (about 2GB should suf
 ```bash
 $ ./build-and-run-all.sh
 ```
+
+## Testing
+
+For testing, you can see the `.travis.yml` file and use the commands listed there.
+Link to results of CI tests are on the top of this page.
+You can also refer to the READMEs in the specific library for concrete testing commands.
+
+## Licence
+
+This software is provided under [MIT License](https://opensource.org/licenses/MIT).
+

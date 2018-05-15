@@ -70,3 +70,12 @@ Finally, you can describe your business contexts in the XML and place them where
     <postConditions />
 </businessContext>
 ```
+
+## Testing
+
+You can test with python's unittest module from this folder
+
+```bash
+pip install -r requirements
+python -m pytest .
+```
