@@ -83,3 +83,7 @@ You can also refer to the READMEs in the specific library for concrete testing c
 
 This software is provided under [MIT License](https://opensource.org/licenses/MIT).
 
+## Motivation and architecture
+
+For the motivation and architecture of this framework, please refer to the [text of my diploma thesis](https://github.com/klimesf/diploma-thesis-text).
+
