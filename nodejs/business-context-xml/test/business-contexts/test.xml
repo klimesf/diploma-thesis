@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<businessContext prefix="user" name="createEmployee"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:noNamespaceSchemaLocation="businessContext.xsd">
+    <includedContexts />
+    <preconditions>
+        <precondition name="Cannot use hidden product">
+            <condition>
+                <logicalEquals>
+                    <left>
+                        <objectPropertyReference propertyName="hidden" objectName="product" type="bool" />
+                    </left>
+                    <right>
+                        <constant type="bool" value="false" />
+                    </right>
+                </logicalEquals>
+            </condition>
+        </precondition>
+    </preconditions>
+    <postConditions />
+</businessContext>

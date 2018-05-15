@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<businessContext prefix="user" name="listAll">
+    <includedContexts />
+    <preconditions />
+    <postConditions />
+</businessContext>

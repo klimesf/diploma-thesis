@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<businessContext prefix="user" name="validEmail">
+    <includedContexts />
+    <preconditions>
+        <precondition name="Email must not be null">
+            <condition>
+                <isNotNull>
+                    <argument>
+                        <variableReference name="email" type="string" />
+                    </argument>
+                </isNotNull>
+            </condition>
+        </precondition>
+    </preconditions>
+    <postConditions />
+</businessContext>

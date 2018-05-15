@@ -14,86 +14,22 @@ const BusinessContextRegistry = require('business-context-framework/dist/Busines
     Equals = require('business-context-framework/dist/expression/logical/Equals').default,
     Or = require('business-context-framework/dist/expression/logical/Or').default,
     businessContextPort = process.env.BUSINESS_CONTEXT_PORT || 5553,
-    server = require('business-context-grpc/dist/server')
+    server = require('business-context-grpc/dist/server'),
+    XmlReader = require('business-context-xml/dist/XmlReader').default,
+    path = require('path')
 
 exports.setUp = () => {
     const registry = exports.businessContextRegistry = new BusinessContextRegistry(
-        {
-            load: () => {
-                return [
-                    new BusinessContext(
-                        BusinessContextIdentifier.of('auth.adminLoggedIn'),
-                        new Set(),
-                        new Set()
-                            .add(new Precondition('Signed user must be an administrator', new Equals(
-                                new ObjectPropertyReference('user', 'role', ExpressionType.STRING),
-                                new Constant("ADMINISTRATOR", ExpressionType.STRING)
-                            ))),
-                        new Set()
-                    ),
-                    new BusinessContext(
-                        BusinessContextIdentifier.of('auth.employeeLoggedIn'),
-                        new Set(),
-                        new Set()
-                            .add(new Precondition('Signed user must be an employee',
-                                new Or(
-                                    new Equals(
-                                        new ObjectPropertyReference('user', 'role', ExpressionType.STRING),
-                                        new Constant("EMPLOYEE", ExpressionType.STRING)
-                                    ),
-                                    new Equals(
-                                        new ObjectPropertyReference('user', 'role', ExpressionType.STRING),
-                                        new Constant("ADMINISTRATOR", ExpressionType.STRING)
-                                    )
-                                ))),
-                        new Set()
-                    ),
-                    new BusinessContext(
-                        BusinessContextIdentifier.of('auth.userLoggedIn'),
-                        new Set(),
-                        new Set()
-                            .add(new Precondition('User must be signed in', new IsNotNull(new VariableReference('user', ExpressionType.OBJECT))),),
-                        new Set()
-                    ),
-                    new BusinessContext(
-                        BusinessContextIdentifier.of('user.validEmail'),
-                        new Set(),
-                        new Set()
-                            .add(new Precondition('Email must not be null', new IsNotNull(new VariableReference('email', ExpressionType.STRING)))),
-                        new Set()
-                    ),
-                    new BusinessContext(
-                        BusinessContextIdentifier.of('user.delete'),
-                        new Set()
-                            .add(BusinessContextIdentifier.of('auth.adminLoggedIn')),
-                        new Set(),
-                        new Set()
-                    ),
-                    new BusinessContext(
-                        BusinessContextIdentifier.of('user.createEmployee'),
-                        new Set()
-                            .add(BusinessContextIdentifier.of('auth.adminLoggedIn'))
-                            .add(BusinessContextIdentifier.of('user.validEmail')),
-                        new Set()
-                            .add(new Precondition('Name must not be null', new IsNotNull(new VariableReference('name', ExpressionType.STRING)))),
-                        new Set()
-                    ),
-                    new BusinessContext(
-                        BusinessContextIdentifier.of('user.register'),
-                        new Set().add(BusinessContextIdentifier.of('user.validEmail')),
-                        new Set()
-                            .add(new Precondition('Name must not be null', new IsNotNull(new VariableReference('name', ExpressionType.STRING)))),
-                        new Set()
-                    ),
-                    new BusinessContext(
-                        BusinessContextIdentifier.of('user.listAll'),
-                        new Set(),
-                        new Set(),
-                        new Set()
-                    ),
-                ]
-            }
-        },
+        new XmlReader([
+            path.join(__dirname, '..', 'business-contexts', 'auth', 'adminLoggedIn.xml'),
+            path.join(__dirname, '..', 'business-contexts', 'auth', 'employeeLoggedIn.xml'),
+            path.join(__dirname, '..', 'business-contexts', 'auth', 'userLoggedIn.xml'),
+            path.join(__dirname, '..', 'business-contexts', 'user', 'createEmployee.xml'),
+            path.join(__dirname, '..', 'business-contexts', 'user', 'delete.xml'),
+            path.join(__dirname, '..', 'business-contexts', 'user', 'listAll.xml'),
+            path.join(__dirname, '..', 'business-contexts', 'user', 'register.xml'),
+            path.join(__dirname, '..', 'business-contexts', 'user', 'validEmail.xml'),
+        ]),
         {
             loadContextsByIdentifier: (identifiers) => {
                 return {}

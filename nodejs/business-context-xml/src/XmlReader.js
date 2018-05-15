@@ -1,5 +1,6 @@
 "use strict"
 
+const fs = require('fs')
 const BusinessContext = require('business-context-framework/dist/BusinessContext').default
 const BusinessContextIdentifier = require('business-context-framework/dist/BusinessContextIdentifier').default
 const Precondition = require('business-context-framework/dist/Precondition').default
@@ -19,6 +20,17 @@ const LogicalOr = require('business-context-framework/dist/expression/logical/Or
 const DOMParser = require('xmldom').DOMParser
 
 export default class XmlReader {
+
+    constructor(files) {
+        this.files = files
+    }
+
+    load() {
+        return this.files.map(file => {
+            let xml = fs.readFileSync(file, "utf8")
+            return XmlReader.read(xml)
+        })
+    }
 
     static read(xml) {
         const dom = new DOMParser().parseFromString(xml, 'text/xml')
@@ -96,7 +108,7 @@ export default class XmlReader {
         switch (element.tagName) {
             case 'constant':
                 type = this.convertExpressionType(element.getAttribute('type'))
-                return new Constant(type.deserialize(this.findPropertyByName(element.properties, 'value')), type)
+                return new Constant(type.deserialize(element.getAttribute('value')), type)
             case 'isNotNull':
                 return new IsNotNull(this.extractExpression(element.getElementsByTagName("argument")))
             case 'isNotBlank':

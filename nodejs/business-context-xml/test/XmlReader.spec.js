@@ -1,6 +1,6 @@
 "use strict";
 
-const chai = require('chai')
+const chai = require('chai'), path = require('path')
 
 const BusinessContextRegistry = require('business-context-framework/dist/BusinessContextRegistry').default
 const BusinessContext = require('business-context-framework/dist/BusinessContext').default
@@ -48,11 +48,15 @@ const xml = `
 
 
 describe('XmlReader', () => {
-    it('reads business context from xml', () => {
+    it('reads business context from xml string', () => {
         const context = XmlReader.read(xml)
         context.identifier.prefix.should.equal("user")
         context.identifier.name.should.equal("createEmployee")
 
         context.includedContexts.size.should.equal(2)
+    })
+    it('reads business context from xml files', () => {
+        const contexts = new XmlReader([path.join(__dirname, 'business-contexts', 'test.xml')]).load()
+        contexts.length.should.equal(1)
     })
 })

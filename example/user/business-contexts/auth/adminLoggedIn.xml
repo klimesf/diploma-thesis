@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<businessContext prefix="auth" name="adminLoggedIn">
+    <includedContexts />
+    <preconditions>
+        <precondition name="Signed user must be an administrator">
+            <condition>
+                <logicalEquals>
+                    <left>
+                        <objectPropertyReference propertyName="role" objectName="user" type="string" />
+                    </left>
+                    <right>
+                        <constant type="string" value="ADMINISTRATOR" />
+                    </right>
+                </logicalEquals>
+            </condition>
+        </precondition>
+    </preconditions>
+    <postConditions />
+</businessContext>
