@@ -17,7 +17,6 @@ const LogicalEquals = require('business-context-framework/dist/expression/logica
 const LogicalNegate = require('business-context-framework/dist/expression/logical/Negate').default
 const LogicalOr = require('business-context-framework/dist/expression/logical/Or').default
 const DOMParser = require('xmldom').DOMParser
-const Node = require('xmldom').Node
 
 export default class XmlReader {
 
@@ -158,10 +157,6 @@ export default class XmlReader {
             default:
                 throw "unknown expression type " + type
         }
-    }
-
-    static findPropertyByName(properties, name) {
-
     }
 
 }
