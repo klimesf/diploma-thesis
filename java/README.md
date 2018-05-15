@@ -60,7 +60,7 @@ public class OrderService
 
 ```
 
-Finally, describe your business contexts in the XML and place them in `src/main/resources/business-contexts/` folder:
+Finally, describe your business contexts in the XML and place them wherever you wish, as long as you provide their input streams to the registry:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>

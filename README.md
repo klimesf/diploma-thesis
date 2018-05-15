@@ -61,3 +61,14 @@ For library user manual, please refer to the specific implementation folders `ja
   - `business_context_xml` - Business context XML description for the Python library.
     - `test_*.py` – Python unit test files.
 - `xml` - XML schema and example of business context representation
+
+## Building the libraries and running the example
+
+You can build all the libraries at once and run the example e-commerce system simply
+by running the `build-and-run-all.sh` script.
+
+Make sure your Docker deamon is running and has enough RAM (about 2GB should suffice).
+
+```bash
+$ ./build-and-run-all.sh
+```
