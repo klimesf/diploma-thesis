@@ -5,13 +5,13 @@
         <includedContext prefix="user" name="validEmail" />
     </includedContexts>
     <preconditions>
-        <precondition name="Name must not be null">
+        <precondition name="Name must not be blank">
             <condition>
-                <isNotNull>
+                <isNotBlank>
                     <argument>
                         <variableReference name="name" type="string" />
                     </argument>
-                </isNotNull>
+                </isNotBlank>
             </condition>
         </precondition>
     </preconditions>

@@ -13,7 +13,7 @@
                         <objectPropertyReference propertyName="itemCount" objectName="shoppingCart" type="number" />
                     </left>
                     <right>
-                        <constant type="number" value="22" />
+                        <constant type="number" value="10" />
                     </right>
                 </numericLessThan>
             </condition>

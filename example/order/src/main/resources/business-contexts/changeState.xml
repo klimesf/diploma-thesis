@@ -1,9 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <businessContext prefix="order" name="changeState">
     <includedContexts>
-        <includedContext prefix="order" name="valid" />
-        <includedContext prefix="auth" name="employeeLoggedIn" />
+        <includedContext prefix="order" name="valid"/>
+        <includedContext prefix="auth" name="employeeLoggedIn"/>
     </includedContexts>
-    <preconditions />
-    <postConditions />
+    <preconditions>
+        <precondition name="Order status must be 'accepted', 'sent' or 'delivered'">
+            <condition>
+                <logicalOr>
+                    <left>
+                        <logicalOr>
+                            <left>
+                                <logicalEquals>
+                                    <left>
+                                        <objectPropertyReference propertyName="status" objectName="order" type="string"/>
+                                    </left>
+                                    <right>
+                                        <constant type="string" value="ACCEPTED"/>
+                                    </right>
+                                </logicalEquals>
+                            </left>
+                            <right>
+                                <logicalEquals>
+                                    <left>
+                                        <objectPropertyReference propertyName="status" objectName="order" type="string"/>
+                                    </left>
+                                    <right>
+                                        <constant type="string" value="SENT"/>
+                                    </right>
+                                </logicalEquals>
+                            </right>
+                        </logicalOr>
+                    </left>
+                    <right>
+                        <logicalEquals>
+                            <left>
+                                <objectPropertyReference propertyName="status" objectName="order" type="string"/>
+                            </left>
+                            <right>
+                                <constant type="string" value="DELIVERED"/>
+                            </right>
+                        </logicalEquals>
+                    </right>
+                </logicalOr>
+            </condition>
+        </precondition>
+    </preconditions>
+    <postConditions/>
 </businessContext>

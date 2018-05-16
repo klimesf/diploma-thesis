@@ -22,3 +22,11 @@ exports.register = (req, res) => {
             res.status(422).json({message: err})
         })
 }
+
+exports.createEmployee = (req, res) => {
+    users.createEmployee(req.body.name, req.body.email)
+        .then(user => res.json(user))
+        .catch(err => {
+            res.status(422).json({message: err})
+        })
+}

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<businessContext prefix="product" name="changeStock">
+    <includedContexts>
+        <includedContext prefix="auth" name="employeeLoggedIn" />
+    </includedContexts>
+    <preconditions>
+        <precondition name="Product stock must be positive">
+            <condition>
+                <numericGreaterThan>
+                    <left>
+                        <objectPropertyReference propertyName="product" objectName="stock" type="number" />
+                    </left>
+                    <right>
+                        <constant type="number" value="0" />
+                    </right>
+                </numericGreaterThan>
+            </condition>
+        </precondition>
+    </preconditions>
+    <postConditions />
+</businessContext>

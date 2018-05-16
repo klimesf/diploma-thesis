@@ -32,6 +32,15 @@ exports.register = (name, email) => {
     })
 }
 
+exports.createEmployee = (name, email) => {
+    return new Promise((resolve, reject) => {
+        const id = nextId++;
+        users[id] = {id: id, name: name, email: email, role: 'EMPLOYEE'}
+        console.log("+ Created employee with id " + id)
+        resolve(users[id])
+    })
+}
+
 exports.init = (registry) => {
     const BusinessContextWeaver = require('business-context-framework/dist/weaver/BusinessContextWeaver').default,
         BusinessOperationContext = require('business-context-framework/dist/weaver/BusinessOperationContext').default,
@@ -61,6 +70,14 @@ exports.init = (registry) => {
     const register = exports.register
     exports.register = (name, email) => {
         const context = new BusinessOperationContext('user.register')
+        context.setInputParameter('name', name)
+        context.setInputParameter('email', email)
+        return wrapCall(context, () => register(name, email))
+    }
+
+    const createEmployee = exports.createEmployee
+    exports.createEmployee = (name, email) => {
+        const context = new BusinessOperationContext('user.createEmployee')
         context.setInputParameter('name', name)
         context.setInputParameter('email', email)
         return wrapCall(context, () => register(name, email))

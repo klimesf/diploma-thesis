@@ -7,6 +7,8 @@ module.exports = app => {
         .get(userController.listUsers)
         .post(userController.register)
 
+    app.route('/employees')
+        .post(userController.createEmployee)
 
     app.route('/users/:userId')
         .get(userController.getUser)
