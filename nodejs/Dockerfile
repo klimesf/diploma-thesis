@@ -14,6 +14,7 @@ RUN cd ./business-context \
     && yarn install \
     && yarn link business-context-framework \
     && yarn link \
+    && npm run-script build \
     && cd ../business-context-xml \
     && yarn install \
     && yarn link business-context-framework \
