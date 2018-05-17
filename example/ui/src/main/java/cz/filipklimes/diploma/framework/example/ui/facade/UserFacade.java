@@ -43,4 +43,9 @@ public class UserFacade
         return userClient.register(name, email);
     }
 
+    public User createEmployee(final String name, final String email) throws CouldNotCreateUserException
+    {
+        return userClient.createEmployee(name, email);
+    }
+
 }

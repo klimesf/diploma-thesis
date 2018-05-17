@@ -23,6 +23,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/orders" th:if="${isUserLoggedIn && (user.role == 'ADMINISTRATOR' || user.role == 'EMPLOYEE')}" style="color: white;">Manage orders</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/create-employee" th:if="${isUserLoggedIn && (user.role == 'ADMINISTRATOR')}" style="color: white;">Create employee</a>
+                </li>
                 <!--<li class="nav-item"><a class="nav-link" href="#">Link</a></li>-->
                 <!--<li class="nav-item"><a class="nav-link disabled" href="#">Disabled</a></li>-->
             </ul>

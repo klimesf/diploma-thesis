@@ -128,4 +128,43 @@ public class UserClient
         }
     }
 
+    public User createEmployee(final String name, final String email) throws CouldNotCreateUserException
+    {
+        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+            HttpPost request = new HttpPost("http://user:5503/employees");
+            if (signedUser.isAnyoneSignedIn()) {
+                request.addHeader("X-User-Id", String.valueOf(signedUser.getCurrentlyLoggedUser().getId()));
+                request.addHeader("X-User-Role", signedUser.getCurrentlyLoggedUser().getRole());
+            }
+
+            String json = String.format(
+                "{\"name\":%s, \"email\":%s}",
+                ClientHelper.jsonField(name),
+                ClientHelper.jsonField(email)
+            );
+            request.setEntity(new StringEntity(json));
+            request.setHeader("Content-type", "application/json");
+
+            try (CloseableHttpResponse response = client.execute(request)) {
+                int statusCode = response.getStatusLine().getStatusCode();
+                log.debug(String.format("Created a new employee, HTTP status %d", statusCode));
+
+                ObjectMapper objectMapper = new ObjectMapper();
+                if (statusCode == HttpStatus.UNPROCESSABLE_ENTITY.value()) {
+                    ErrorResponse errorResponse = objectMapper.readValue(response.getEntity().getContent(), ErrorResponse.class);
+                    throw new CouldNotCreateUserException(errorResponse.getMessage());
+                }
+
+                if (statusCode != HttpStatus.OK.value()) {
+                    throw new RuntimeException(String.format("Could not create employee: status code %d", statusCode));
+                }
+
+                return objectMapper.readValue(response.getEntity().getContent(), User.class);
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException("Could not create employee", e);
+        }
+    }
+
 }

@@ -8,7 +8,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <title>Users | Example e-commerce system</title>
+    <title>Create employee | Example e-commerce system</title>
 </head>
 <body>
 <nav class="navbar navbar-dark bg-dark navbar-expand-lg" style="margin-bottom: 0;">
@@ -45,38 +45,22 @@
 
 <div class="jumbotron text-center">
     <h1>Example e-commerce system</h1>
-    <p>Users</p>
-</div>
-
-<div class="container" th:if="${successMessage != null || errorMessage != null || infoMessage != null}">
-    <div th:if="${successMessage != null}" th:text="${successMessage}" class="alert alert-success"></div>
-    <div th:if="${infoMessage != null}" th:text="${infoMessage}" class="alert alert-info"></div>
-    <div th:if="${errorMessage != null}" th:text="${errorMessage}" class="alert alert-danger"></div>
+    <p>Shopping cart</p>
 </div>
 
 <div class="container">
-    <h2>Users</h2>
-    <table class="table table-striped">
-        <thead class="thead-dart">
-        <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Role</th>
-            <th scope="col">Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="item : ${users}">
-            <!--/*@thymesVar id="item" type="cz.filipklimes.diploma.framework.example.ui.business.User"*/-->
-            <td th:text="${item.id}"></td>
-            <td th:text="${item.name}"></td>
-            <td th:text="${item.email}"></td>
-            <td th:text="${item.role}"></td>
-            <td><a th:href="@{/sign-in/{userId}(userId=${item.id})}">Sign in</a></td>
-        </tr>
-        </tbody>
-    </table>
+    <h2>Create employee</h2>
+    <form action="#" th:action="@{/create-employee}" th:object="${employeeForm}" method="post">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input class="form-control" id="name" type="text" th:field="*{name}"/>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input class="form-control" id="email" type="email" th:field="*{email}"/>
+        </div>
+        <input class="btn btn-primary" type="submit" value="Submit"/>
+    </form>
 </div>
 
 <!-- Optional JavaScript -->

@@ -95,6 +95,34 @@ public class UserController
         return new RedirectView("/");
     }
 
+    @GetMapping("/create-employee")
+    public String createEmployee(Model model)
+    {
+        // Header info
+        model.addAttribute("cartCount", orderClient.listCartItems().size());
+        model.addAttribute("isUserLoggedIn", signedUser.isAnyoneSignedIn());
+        model.addAttribute("user", signedUser.getCurrentlyLoggedUser());
+        model.addAttribute("employeeForm", new UserForm());
+
+        return "create-employee";
+    }
+
+    @PostMapping("/create-employee")
+    public RedirectView handleCreateEmployee(@ModelAttribute UserForm employeeForm, RedirectAttributes attributes)
+    {
+        try {
+            User user = userFacade.createEmployee(
+                Optional.of(employeeForm.getName()).filter(s -> !s.isEmpty()).orElse(null),
+                Optional.of(employeeForm.getEmail()).filter(s -> !s.isEmpty()).orElse(null)
+            );
+            attributes.addFlashAttribute("success", String.format("Registered new employee %s", user.getName()));
+
+        } catch (CouldNotCreateUserException e) {
+            attributes.addFlashAttribute("error", e.getMessage());
+        }
+        return new RedirectView("/");
+    }
+
     private static final class UserForm
     {
 
