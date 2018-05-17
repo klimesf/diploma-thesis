@@ -16,6 +16,14 @@ const LogicalAnd = require('business-context/dist/expression/logical/And').defau
 const LogicalEquals = require('business-context/dist/expression/logical/Equals').default
 const LogicalNegate = require('business-context/dist/expression/logical/Negate').default
 const LogicalOr = require('business-context/dist/expression/logical/Or').default
+const NumericAdd = require('business-context/dist/expression/numeric/Add').default
+const NumericDivide = require('business-context/dist/expression/numeric/Divide').default
+const NumericGreaterOrEqualTo = require('business-context/dist/expression/numeric/GreaterOrEqualTo').default
+const NumericGreaterThan = require('business-context/dist/expression/numeric/GreaterThan').default
+const NumericLessOrEqualTo = require('business-context/dist/expression/numeric/LessOrEqualTo').default
+const NumericLessThan = require('business-context/dist/expression/numeric/LessThan').default
+const NumericMultiply = require('business-context/dist/expression/numeric/Multiply').default
+const NumericSubtract = require('business-context/dist/expression/numeric/Subtract').default
 
 function convertExpressionType(type) {
     switch (type) {
@@ -67,6 +75,22 @@ function buildExpression(message) {
             return new LogicalNegate(buildExpression(message['arguments'][0]))
         case 'logical-or':
             return new LogicalOr(buildExpression(message['arguments'][0]), buildExpression(message['arguments'][1]))
+        case 'numeric-add':
+            return new NumericAdd(buildExpression(message['arguments'][0]), buildExpression(message['arguments'][1]))
+        case 'numeric-divide':
+            return new NumericDivide(buildExpression(message['arguments'][0]), buildExpression(message['arguments'][1]))
+        case 'numeric-gte':
+            return new NumericGreaterOrEqualTo(buildExpression(message['arguments'][0]), buildExpression(message['arguments'][1]))
+        case 'numeric-gt':
+            return new NumericGreaterThan(buildExpression(message['arguments'][0]), buildExpression(message['arguments'][1]))
+        case 'numeric-lte':
+            return new NumericLessOrEqualTo(buildExpression(message['arguments'][0]), buildExpression(message['arguments'][1]))
+        case 'numeric-lt':
+            return new NumericLessThan(buildExpression(message['arguments'][0]), buildExpression(message['arguments'][1]))
+        case 'numeric-multiply':
+            return new NumericMultiply(buildExpression(message['arguments'][0]), buildExpression(message['arguments'][1]))
+        case 'numeric-subtract':
+            return new NumericSubtract(buildExpression(message['arguments'][0]), buildExpression(message['arguments'][1]))
         default:
             throw "unknown expression " + message.name
     }
