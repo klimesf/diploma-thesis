@@ -71,8 +71,6 @@ describe('XmlReader', () => {
         context.identifier.name.should.equal("createEmployee")
 
         context.includedContexts.size.should.equal(2)
-
-        console.log(context.preconditions)
     })
     it('reads business context from xml files', () => {
         const contexts = new XmlReader([path.join(__dirname, 'business-contexts', 'test.xml')]).load()

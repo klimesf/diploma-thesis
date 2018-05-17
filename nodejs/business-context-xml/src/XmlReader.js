@@ -17,14 +17,14 @@ const LogicalAnd = require('business-context-framework/dist/expression/logical/A
 const LogicalEquals = require('business-context-framework/dist/expression/logical/Equals').default
 const LogicalNegate = require('business-context-framework/dist/expression/logical/Negate').default
 const LogicalOr = require('business-context-framework/dist/expression/logical/Or').default
-const NumericAdd = require('business-context/dist/expression/numeric/Add').default
-const NumericDivide = require('business-context/dist/expression/numeric/Divide').default
-const NumericGreaterOrEqualTo = require('business-context/dist/expression/numeric/GreaterOrEqualTo').default
-const NumericGreaterThan = require('business-context/dist/expression/numeric/GreaterThan').default
-const NumericLessOrEqualTo = require('business-context/dist/expression/numeric/LessOrEqualTo').default
-const NumericLessThan = require('business-context/dist/expression/numeric/LessThan').default
-const NumericMultiply = require('business-context/dist/expression/numeric/Multiply').default
-const NumericSubtract = require('business-context/dist/expression/numeric/Subtract').default
+const NumericAdd = require('business-context-framework/dist/expression/numeric/Add').default
+const NumericDivide = require('business-context-framework/dist/expression/numeric/Divide').default
+const NumericGreaterOrEqualTo = require('business-context-framework/dist/expression/numeric/GreaterOrEqualTo').default
+const NumericGreaterThan = require('business-context-framework/dist/expression/numeric/GreaterThan').default
+const NumericLessOrEqualTo = require('business-context-framework/dist/expression/numeric/LessOrEqualTo').default
+const NumericLessThan = require('business-context-framework/dist/expression/numeric/LessThan').default
+const NumericMultiply = require('business-context-framework/dist/expression/numeric/Multiply').default
+const NumericSubtract = require('business-context-framework/dist/expression/numeric/Subtract').default
 const DOMParser = require('xmldom').DOMParser
 
 export default class XmlReader {

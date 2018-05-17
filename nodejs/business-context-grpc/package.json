@@ -23,7 +23,6 @@
     "rimraf": "^2.6.2"
   },
   "dependencies": {
-    "business-context": "file:../business-context",
     "google-protobuf": "^3.5.0",
     "grpc": "^1.10.0",
     "grpc-promise": "^1.1.0"

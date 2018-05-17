@@ -1,29 +1,29 @@
 "use strict"
 
-const BusinessContext = require('business-context/dist/BusinessContext').default
-const BusinessContextIdentifier = require('business-context/dist/BusinessContextIdentifier').default
-const Precondition = require('business-context/dist/Precondition').default
-const PostCondition = require('business-context/dist/PostCondition').default
-const PostConditionType = require('business-context/dist/PostConditionType').default
-const IsNotNull = require('business-context/dist/expression/IsNotNull').default
-const IsNotBlank = require('business-context/dist/expression/IsNotBlank').default
-const ExpressionType = require('business-context/dist/expression/ExpressionType').default
-const VariableReference = require('business-context/dist/expression/VariableReference').default
-const FunctionCall = require('business-context/dist/expression/FunctionCall').default
-const ObjectPropertyReference = require('business-context/dist/expression/ObjectPropertyReference').default
-const Constant = require('business-context/dist/expression/Constant').default
-const LogicalAnd = require('business-context/dist/expression/logical/And').default
-const LogicalEquals = require('business-context/dist/expression/logical/Equals').default
-const LogicalNegate = require('business-context/dist/expression/logical/Negate').default
-const LogicalOr = require('business-context/dist/expression/logical/Or').default
-const NumericAdd = require('business-context/dist/expression/numeric/Add').default
-const NumericDivide = require('business-context/dist/expression/numeric/Divide').default
-const NumericGreaterOrEqualTo = require('business-context/dist/expression/numeric/GreaterOrEqualTo').default
-const NumericGreaterThan = require('business-context/dist/expression/numeric/GreaterThan').default
-const NumericLessOrEqualTo = require('business-context/dist/expression/numeric/LessOrEqualTo').default
-const NumericLessThan = require('business-context/dist/expression/numeric/LessThan').default
-const NumericMultiply = require('business-context/dist/expression/numeric/Multiply').default
-const NumericSubtract = require('business-context/dist/expression/numeric/Subtract').default
+const BusinessContext = require('business-context-framework/dist/BusinessContext').default
+const BusinessContextIdentifier = require('business-context-framework/dist/BusinessContextIdentifier').default
+const Precondition = require('business-context-framework/dist/Precondition').default
+const PostCondition = require('business-context-framework/dist/PostCondition').default
+const PostConditionType = require('business-context-framework/dist/PostConditionType').default
+const IsNotNull = require('business-context-framework/dist/expression/IsNotNull').default
+const IsNotBlank = require('business-context-framework/dist/expression/IsNotBlank').default
+const ExpressionType = require('business-context-framework/dist/expression/ExpressionType').default
+const VariableReference = require('business-context-framework/dist/expression/VariableReference').default
+const FunctionCall = require('business-context-framework/dist/expression/FunctionCall').default
+const ObjectPropertyReference = require('business-context-framework/dist/expression/ObjectPropertyReference').default
+const Constant = require('business-context-framework/dist/expression/Constant').default
+const LogicalAnd = require('business-context-framework/dist/expression/logical/And').default
+const LogicalEquals = require('business-context-framework/dist/expression/logical/Equals').default
+const LogicalNegate = require('business-context-framework/dist/expression/logical/Negate').default
+const LogicalOr = require('business-context-framework/dist/expression/logical/Or').default
+const NumericAdd = require('business-context-framework/dist/expression/numeric/Add').default
+const NumericDivide = require('business-context-framework/dist/expression/numeric/Divide').default
+const NumericGreaterOrEqualTo = require('business-context-framework/dist/expression/numeric/GreaterOrEqualTo').default
+const NumericGreaterThan = require('business-context-framework/dist/expression/numeric/GreaterThan').default
+const NumericLessOrEqualTo = require('business-context-framework/dist/expression/numeric/LessOrEqualTo').default
+const NumericLessThan = require('business-context-framework/dist/expression/numeric/LessThan').default
+const NumericMultiply = require('business-context-framework/dist/expression/numeric/Multiply').default
+const NumericSubtract = require('business-context-framework/dist/expression/numeric/Subtract').default
 
 function convertExpressionType(type) {
     switch (type) {

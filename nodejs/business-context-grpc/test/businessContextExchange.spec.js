@@ -5,16 +5,16 @@ const server = require('./../dist/server')
 
 const chai = require('chai')
 
-const BusinessContextRegistry = require('business-context/dist/BusinessContextRegistry').default
-const BusinessContext = require('business-context/dist/BusinessContext').default
-const BusinessContextIdentifier = require('business-context/dist/BusinessContextIdentifier').default
-const Precondition = require('business-context/dist/Precondition').default
-const PostCondition = require('business-context/dist/PostCondition').default
-const PostConditionType = require('business-context/dist/PostConditionType').default
-const IsNotNull = require('business-context/dist/expression/IsNotNull').default
-const ExpressionType = require('business-context/dist/expression/ExpressionType').default
-const VariableReference = require('business-context/dist/expression/VariableReference').default
-const Constant = require('business-context/dist/expression/Constant').default
+const BusinessContextRegistry = require('business-context-framework/dist/BusinessContextRegistry').default
+const BusinessContext = require('business-context-framework/dist/BusinessContext').default
+const BusinessContextIdentifier = require('business-context-framework/dist/BusinessContextIdentifier').default
+const Precondition = require('business-context-framework/dist/Precondition').default
+const PostCondition = require('business-context-framework/dist/PostCondition').default
+const PostConditionType = require('business-context-framework/dist/PostConditionType').default
+const IsNotNull = require('business-context-framework/dist/expression/IsNotNull').default
+const ExpressionType = require('business-context-framework/dist/expression/ExpressionType').default
+const VariableReference = require('business-context-framework/dist/expression/VariableReference').default
+const Constant = require('business-context-framework/dist/expression/Constant').default
 
 chai.should()
 
