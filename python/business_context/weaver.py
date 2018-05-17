@@ -64,3 +64,9 @@ class Weaver:
 class BusinessRulesCheckFailed(BaseException):
     def __init__(self, failed: Set[Precondition]):
         self.failed = failed
+
+    def get_message(self):
+        names = []
+        for fail in self.failed:
+            names.append(fail.name)
+        return "; ".join(names)

@@ -12,6 +12,9 @@ public class Product
     private Integer sellPrice;
 
     @Getter
+    private Integer costPrice;
+
+    @Getter
     private String name;
 
     @Getter
@@ -21,10 +24,11 @@ public class Product
     {
     }
 
-    public Product(final Integer id, final Integer sellPrice, final String name, final String description)
+    public Product(final Integer id, final Integer sellPrice, final Integer costPrice, final String name, final String description)
     {
         this.id = id;
         this.sellPrice = sellPrice;
+        this.costPrice = costPrice;
         this.name = name;
         this.description = description;
     }

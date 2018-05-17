@@ -60,6 +60,7 @@
             <p th:text="${#numbers.formatDecimal(product.sellPrice, 0, 'COMMA', 2, 'POINT')} + ' €'"></p>
             <p th:text="${product.description}"></p>
             <a th:href="@{/add-to-cart/{productId}(productId=${product.id})}">Add to cart</a>
+            <a th:href="@{/change-price/{productId}(productId=${product.id})}" th:if="${isUserLoggedIn && (user.role == 'ADMINISTRATOR')}">Change price</a>
         </div>
     </div>
 </div>

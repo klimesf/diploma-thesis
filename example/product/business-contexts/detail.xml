@@ -5,7 +5,7 @@
     <postConditions>
         <postCondition name="filterProductBuyingPrice">
             <type>FILTER_OBJECT_FIELD</type>
-            <referenceName>buyingPrice</referenceName>
+            <referenceName>costPrice</referenceName>
             <condition>
                 <constant type="bool" value="true" />
             </condition>

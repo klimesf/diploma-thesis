@@ -8,7 +8,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <title>Create employee | Example e-commerce system</title>
+    <title>Change price | Example e-commerce system</title>
 </head>
 <body>
 <nav class="navbar navbar-dark bg-dark navbar-expand-lg" style="margin-bottom: 0;">
@@ -45,19 +45,19 @@
 
 <div class="jumbotron text-center">
     <h1>Example e-commerce system</h1>
-    <p>Employee management</p>
+    <p>Product management</p>
 </div>
 
 <div class="container">
-    <h2>Create employee</h2>
-    <form action="#" th:action="@{/create-employee}" th:object="${employeeForm}" method="post">
+    <h2>Change product price</h2>
+    <form action="#" th:action="@{/change-price/{productId}(productId=${productId})}" th:object="${changePriceForm}" method="post">
         <div class="form-group">
-            <label for="name">Name:</label>
-            <input class="form-control" id="name" type="text" th:field="*{name}"/>
+            <label for="costPrice">Cost price:</label>
+            <input class="form-control" id="costPrice" type="number" th:field="*{costPrice}"/>
         </div>
         <div class="form-group">
-            <label for="email">Email:</label>
-            <input class="form-control" id="email" type="email" th:field="*{email}"/>
+            <label for="sellPrice">Sell price:</label>
+            <input class="form-control" id="sellPrice" type="number" th:field="*{sellPrice}"/>
         </div>
         <input class="btn btn-primary" type="submit" value="Submit"/>
     </form>

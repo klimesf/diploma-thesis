@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, abort
+from flask import Flask, jsonify, abort, request
 from typing import Optional, List
 from business_context.registry import *
 from business_context.weaver import *
@@ -36,6 +36,12 @@ class Product:
         self.hidden = hidden
 
 
+class User:
+    def __init__(self, id, role):
+        self.id = id
+        self.role = role
+
+
 class ProductRepository:
     def __init__(self):
         self.products = {
@@ -55,6 +61,14 @@ class ProductRepository:
     def get(self, id: int) -> Optional[Product]:
         if id not in self.products:
             return None
+        return self.products[id]
+
+    @business_operation("product.changePrice", weaver)
+    def change_price(self, id, costPrice, sellPrice, user) -> Optional[Product]:
+        if id not in self.products:
+            return None
+        self.products[id].costPrice = int(costPrice)
+        self.products[id].sellPrice = int(sellPrice)
         return self.products[id]
 
 
@@ -80,10 +94,38 @@ def get_product(id: int):
     if product is None: abort(404)
     return jsonify({
         'id': product.id,
+        'costPrice': product.costPrice,
         'sellPrice': product.sellPrice,
         'name': product.name,
         'description': product.description
     })
+
+
+@app.route("/<int:id>/price", methods=['POST'])
+def change_price(id: int):
+    content = request.get_json()
+    product = product_repository.get(id)
+    if product is None: abort(404)
+    try:
+        product = product_repository.change_price(
+            id,
+            content['costPrice'],
+            content['sellPrice'],
+            User(request.headers.get('X-User-Id'), request.headers.get('X-User-Role'))
+        )
+        print("Changed price of product " + str(id))
+        return jsonify({
+            'id': product.id,
+            'costPrice': product.costPrice,
+            'sellPrice': product.sellPrice,
+            'name': product.name,
+            'description': product.description
+        })
+    except BusinessRulesCheckFailed as e:
+        print("Could not change price of product: " + e.get_message())
+        return jsonify({
+            'message': e.get_message()
+        }), 422
 
 
 if __name__ == '__main__':

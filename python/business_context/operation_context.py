@@ -1,3 +1,5 @@
+import inspect, itertools
+
 class OperationContext:
     def __init__(self, name: str):
         self.name = name
@@ -46,6 +48,10 @@ def business_operation(name, weaver):
     def wrapper(func):
         def func_wrapper(*args, **kwargs):
             operation_context = OperationContext(name)
+            args_names = inspect.getfullargspec(func)[0]
+            args_dict = dict(zip(args_names, args))
+            for key, value in args_dict.items():
+                operation_context.set_input_parameter(key, value)
             weaver.evaluate_preconditions(operation_context)
             output = func(*args, **kwargs)
             operation_context.set_output(output)

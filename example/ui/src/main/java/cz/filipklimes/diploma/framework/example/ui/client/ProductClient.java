@@ -2,10 +2,14 @@ package cz.filipklimes.diploma.framework.example.ui.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.filipklimes.diploma.framework.example.ui.business.Product;
+import cz.filipklimes.diploma.framework.example.ui.controller.response.ErrorResponse;
+import cz.filipklimes.diploma.framework.example.ui.exception.CouldNotChangePriceException;
 import cz.filipklimes.diploma.framework.example.ui.facade.SignedUser;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
@@ -85,4 +89,42 @@ public class ProductClient
         }
     }
 
+    public Product changePrice(final Integer productId, final String costPrice, final String sellPrice) throws CouldNotChangePriceException
+    {
+        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+            HttpPost request = new HttpPost(String.format("http://product:5502/%d/price", productId));
+            if (signedUser.isAnyoneSignedIn()) {
+                request.addHeader("X-User-Id", String.valueOf(signedUser.getCurrentlyLoggedUser().getId()));
+                request.addHeader("X-User-Role", signedUser.getCurrentlyLoggedUser().getRole());
+            }
+
+            String json = String.format(
+                "{\"costPrice\":%s, \"sellPrice\":%s}",
+                ClientHelper.jsonField(costPrice),
+                ClientHelper.jsonField(sellPrice)
+            );
+            request.setEntity(new StringEntity(json));
+            request.setHeader("Content-type", "application/json");
+
+            try (CloseableHttpResponse response = client.execute(request)) {
+                int statusCode = response.getStatusLine().getStatusCode();
+                log.debug(String.format("Changed price, HTTP status %d", statusCode));
+
+                ObjectMapper objectMapper = new ObjectMapper();
+                if (statusCode == HttpStatus.UNPROCESSABLE_ENTITY.value()) {
+                    ErrorResponse errorResponse = objectMapper.readValue(response.getEntity().getContent(), ErrorResponse.class);
+                    throw new CouldNotChangePriceException(errorResponse.getMessage());
+                }
+
+                if (statusCode != HttpStatus.OK.value()) {
+                    throw new RuntimeException(String.format("Could not change price: status code %d", statusCode));
+                }
+
+                return objectMapper.readValue(response.getEntity().getContent(), Product.class);
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException("Could not change price", e);
+        }
+    }
 }
