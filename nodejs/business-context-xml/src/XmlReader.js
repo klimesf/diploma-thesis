@@ -66,7 +66,7 @@ export default class XmlReader {
             if (node.nodeType !== 1) continue // skip text
             result.add(new Precondition(
                 node.getAttribute("name"),
-                this.extractExpression(node.getElementsByTagName("condition"))
+                this.extractExpression(this.findChildrenWithTagName(node, "condition"))
             ))
         }
 
@@ -84,7 +84,7 @@ export default class XmlReader {
                 node.getAttribute("name"),
                 PostConditionType[node.getAttribute("type")],
                 node.getAttribute("referenceName"),
-                this.extractExpression(node.getElementsByTagName("condition"))
+                this.extractExpression(this.findChildrenWithTagName(node, "condition"))
             ))
         }
 
@@ -92,12 +92,26 @@ export default class XmlReader {
     }
 
     static extractExpression(parent) {
-        const conditionElements = parent[0].childNodes
+        const conditionElements = parent.childNodes
         for (let key in conditionElements) {
             if (!conditionElements.hasOwnProperty(key)) continue
             let node = conditionElements[key]
             if (node.nodeType !== 1) continue // skip text
             return this.buildExpression(conditionElements[key])
+        }
+
+        return null
+    }
+
+    static findChildrenWithTagName(parent, tagName) {
+        const children = parent.childNodes
+        for (let key in children) {
+            if (!children.hasOwnProperty(key)) continue
+            let node = children[key]
+            if (node.nodeType !== 1) continue // skip text
+            if (node.tagName !== tagName) continue
+
+            return node
         }
 
         return null
@@ -110,12 +124,12 @@ export default class XmlReader {
                 type = this.convertExpressionType(element.getAttribute('type'))
                 return new Constant(type.deserialize(element.getAttribute('value')), type)
             case 'isNotNull':
-                return new IsNotNull(this.extractExpression(element.getElementsByTagName("argument")))
+                return new IsNotNull(this.extractExpression(this.findChildrenWithTagName(element, 'argument')))
             case 'isNotBlank':
-                return new IsNotBlank(this.extractExpression(element.getElementsByTagName("argument")))
+                return new IsNotBlank(this.extractExpression(this.findChildrenWithTagName(element, 'argument')))
             case 'functionCall':
                 type = this.convertExpressionType(element.getAttribute('type'))
-                const args = element.getElementsByTagName("argument")
+                const args = this.findChildrenWithTagName(element, "argument")
                 const argsExpressions = []
                 for (let key in args) {
                     if (!args.hasOwnProperty(key)) continue
@@ -134,20 +148,20 @@ export default class XmlReader {
                 return new VariableReference(element.getAttribute('name'), type)
             case 'logicalAnd':
                 return new LogicalAnd(
-                    this.extractExpression(element.getElementsByTagName('left')),
-                    this.extractExpression(element.getElementsByTagName('right'))
+                    this.extractExpression(this.findChildrenWithTagName(element, 'left')),
+                    this.extractExpression(this.findChildrenWithTagName(element, 'right'))
                 )
             case 'logicalEquals':
                 return new LogicalEquals(
-                    this.extractExpression(element.getElementsByTagName('left')),
-                    this.extractExpression(element.getElementsByTagName('right'))
+                    this.extractExpression(this.findChildrenWithTagName(element, 'left')),
+                    this.extractExpression(this.findChildrenWithTagName(element, 'right'))
                 )
             case 'logicalNegate':
-                return new LogicalNegate(this.extractExpression(element.getElementsByTagName('argument')))
+                return new LogicalNegate(this.extractExpression(this.findChildrenWithTagName(element, 'argument')))
             case 'logicalOr':
                 return new LogicalOr(
-                    this.extractExpression(element.getElementsByTagName('left')),
-                    this.extractExpression(element.getElementsByTagName('right'))
+                    this.extractExpression(this.findChildrenWithTagName(element, 'left')),
+                    this.extractExpression(this.findChildrenWithTagName(element, 'right'))
                 )
             default:
                 throw "unknown expression " + element.tagName

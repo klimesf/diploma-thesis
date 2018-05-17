@@ -56,6 +56,14 @@ def get_non_text(nodelist):
     return nodes
 
 
+def get_child_with_name(el, name):
+    for node in el.childNodes:
+        if node.nodeType == node.TEXT_NODE: continue
+        if node.tagName != name: continue
+        return node
+    return None
+
+
 def build_expression(el):
     matcher = {
         'constant': lambda el: Constant(value=el.attributes['value'].value,
@@ -63,17 +71,17 @@ def build_expression(el):
         'functionCall': lambda el: FunctionCall(method_name=el.attributes['methodName'].value,
                                                 type=convert_expression_type(el.attributes['type'].value),
                                                 arguments=list(map(build_expression, get_non_text(el.childNodes)))),
-        'isNotNull': lambda el: IsNotNull(argument=build_expression(get_non_text(get_non_text(el.getElementsByTagName('argument'))[0].childNodes)[0])),
-        'isNotBlank': lambda el: IsNotBlank(argument=build_expression(get_non_text(get_non_text(el.getElementsByTagName('argument'))[0].childNodes)[0])),
+        'isNotNull': lambda el: IsNotNull(argument=build_expression(get_non_text(get_non_text(get_child_with_name(el, 'argument').childNodes))[0])),
+        'isNotBlank': lambda el: IsNotBlank(argument=build_expression(get_non_text(get_non_text(get_child_with_name(el, 'argument').childNodes))[0])),
         'objectPropertyReference': lambda el: ObjectPropertyReference(object_name=el.attributes['objectName'].value,
                                                                       property_name=el.attributes['propertyName'].value,
                                                                       type=convert_expression_type(el.attributes['type'].value)),
         'variableReference': lambda el: VariableReference(name=el.attributes['name'].value,
                                                           type=convert_expression_type(el.attributes['type'].value)),
-        'logicalAnd': lambda el: LogicalAnd(left=build_expression(get_non_text(el.getElementsByTagName('left')[0].childNodes)[0]), right=build_expression(get_non_text(el.getElementsByTagName('right')[0].childNodes)[0])),
-        'logicalEquals': lambda el: LogicalEquals(left=build_expression(get_non_text(el.getElementsByTagName('left')[0].childNodes)[0]), right=build_expression(get_non_text(el.getElementsByTagName('right')[0].childNodes)[0])),
-        'logicalNegate': lambda el: LogicalNegate(argument=build_expression(get_non_text(el.getElementsByTagName('argument')[0].childNodes)[0])),
-        'logicalOr': lambda el: LogicalOr(left=build_expression(get_non_text(el.getElementsByTagName('left')[0].childNodes)[0]), right=build_expression(get_non_text(el.getElementsByTagName('right')[0].childNodes)[0])),
+        'logicalAnd': lambda el: LogicalAnd(left=build_expression(get_non_text(get_child_with_name(el, 'left').childNodes)[0]), right=build_expression(get_non_text(get_child_with_name(el, 'right').childNodes)[0])),
+        'logicalEquals': lambda el: LogicalEquals(left=build_expression(get_non_text(get_child_with_name(el, 'left').childNodes)[0]), right=build_expression(get_non_text(get_child_with_name(el, 'right').childNodes)[0])),
+        'logicalNegate': lambda el: LogicalNegate(argument=build_expression(get_non_text(get_child_with_name(el, 'argument').childNodes)[0])),
+        'logicalOr': lambda el: LogicalOr(left=build_expression(get_non_text(get_child_with_name(el, 'left').childNodes)[0]), right=build_expression(get_non_text(get_child_with_name(el, 'right').childNodes)[0])),
     }
     expression_name = el.tagName
     if expression_name not in matcher:
@@ -86,7 +94,7 @@ def load_preconditions(root):
     for precondition in root.getElementsByTagName('precondition'):
         preconditions.add(Precondition(
             name=precondition.attributes['name'].value,
-            condition=build_expression(get_non_text(precondition.getElementsByTagName('condition')[0].childNodes)[0])
+            condition=build_expression(get_non_text(get_child_with_name(precondition, 'condition').childNodes)[0])
         ))
     return preconditions
 

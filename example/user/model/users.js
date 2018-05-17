@@ -47,20 +47,20 @@ exports.init = (registry) => {
         weaver = new BusinessContextWeaver(registry)
 
     const wrapCall = (context, func) => {
-        return new Promise(async (resolve, reject) => {
+        return new Promise((resolve, reject) => {
             try {
-                await weaver.evaluatePreconditions(context)
+                weaver.evaluatePreconditions(context)
                 console.log("# Evaluated preconditions of " + context.name)
                 resolve()
             } catch (error) {
-                console.error(error.getMessage())
+                console.log("# Preconditions of " + context.name + " failed")
                 reject(error.getMessage())
             }
         })
             .then(_ => func())
-            .then(async result => {
+            .then(result => {
                 context.setOutput(result)
-                await weaver.applyPostConditions(context)
+                weaver.applyPostConditions(context)
                 console.log("# Applied post-conditions of " + context.name)
                 return new Promise((resolve, reject) => resolve(context.getOutput()))
             })
@@ -76,11 +76,12 @@ exports.init = (registry) => {
     }
 
     const createEmployee = exports.createEmployee
-    exports.createEmployee = (name, email) => {
+    exports.createEmployee = (name, email, user) => {
         const context = new BusinessOperationContext('user.createEmployee')
         context.setInputParameter('name', name)
         context.setInputParameter('email', email)
-        return wrapCall(context, () => register(name, email))
+        context.setInputParameter('user', user)
+        return wrapCall(context, () => createEmployee(name, email))
     }
 
     const listUsers = exports.listUsers

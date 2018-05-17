@@ -24,7 +24,9 @@ exports.register = (req, res) => {
 }
 
 exports.createEmployee = (req, res) => {
-    users.createEmployee(req.body.name, req.body.email)
+    const userId = req.get('X-User-Id') || ""
+    const userRole = req.get('X-User-Role') || ""
+    users.createEmployee(req.body.name, req.body.email, {id: userId, role: userRole.toUpperCase()})
         .then(user => res.json(user))
         .catch(err => {
             res.status(422).json({message: err})

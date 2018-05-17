@@ -25,14 +25,31 @@ const xml = `
     <includedContext prefix="auth" name="loggedIn" />
   </includedContexts>
   <preconditions>
-    <precondition name="true">
-      <condition>
-        <isNotNull>
-          <argument>
-            <variableReference name="email" type="string" />
-          </argument>
-        </isNotNull>
-      </condition>
+    <precondition name="Signed user must be an employee">
+        <condition>
+            <logicalOr>
+                <left>
+                    <logicalEquals>
+                        <left>
+                            <objectPropertyReference propertyName="role" objectName="user" type="string" />
+                        </left>
+                        <right>
+                            <constant type="string" value="EMPLOYEE" />
+                        </right>
+                    </logicalEquals>
+                </left>
+                <right>
+                    <logicalEquals>
+                        <left>
+                            <objectPropertyReference propertyName="role" objectName="user" type="string" />
+                        </left>
+                        <right>
+                            <constant type="string" value="ADMINISTRATOR" />
+                        </right>
+                    </logicalEquals>
+                </right>
+            </logicalOr>
+        </condition>
     </precondition>
   </preconditions>
   <postConditions>
@@ -54,6 +71,8 @@ describe('XmlReader', () => {
         context.identifier.name.should.equal("createEmployee")
 
         context.includedContexts.size.should.equal(2)
+
+        console.log(context.preconditions)
     })
     it('reads business context from xml files', () => {
         const contexts = new XmlReader([path.join(__dirname, 'business-contexts', 'test.xml')]).load()

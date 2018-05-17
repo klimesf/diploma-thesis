@@ -2,16 +2,30 @@
 <businessContext prefix="user" name="createEmployee">
     <includedContexts/>
     <preconditions>
-        <precondition name="Cannot use hidden product">
+        <precondition name="Signed user must be an employee">
             <condition>
-                <logicalEquals>
+                <logicalOr>
                     <left>
-                        <objectPropertyReference propertyName="hidden" objectName="product" type="bool"/>
+                        <logicalEquals>
+                            <left>
+                                <objectPropertyReference propertyName="role" objectName="user" type="string"/>
+                            </left>
+                            <right>
+                                <constant type="string" value="EMPLOYEE"/>
+                            </right>
+                        </logicalEquals>
                     </left>
                     <right>
-                        <constant type="bool" value="false"/>
+                        <logicalEquals>
+                            <left>
+                                <objectPropertyReference propertyName="role" objectName="user" type="string"/>
+                            </left>
+                            <right>
+                                <constant type="string" value="ADMINISTRATOR"/>
+                            </right>
+                        </logicalEquals>
                     </right>
-                </logicalEquals>
+                </logicalOr>
             </condition>
         </precondition>
     </preconditions>
