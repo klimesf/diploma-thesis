@@ -1,7 +1,6 @@
 from typing import List, Dict
-from business_context.expression import Expression, Constant, ExpressionType, FunctionCall, IsNotNull, IsNotBlank, ObjectPropertyReference, VariableReference, LogicalAnd, LogicalOr, LogicalEquals, LogicalNegate
+from business_context.expression import *
 from business_context.context import BusinessContext
-from business_context.expression import Expression
 from business_context.identifier import Identifier
 from business_context.rule import Precondition, PostCondition, PostConditionType
 from business_context_grpc.business_context_pb2 import BusinessContextMessage, PreconditionMessage, PostConditionMessage, ExpressionMessage, PostConditionTypeMessage, ExpressionPropertyMessage
@@ -46,6 +45,14 @@ def build_expression(message: ExpressionMessage) -> Expression:
         'logical-equals': lambda m: LogicalEquals(left=build_expression(m.arguments[0]), right=build_expression(m.arguments[1])),
         'logical-negate': lambda m: LogicalNegate(argument=build_expression(m.arguments[0])),
         'logical-or': lambda m: LogicalOr(left=build_expression(m.arguments[0]), right=build_expression(m.arguments[1])),
+        'numeric-add': lambda m: NumericAdd(left=build_expression(m.arguments[0]), right=build_expression(m.arguments[1])),
+        'numeric-divide': lambda m: NumericDivide(left=build_expression(m.arguments[0]), right=build_expression(m.arguments[1])),
+        'numeric-gte': lambda m: NumericGreaterOrEqualTo(left=build_expression(m.arguments[0]), right=build_expression(m.arguments[1])),
+        'numeric-gt': lambda m: NumericGreaterThan(left=build_expression(m.arguments[0]), right=build_expression(m.arguments[1])),
+        'numeric-lte': lambda m: NumericLessOrEqualTo(left=build_expression(m.arguments[0]), right=build_expression(m.arguments[1])),
+        'numeric-lt': lambda m: NumericLessThan(left=build_expression(m.arguments[0]), right=build_expression(m.arguments[1])),
+        'numeric-multiply': lambda m: NumericMultiply(left=build_expression(m.arguments[0]), right=build_expression(m.arguments[1])),
+        'numeric-subtract': lambda m: NumericSubtract(left=build_expression(m.arguments[0]), right=build_expression(m.arguments[1])),
     }
     if message.name not in matcher:
         raise Exception('Unknown Expression ' + message.name)

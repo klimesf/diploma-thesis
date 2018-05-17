@@ -250,3 +250,171 @@ class LogicalOr(Expression):
 
     def __str__(self) -> str:
         return self.left.__str__() + ' or ' + self.right.__str__()
+
+
+class NumericAdd(Expression):
+    def __init__(self, left: Expression, right: Expression):
+        self.left = left
+        self.right = right
+
+    def interpret(self, context: OperationContext):
+        return self.left.interpret(context) + self.right.interpret(context)
+
+    def get_name(self):
+        return 'numeric-add'
+
+    def get_arguments(self) -> List[Expression]:
+        return [self.left, self.right]
+
+    def get_properties(self) -> Dict[str, str]:
+        return {}
+
+    def __str__(self) -> str:
+        return self.left.__str__() + ' + ' + self.right.__str__()
+
+
+class NumericDivide(Expression):
+    def __init__(self, left: Expression, right: Expression):
+        self.left = left
+        self.right = right
+
+    def interpret(self, context: OperationContext):
+        return self.left.interpret(context) / self.right.interpret(context)
+
+    def get_name(self):
+        return 'numeric-divide'
+
+    def get_arguments(self) -> List[Expression]:
+        return [self.left, self.right]
+
+    def get_properties(self) -> Dict[str, str]:
+        return {}
+
+    def __str__(self) -> str:
+        return self.left.__str__() + ' / ' + self.right.__str__()
+
+
+class NumericGreaterOrEqualTo(Expression):
+    def __init__(self, left: Expression, right: Expression):
+        self.left = left
+        self.right = right
+
+    def interpret(self, context: OperationContext):
+        return self.left.interpret(context) >= self.right.interpret(context)
+
+    def get_name(self):
+        return 'numeric-gte'
+
+    def get_arguments(self) -> List[Expression]:
+        return [self.left, self.right]
+
+    def get_properties(self) -> Dict[str, str]:
+        return {}
+
+    def __str__(self) -> str:
+        return self.left.__str__() + ' >= ' + self.right.__str__()
+
+
+class NumericGreaterThan(Expression):
+    def __init__(self, left: Expression, right: Expression):
+        self.left = left
+        self.right = right
+
+    def interpret(self, context: OperationContext):
+        return self.left.interpret(context) > self.right.interpret(context)
+
+    def get_name(self):
+        return 'numeric-gt'
+
+    def get_arguments(self) -> List[Expression]:
+        return [self.left, self.right]
+
+    def get_properties(self) -> Dict[str, str]:
+        return {}
+
+    def __str__(self) -> str:
+        return self.left.__str__() + ' > ' + self.right.__str__()
+
+
+class NumericLessOrEqualTo(Expression):
+    def __init__(self, left: Expression, right: Expression):
+        self.left = left
+        self.right = right
+
+    def interpret(self, context: OperationContext):
+        return self.left.interpret(context) <= self.right.interpret(context)
+
+    def get_name(self):
+        return 'numeric-lte'
+
+    def get_arguments(self) -> List[Expression]:
+        return [self.left, self.right]
+
+    def get_properties(self) -> Dict[str, str]:
+        return {}
+
+    def __str__(self) -> str:
+        return self.left.__str__() + ' <= ' + self.right.__str__()
+
+
+class NumericLessThan(Expression):
+    def __init__(self, left: Expression, right: Expression):
+        self.left = left
+        self.right = right
+
+    def interpret(self, context: OperationContext):
+        return self.left.interpret(context) < self.right.interpret(context)
+
+    def get_name(self):
+        return 'numeric-lt'
+
+    def get_arguments(self) -> List[Expression]:
+        return [self.left, self.right]
+
+    def get_properties(self) -> Dict[str, str]:
+        return {}
+
+    def __str__(self) -> str:
+        return self.left.__str__() + ' < ' + self.right.__str__()
+
+
+class NumericMultiply(Expression):
+    def __init__(self, left: Expression, right: Expression):
+        self.left = left
+        self.right = right
+
+    def interpret(self, context: OperationContext):
+        return self.left.interpret(context) * self.right.interpret(context)
+
+    def get_name(self):
+        return 'numeric-multiply'
+
+    def get_arguments(self) -> List[Expression]:
+        return [self.left, self.right]
+
+    def get_properties(self) -> Dict[str, str]:
+        return {}
+
+    def __str__(self) -> str:
+        return self.left.__str__() + ' * ' + self.right.__str__()
+
+
+class NumericSubtract(Expression):
+    def __init__(self, left: Expression, right: Expression):
+        self.left = left
+        self.right = right
+
+    def interpret(self, context: OperationContext):
+        return self.left.interpret(context) - self.right.interpret(context)
+
+    def get_name(self):
+        return 'numeric-subtract'
+
+    def get_arguments(self) -> List[Expression]:
+        return [self.left, self.right]
+
+    def get_properties(self) -> Dict[str, str]:
+        return {}
+
+    def __str__(self) -> str:
+        return self.left.__str__() + ' - ' + self.right.__str__()

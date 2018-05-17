@@ -3,7 +3,7 @@ from typing import Set
 from xml.dom.minidom import parseString
 from business_context.context import BusinessContext
 from business_context.rule import Precondition, PostCondition, PostConditionType
-from business_context.expression import Constant, ExpressionType, IsNotNull, VariableReference, LogicalAnd, FunctionCall, IsNotBlank, ObjectPropertyReference, LogicalEquals, LogicalNegate, LogicalOr
+from business_context.expression import *
 from business_context.identifier import Identifier
 from business_context.registry import LocalBusinessContextLoader
 
@@ -82,6 +82,14 @@ def build_expression(el):
         'logicalEquals': lambda el: LogicalEquals(left=build_expression(get_non_text(get_child_with_name(el, 'left').childNodes)[0]), right=build_expression(get_non_text(get_child_with_name(el, 'right').childNodes)[0])),
         'logicalNegate': lambda el: LogicalNegate(argument=build_expression(get_non_text(get_child_with_name(el, 'argument').childNodes)[0])),
         'logicalOr': lambda el: LogicalOr(left=build_expression(get_non_text(get_child_with_name(el, 'left').childNodes)[0]), right=build_expression(get_non_text(get_child_with_name(el, 'right').childNodes)[0])),
+        'numericAdd': lambda el: NumericAdd(left=build_expression(get_non_text(get_child_with_name(el, 'left').childNodes)[0]), right=build_expression(get_non_text(get_child_with_name(el, 'right').childNodes)[0])),
+        'numericDivide': lambda el: NumericDivide(left=build_expression(get_non_text(get_child_with_name(el, 'left').childNodes)[0]), right=build_expression(get_non_text(get_child_with_name(el, 'right').childNodes)[0])),
+        'numericGreaterOrEqualTo': lambda el: NumericGreaterOrEqualTo(left=build_expression(get_non_text(get_child_with_name(el, 'left').childNodes)[0]), right=build_expression(get_non_text(get_child_with_name(el, 'right').childNodes)[0])),
+        'numericGreaterThan': lambda el: NumericGreaterThan(left=build_expression(get_non_text(get_child_with_name(el, 'left').childNodes)[0]), right=build_expression(get_non_text(get_child_with_name(el, 'right').childNodes)[0])),
+        'numericLessOrEqualTo': lambda el: NumericLessOrEqualTo(left=build_expression(get_non_text(get_child_with_name(el, 'left').childNodes)[0]), right=build_expression(get_non_text(get_child_with_name(el, 'right').childNodes)[0])),
+        'numericLessThan': lambda el: NumericLessThan(left=build_expression(get_non_text(get_child_with_name(el, 'left').childNodes)[0]), right=build_expression(get_non_text(get_child_with_name(el, 'right').childNodes)[0])),
+        'numericMultiply': lambda el: NumericMultiply(left=build_expression(get_non_text(get_child_with_name(el, 'left').childNodes)[0]), right=build_expression(get_non_text(get_child_with_name(el, 'right').childNodes)[0])),
+        'numericSubtract': lambda el: NumericSubtract(left=build_expression(get_non_text(get_child_with_name(el, 'left').childNodes)[0]), right=build_expression(get_non_text(get_child_with_name(el, 'right').childNodes)[0])),
     }
     expression_name = el.tagName
     if expression_name not in matcher:

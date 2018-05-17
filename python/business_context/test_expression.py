@@ -103,3 +103,75 @@ class LogicalOrTest(unittest.TestCase):
         self.assertTrue(expr.interpret(context))
         expr = LogicalOr(Constant(value=False, type=ExpressionType.BOOL), Constant(value=False, type=ExpressionType.BOOL))
         self.assertFalse(expr.interpret(context))
+
+
+class NumericAddTest(unittest.TestCase):
+    def test(self):
+        context = OperationContext('user.create')
+        expr = NumericAdd(Constant(value=1, type=ExpressionType.NUMBER), Constant(value=1, type=ExpressionType.NUMBER))
+        self.assertEquals(2, expr.interpret(context))
+
+
+class NumericMultiplyTest(unittest.TestCase):
+    def test(self):
+        context = OperationContext('user.create')
+        expr = NumericMultiply(Constant(value=2, type=ExpressionType.NUMBER), Constant(value=3, type=ExpressionType.NUMBER))
+        self.assertEquals(6, expr.interpret(context))
+
+
+class NumericGreaterOrEqualToTest(unittest.TestCase):
+    def test(self):
+        context = OperationContext('user.create')
+        expr = NumericGreaterOrEqualTo(Constant(value=6, type=ExpressionType.NUMBER), Constant(value=3, type=ExpressionType.NUMBER))
+        self.assertTrue(expr.interpret(context))
+        expr = NumericGreaterOrEqualTo(Constant(value=6, type=ExpressionType.NUMBER), Constant(value=6, type=ExpressionType.NUMBER))
+        self.assertTrue(expr.interpret(context))
+        expr = NumericGreaterOrEqualTo(Constant(value=3, type=ExpressionType.NUMBER), Constant(value=6, type=ExpressionType.NUMBER))
+        self.assertFalse(expr.interpret(context))
+
+
+class NumericGreaterThanTest(unittest.TestCase):
+    def test(self):
+        context = OperationContext('user.create')
+        expr = NumericGreaterThan(Constant(value=6, type=ExpressionType.NUMBER), Constant(value=3, type=ExpressionType.NUMBER))
+        self.assertTrue(expr.interpret(context))
+        expr = NumericGreaterThan(Constant(value=6, type=ExpressionType.NUMBER), Constant(value=6, type=ExpressionType.NUMBER))
+        self.assertFalse(expr.interpret(context))
+        expr = NumericGreaterThan(Constant(value=3, type=ExpressionType.NUMBER), Constant(value=6, type=ExpressionType.NUMBER))
+        self.assertFalse(expr.interpret(context))
+
+
+class NumericLessOrEqualToTest(unittest.TestCase):
+    def test(self):
+        context = OperationContext('user.create')
+        expr = NumericLessOrEqualTo(Constant(value=6, type=ExpressionType.NUMBER), Constant(value=3, type=ExpressionType.NUMBER))
+        self.assertFalse(expr.interpret(context))
+        expr = NumericLessOrEqualTo(Constant(value=6, type=ExpressionType.NUMBER), Constant(value=6, type=ExpressionType.NUMBER))
+        self.assertTrue(expr.interpret(context))
+        expr = NumericLessOrEqualTo(Constant(value=3, type=ExpressionType.NUMBER), Constant(value=6, type=ExpressionType.NUMBER))
+        self.assertTrue(expr.interpret(context))
+
+
+class NumericLessThanTest(unittest.TestCase):
+    def test(self):
+        context = OperationContext('user.create')
+        expr = NumericLessThan(Constant(value=6, type=ExpressionType.NUMBER), Constant(value=3, type=ExpressionType.NUMBER))
+        self.assertFalse(expr.interpret(context))
+        expr = NumericLessThan(Constant(value=6, type=ExpressionType.NUMBER), Constant(value=6, type=ExpressionType.NUMBER))
+        self.assertFalse(expr.interpret(context))
+        expr = NumericLessThan(Constant(value=3, type=ExpressionType.NUMBER), Constant(value=6, type=ExpressionType.NUMBER))
+        self.assertTrue(expr.interpret(context))
+
+
+class NumericDivideTest(unittest.TestCase):
+    def test(self):
+        context = OperationContext('user.create')
+        expr = NumericDivide(Constant(value=6, type=ExpressionType.NUMBER), Constant(value=3, type=ExpressionType.NUMBER))
+        self.assertEquals(2, expr.interpret(context))
+
+
+class NumericSubtractTest(unittest.TestCase):
+    def test(self):
+        context = OperationContext('user.create')
+        expr = NumericSubtract(Constant(value=6, type=ExpressionType.NUMBER), Constant(value=3, type=ExpressionType.NUMBER))
+        self.assertEquals(3, expr.interpret(context))
