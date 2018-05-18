@@ -8,6 +8,8 @@ import cz.filipklimes.diploma.framework.example.order.business.ShoppingCartItem;
 import cz.filipklimes.diploma.framework.example.order.business.User;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 public class ShoppingCartService
 {
@@ -16,7 +18,7 @@ public class ShoppingCartService
     public void addToShoppingCart(
         @BusinessOperationParameter("user") final User user,
         @BusinessOperationParameter("product") final Product product,
-        @BusinessOperationParameter("quantity") final Integer quantity,
+        @BusinessOperationParameter("quantity") final BigDecimal quantity,
         @BusinessOperationParameter("shoppingCart") final ShoppingCart shoppingCart
     )
     {

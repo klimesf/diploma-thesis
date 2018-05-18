@@ -70,7 +70,7 @@ def build_expression(el):
                                         type=convert_expression_type(el.attributes['type'].value)),
         'functionCall': lambda el: FunctionCall(method_name=el.attributes['methodName'].value,
                                                 type=convert_expression_type(el.attributes['type'].value),
-                                                arguments=list(map(build_expression, get_non_text(el.childNodes)))),
+                                                arguments=list(map(build_expression, get_non_text(get_child_with_name(el, 'arguments').childNodes)))),
         'isNotNull': lambda el: IsNotNull(argument=build_expression(get_non_text(get_non_text(get_child_with_name(el, 'argument').childNodes))[0])),
         'isNotBlank': lambda el: IsNotBlank(argument=build_expression(get_non_text(get_non_text(get_child_with_name(el, 'argument').childNodes))[0])),
         'objectPropertyReference': lambda el: ObjectPropertyReference(object_name=el.attributes['objectName'].value,

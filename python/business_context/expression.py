@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List, Dict
+from typing import List, Dict, Any
 
 from business_context.operation_context import OperationContext
 
@@ -13,7 +13,7 @@ class ExpressionType(Enum):
 
 
 class Expression:
-    def interpret(self, context: OperationContext):
+    def interpret(self, context: OperationContext) -> Any:
         pass
 
     def get_name(self):
@@ -258,7 +258,7 @@ class NumericAdd(Expression):
         self.right = right
 
     def interpret(self, context: OperationContext):
-        return self.left.interpret(context) + self.right.interpret(context)
+        return int(self.left.interpret(context)) + int(self.right.interpret(context))
 
     def get_name(self):
         return 'numeric-add'
@@ -279,7 +279,7 @@ class NumericDivide(Expression):
         self.right = right
 
     def interpret(self, context: OperationContext):
-        return self.left.interpret(context) / self.right.interpret(context)
+        return int(self.left.interpret(context)) / int(self.right.interpret(context))
 
     def get_name(self):
         return 'numeric-divide'
@@ -300,7 +300,7 @@ class NumericGreaterOrEqualTo(Expression):
         self.right = right
 
     def interpret(self, context: OperationContext):
-        return self.left.interpret(context) >= self.right.interpret(context)
+        return int(self.left.interpret(context)) >= int(self.right.interpret(context))
 
     def get_name(self):
         return 'numeric-gte'
@@ -321,7 +321,7 @@ class NumericGreaterThan(Expression):
         self.right = right
 
     def interpret(self, context: OperationContext):
-        return self.left.interpret(context) > self.right.interpret(context)
+        return int(self.left.interpret(context)) > int(self.right.interpret(context))
 
     def get_name(self):
         return 'numeric-gt'
@@ -342,7 +342,7 @@ class NumericLessOrEqualTo(Expression):
         self.right = right
 
     def interpret(self, context: OperationContext):
-        return self.left.interpret(context) <= self.right.interpret(context)
+        return int(self.left.interpret(context)) <= int(self.right.interpret(context))
 
     def get_name(self):
         return 'numeric-lte'
@@ -363,7 +363,7 @@ class NumericLessThan(Expression):
         self.right = right
 
     def interpret(self, context: OperationContext):
-        return self.left.interpret(context) < self.right.interpret(context)
+        return int(self.left.interpret(context)) < int(self.right.interpret(context))
 
     def get_name(self):
         return 'numeric-lt'
@@ -384,7 +384,7 @@ class NumericMultiply(Expression):
         self.right = right
 
     def interpret(self, context: OperationContext):
-        return self.left.interpret(context) * self.right.interpret(context)
+        return int(self.left.interpret(context)) * int(self.right.interpret(context))
 
     def get_name(self):
         return 'numeric-multiply'
@@ -405,7 +405,7 @@ class NumericSubtract(Expression):
         self.right = right
 
     def interpret(self, context: OperationContext):
-        return self.left.interpret(context) - self.right.interpret(context)
+        return int(self.left.interpret(context)) - int(self.right.interpret(context))
 
     def get_name(self):
         return 'numeric-subtract'

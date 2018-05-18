@@ -41,6 +41,14 @@ exports.createEmployee = (name, email) => {
     })
 }
 
+exports.deleteUser = (id) => {
+    return new Promise((resolve, reject) => {
+        delete users[id]
+        console.log("+ Deleted user with id " + id)
+        resolve(true)
+    })
+}
+
 exports.init = (registry) => {
     const BusinessContextWeaver = require('business-context-framework/dist/weaver/BusinessContextWeaver').default,
         BusinessOperationContext = require('business-context-framework/dist/weaver/BusinessOperationContext').default,
@@ -88,6 +96,14 @@ exports.init = (registry) => {
     exports.listUsers = () => {
         const context = new BusinessOperationContext('user.listAll')
         return wrapCall(context, listUsers)
+    }
+
+    const deleteUser = exports.deleteUser
+    exports.deleteUser = (id, user) => {
+        const context = new BusinessOperationContext('user.delete')
+        context.setInputParameter('id', id)
+        context.setInputParameter('user', user)
+        return wrapCall(context, deleteUser)
     }
 
 }

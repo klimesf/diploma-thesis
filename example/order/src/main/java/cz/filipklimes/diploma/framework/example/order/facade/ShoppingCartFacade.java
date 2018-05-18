@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -39,7 +40,7 @@ public class ShoppingCartFacade
      * @throws ProductNotFoundException When product with given Id does not exist.
      * @throws BusinessRulesCheckFailedException When business rule check fails.
      */
-    public void addProduct(final User user, final Integer productId, final Integer quantity) throws ProductNotFoundException
+    public void addProduct(final User user, final Integer productId, final BigDecimal quantity) throws ProductNotFoundException
     {
         Product product = productClient.getProduct(productId);
         if (product == null) {
@@ -54,8 +55,8 @@ public class ShoppingCartFacade
         );
 
         log.info(String.format(
-            "Added product %d pieces of product %d into shopping cart, it now has %d items",
-            quantity,
+            "Added product %s pieces of product %d into shopping cart, it now has %d items",
+            quantity.toPlainString(),
             product.getId(),
             shoppingCart.getItems().size()
         ));

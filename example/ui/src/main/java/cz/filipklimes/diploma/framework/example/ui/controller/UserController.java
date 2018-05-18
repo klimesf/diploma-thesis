@@ -3,6 +3,7 @@ package cz.filipklimes.diploma.framework.example.ui.controller;
 import cz.filipklimes.diploma.framework.example.ui.business.User;
 import cz.filipklimes.diploma.framework.example.ui.client.OrderClient;
 import cz.filipklimes.diploma.framework.example.ui.exception.CouldNotCreateUserException;
+import cz.filipklimes.diploma.framework.example.ui.exception.CouldNotDeleteUserException;
 import cz.filipklimes.diploma.framework.example.ui.exception.UserNotFoundException;
 import cz.filipklimes.diploma.framework.example.ui.facade.SignedUser;
 import cz.filipklimes.diploma.framework.example.ui.facade.UserFacade;
@@ -44,6 +45,11 @@ public class UserController
     public String listUsers(Model model)
     {
         model.addAttribute("users", userFacade.listUsers());
+
+        // Flash messages
+        model.addAttribute("successMessage", model.asMap().get("success"));
+        model.addAttribute("infoMessage", model.asMap().get("info"));
+        model.addAttribute("errorMessage", model.asMap().get("error"));
 
         // Header info
         model.addAttribute("cartCount", orderClient.listCartItems().size());
@@ -121,6 +127,19 @@ public class UserController
             attributes.addFlashAttribute("error", e.getMessage());
         }
         return new RedirectView("/");
+    }
+
+    @GetMapping("/delete-user/{userId}")
+    public RedirectView handleDeleteUser(@PathVariable Integer userId, RedirectAttributes attributes)
+    {
+        try {
+            userFacade.deleteUser(userId);
+            attributes.addFlashAttribute("success", String.format("Deleted user %s", userId));
+
+        } catch (CouldNotDeleteUserException e) {
+            attributes.addFlashAttribute("error", e.getMessage());
+        }
+        return new RedirectView("/users");
     }
 
     private static final class UserForm

@@ -3,6 +3,7 @@ package cz.filipklimes.diploma.framework.example.ui.facade;
 import cz.filipklimes.diploma.framework.example.ui.business.User;
 import cz.filipklimes.diploma.framework.example.ui.client.UserClient;
 import cz.filipklimes.diploma.framework.example.ui.exception.CouldNotCreateUserException;
+import cz.filipklimes.diploma.framework.example.ui.exception.CouldNotDeleteUserException;
 import cz.filipklimes.diploma.framework.example.ui.exception.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +47,11 @@ public class UserFacade
     public User createEmployee(final String name, final String email) throws CouldNotCreateUserException
     {
         return userClient.createEmployee(name, email);
+    }
+
+    public void deleteUser(final Integer id) throws CouldNotDeleteUserException
+    {
+        userClient.deleteUser(id);
     }
 
 }

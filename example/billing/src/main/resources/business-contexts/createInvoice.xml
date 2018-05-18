@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<businessContext prefix="billing" name="createInvoice">
+    <includedContexts>
+        <includedContext prefix="auth" name="adminLoggedIn"/>
+        <includedContext prefix="billing" name="correctAddress"/>
+    </includedContexts>
+    <preconditions/>
+    <postConditions/>
+</businessContext>

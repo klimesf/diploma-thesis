@@ -12,11 +12,11 @@ app = Flask(__name__)
 registry = Registry(
     XmlBusinessContextLoader([
         'business-contexts/changePrice.xml',
+        'business-contexts/changeStock.xml',
         'business-contexts/create.xml',
         'business-contexts/detail.xml',
         'business-contexts/hidden.xml',
         'business-contexts/listAll.xml',
-        'business-contexts/stock.xml',
     ]),
     RemoteBusinessContextLoader(GrpcRemoteLoader({
         'auth': {'host': 'user', 'port': 5553}
@@ -42,6 +42,10 @@ class User:
         self.role = role
 
 
+def string_length(string):
+    return len(string)
+
+
 class ProductRepository:
     def __init__(self):
         self.products = {
@@ -52,6 +56,7 @@ class ProductRepository:
             5: Product(5, "Wardrobe", "Wooden wardrobe for your clothes", None, 300, 1, False),
             6: Product(6, "A chair", "Prime italian leather, it can bend over backwards", None, 399, 0, False),
         }
+        self.nextId = 7
 
     @business_operation("product.listAll", weaver)
     def get_all(self) -> List[Product]:
@@ -64,7 +69,7 @@ class ProductRepository:
         return self.products[id]
 
     @business_operation("product.changePrice", weaver)
-    def change_price(self, id, costPrice, sellPrice, user) -> Optional[Product]:
+    def change_price(self, id, costPrice: int, sellPrice: int, user: User) -> Optional[Product]:
         if id not in self.products:
             return None
         self.products[id].costPrice = int(costPrice)
@@ -72,11 +77,18 @@ class ProductRepository:
         return self.products[id]
 
     @business_operation("product.changeStock", weaver)
-    def change_stock(self, id, stockCount, user) -> Optional[Product]:
+    def change_stock(self, id, stockCount: int, user: User) -> Optional[Product]:
         if id not in self.products:
             return None
-        self.products[id].stockCount = int(stockCount)
+        self.products[id].stockCount = stockCount
         return self.products[id]
+
+    @business_operation("product.create", weaver, functions={'length': string_length})
+    def create_product(self, name, description, stockCount, user) -> Optional[Product]:
+        product = Product(self.nextId, name, description, 0, 0, stockCount, False)
+        self.products[self.nextId] = product
+        self.nextId += 1
+        return product
 
 
 product_repository = ProductRepository()
@@ -93,7 +105,7 @@ def create_product_response(product):
     }
 
 
-@app.route("/")
+@app.route("/", methods=['GET'])
 def list_all_products():
     result = []
     for product in product_repository.get_all():
@@ -101,7 +113,7 @@ def list_all_products():
     return jsonify(result)
 
 
-@app.route("/<int:id>")
+@app.route("/<int:id>", methods=['GET'])
 def get_product(id: int):
     product = product_repository.get(id)
     if product is None: abort(404)
@@ -114,8 +126,8 @@ def change_price(id: int):
     try:
         product = product_repository.change_price(
             id,
-            content['costPrice'],
-            content['sellPrice'],
+            int(content['costPrice']),
+            int(content['sellPrice']),
             User(request.headers.get('X-User-Id'), request.headers.get('X-User-Role'))
         )
         if product is None: abort(404)
@@ -134,7 +146,7 @@ def change_stock(id: int):
     try:
         product = product_repository.change_stock(
             id,
-            content['stockCount'],
+            int(content['stockCount']),
             User(request.headers.get('X-User-Id'), request.headers.get('X-User-Role'))
         )
         if product is None: abort(404)
@@ -142,6 +154,26 @@ def change_stock(id: int):
         return jsonify(create_product_response(product))
     except BusinessRulesCheckFailed as e:
         print("Could not change stock count of product: " + e.get_message())
+        return jsonify({
+            'message': e.get_message()
+        }), 422
+
+
+@app.route("/", methods=['POST'])
+def create_product():
+    content = request.get_json()
+    try:
+        product = product_repository.create_product(
+            content['name'],
+            content['description'],
+            int(content['stockCount']),
+            User(request.headers.get('X-User-Id'), request.headers.get('X-User-Role'))
+        )
+        if product is None: abort(404)
+        print("Created product " + str(product.id))
+        return jsonify(create_product_response(product))
+    except BusinessRulesCheckFailed as e:
+        print("Could not create product: " + e.get_message())
         return jsonify({
             'message': e.get_message()
         }), 422

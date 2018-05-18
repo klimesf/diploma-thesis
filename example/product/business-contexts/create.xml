@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <businessContext prefix="product" name="create">
     <includedContexts>
-        <includedContext prefix="auth" name="employeeLoggedIn" />
+        <includedContext prefix="auth" name="employeeLoggedIn"/>
+        <includedContext prefix="product" name="detail"/>
+        <includedContext prefix="product" name="changeStock"/>
     </includedContexts>
     <preconditions>
         <precondition name="Product name must be at least 5 characters long">
             <condition>
-                <isNotNull>
-                    <argument>
-                        <variableReference name="name" type="string" />
-                    </argument>
-                </isNotNull>
+                <numericGreaterOrEqualTo>
+                    <left>
+                        <functionCall methodName="length" type="number">
+                            <arguments>
+                                <variableReference name="name" type="string"/>
+                            </arguments>
+                        </functionCall>
+                    </left>
+                    <right>
+                        <constant type="number" value="5"/>
+                    </right>
+                </numericGreaterOrEqualTo>
             </condition>
         </precondition>
     </preconditions>
-    <postConditions />
+    <postConditions/>
 </businessContext>

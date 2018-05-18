@@ -4,6 +4,7 @@ import cz.filipklimes.diploma.framework.example.ui.business.Product;
 import cz.filipklimes.diploma.framework.example.ui.client.OrderClient;
 import cz.filipklimes.diploma.framework.example.ui.exception.CouldNotChangePriceException;
 import cz.filipklimes.diploma.framework.example.ui.exception.CouldNotChangeStockException;
+import cz.filipklimes.diploma.framework.example.ui.exception.CouldNotCreateProductException;
 import cz.filipklimes.diploma.framework.example.ui.facade.ProductFacade;
 import cz.filipklimes.diploma.framework.example.ui.facade.SignedUser;
 import lombok.Getter;
@@ -99,6 +100,34 @@ public class ProductController
         return new RedirectView("/");
     }
 
+    @GetMapping("/create-product")
+    public String createProduct(Model model)
+    {
+        // Header info
+        model.addAttribute("cartCount", orderClient.listCartItems().size());
+        model.addAttribute("isUserLoggedIn", signedUser.isAnyoneSignedIn());
+        model.addAttribute("user", signedUser.getCurrentlyLoggedUser());
+        model.addAttribute("createProductForm", new CreateProductForm());
+
+        return "create-product";
+    }
+
+    @PostMapping("/create-product")
+    public RedirectView handleCreateProduct(@ModelAttribute CreateProductForm createProductForm, RedirectAttributes attributes)
+    {
+        try {
+            Product product = productFacade.createProduct(
+                Optional.of(createProductForm.getName()).filter(s -> !s.isEmpty()).orElse(null),
+                Optional.of(createProductForm.getDescription()).filter(s -> !s.isEmpty()).orElse(null),
+                Optional.of(createProductForm.getStockCount()).filter(s -> !s.isEmpty()).orElse(null)
+            );
+            attributes.addFlashAttribute("success", String.format("Created product %s", product.getName()));
+
+        } catch (CouldNotCreateProductException e) {
+            attributes.addFlashAttribute("error", e.getMessage());
+        }
+        return new RedirectView("/");
+    }
 
     public static class ChangePriceForm
     {
@@ -113,9 +142,25 @@ public class ProductController
 
     }
 
-
     public static class ChangeStockForm
     {
+
+        @Getter
+        @Setter
+        private String stockCount;
+
+    }
+
+    public static class CreateProductForm
+    {
+
+        @Getter
+        @Setter
+        private String name;
+
+        @Getter
+        @Setter
+        private String description;
 
         @Getter
         @Setter

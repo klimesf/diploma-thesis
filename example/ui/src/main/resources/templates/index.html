@@ -24,10 +24,11 @@
                     <a class="nav-link" href="/orders" th:if="${isUserLoggedIn && (user.role == 'ADMINISTRATOR' || user.role == 'EMPLOYEE')}" style="color: white;">Manage orders</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="/create-product" th:if="${isUserLoggedIn && (user.role == 'ADMINISTRATOR' || user.role == 'EMPLOYEE')}" style="color: white;">Create product</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="/create-employee" th:if="${isUserLoggedIn && (user.role == 'ADMINISTRATOR')}" style="color: white;">Create employee</a>
                 </li>
-                <!--<li class="nav-item"><a class="nav-link" href="#">Link</a></li>-->
-                <!--<li class="nav-item"><a class="nav-link disabled" href="#">Disabled</a></li>-->
             </ul>
             <div class="form-inline my-2 my-lg-0 text-light">
                 <a href="/users" th:if="${isUserLoggedIn}" style="color: white;" th:text="'User: ' + ${user.name} + '&nbsp;|&nbsp;'"></a>

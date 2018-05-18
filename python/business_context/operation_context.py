@@ -44,10 +44,15 @@ class UndefinedFunctionException(BaseException):
         self.name = name
 
 
-def business_operation(name, weaver):
+def business_operation(name, weaver, functions=None):
+    if functions is None:
+        functions = dict()
+
     def wrapper(func):
         def func_wrapper(*args, **kwargs):
             operation_context = OperationContext(name)
+            for function_name, function_body in functions.items():
+                operation_context.set_function(function_name, function_body)
             args_names = inspect.getfullargspec(func)[0]
             args_dict = dict(zip(args_names, args))
             for key, value in args_dict.items():

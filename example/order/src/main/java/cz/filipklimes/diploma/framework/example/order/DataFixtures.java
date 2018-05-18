@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+
 @Component
 public class DataFixtures
 {
@@ -29,14 +31,14 @@ public class DataFixtures
     {
         try {
             User user = new User(1, "John Doe", "john.doe@example.com", "CUSTOMER");
-            shoppingCartFacade.addProduct(user, 1, 1);
+            shoppingCartFacade.addProduct(user, 1, BigDecimal.ONE);
             orderFacade.createOrder(
                 user,
-                new Address("Czech Republic", "Prague", "Karlovo Náměstí 5", "15000"),
-                new Address("Czech Republic", "Prague", "Karlovo Náměstí 5", "15000")
+                new Address("Czech Republic", "Prague", "Karlovo Namesti 5", "15000"),
+                new Address("Czech Republic", "Prague", "Karlovo Namesti 5", "15000")
             );
 
-            shoppingCartFacade.addProduct(user, 1, 1);
+            shoppingCartFacade.addProduct(user, 1, BigDecimal.ONE);
 
         } catch (ProductNotFoundException e) {
             log.error(String.format("Could not create fixtures: %s", e.getMessage()));

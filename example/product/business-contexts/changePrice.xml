@@ -8,10 +8,10 @@
             <condition>
                 <numericGreaterThan>
                     <left>
-                        <objectPropertyReference objectName="product" propertyName="sellPrice" type="number" />
+                        <variableReference name="sellPrice" type="number" />
                     </left>
                     <right>
-                        <objectPropertyReference objectName="product" propertyName="costPrice" type="number" />
+                        <variableReference name="costPrice" type="number" />
                     </right>
                 </numericGreaterThan>
             </condition>

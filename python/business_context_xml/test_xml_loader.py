@@ -19,6 +19,22 @@ document = """\
         </isNotNull>
       </condition>
     </precondition>
+    <precondition name="Product name must be at least 5 characters long">
+    <condition>
+        <numericGreaterOrEqualTo>
+            <left>
+                <functionCall methodName="length" type="number">
+                    <arguments>
+                        <objectPropertyReference propertyName="name" objectName="product" type="string"/>
+                    </arguments>
+                </functionCall>
+            </left>
+            <right>
+                <constant type="number" value="5"/>
+            </right>
+        </numericGreaterOrEqualTo>
+    </condition>
+    </precondition>
   </preconditions>
   <postConditions>
     <postCondition name="hideUserEmail">
@@ -47,7 +63,7 @@ class XmlLoaderTest(unittest.TestCase):
         self.assertTrue(business_context.included_contexts.__contains__(Identifier("user", "validEmail")))
 
         # Preconditions
-        self.assertEquals(1, len(business_context.preconditions))
+        self.assertEquals(2, len(business_context.preconditions))
 
         # Post-conditions
         self.assertEquals(1, len(business_context.post_conditions))

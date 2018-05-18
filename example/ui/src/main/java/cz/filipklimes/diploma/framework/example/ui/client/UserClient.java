@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.filipklimes.diploma.framework.example.ui.business.User;
 import cz.filipklimes.diploma.framework.example.ui.controller.response.ErrorResponse;
 import cz.filipklimes.diploma.framework.example.ui.exception.CouldNotCreateUserException;
+import cz.filipklimes.diploma.framework.example.ui.exception.CouldNotDeleteUserException;
 import cz.filipklimes.diploma.framework.example.ui.facade.SignedUser;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -164,6 +166,35 @@ public class UserClient
 
         } catch (IOException e) {
             throw new RuntimeException("Could not create employee", e);
+        }
+    }
+
+    public void deleteUser(final Integer userId) throws CouldNotDeleteUserException
+    {
+        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+            HttpDelete request = new HttpDelete(String.format("http://user:5503/users/%d", userId));
+            if (signedUser.isAnyoneSignedIn()) {
+                request.addHeader("X-User-Id", String.valueOf(signedUser.getCurrentlyLoggedUser().getId()));
+                request.addHeader("X-User-Role", signedUser.getCurrentlyLoggedUser().getRole());
+            }
+
+            try (CloseableHttpResponse response = client.execute(request)) {
+                int statusCode = response.getStatusLine().getStatusCode();
+                log.debug(String.format("Deleted user, HTTP status %d", statusCode));
+
+                ObjectMapper objectMapper = new ObjectMapper();
+                if (statusCode == HttpStatus.UNPROCESSABLE_ENTITY.value()) {
+                    ErrorResponse errorResponse = objectMapper.readValue(response.getEntity().getContent(), ErrorResponse.class);
+                    throw new CouldNotDeleteUserException(errorResponse.getMessage());
+                }
+
+                if (statusCode != HttpStatus.OK.value()) {
+                    throw new RuntimeException(String.format("Could not delete user: status code %d", statusCode));
+                }
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException("Could not delete user", e);
         }
     }
 

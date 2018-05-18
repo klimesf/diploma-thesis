@@ -3,7 +3,6 @@
     <includedContexts>
         <includedContext prefix="auth" name="userLoggedIn" />
         <includedContext prefix="product" name="hidden" />
-        <includedContext prefix="product" name="stock" />
     </includedContexts>
     <preconditions>
         <precondition name="Shopping cart must contain less than 10 items">
@@ -14,6 +13,18 @@
                     </left>
                     <right>
                         <constant type="number" value="10" />
+                    </right>
+                </numericLessThan>
+            </condition>
+        </precondition>
+        <precondition name="Order item quantity must be less than the product stock count">
+            <condition>
+                <numericLessThan>
+                    <left>
+                        <variableReference name="quantity" type="number" />
+                    </left>
+                    <right>
+                        <objectPropertyReference propertyName="stockCount" objectName="product" type="number" />
                     </right>
                 </numericLessThan>
             </condition>

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -48,7 +49,7 @@ public class ShoppingCartController
     {
         try {
             User user = userId != null ? userClient.getUser(Integer.valueOf(userId)) : null;
-            shoppingCartFacade.addProduct(user, request.getProductId(), request.getQuantity());
+            shoppingCartFacade.addProduct(user, request.getProductId(), new BigDecimal(request.getQuantity()));
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
 
         } catch (ProductNotFoundException e) {

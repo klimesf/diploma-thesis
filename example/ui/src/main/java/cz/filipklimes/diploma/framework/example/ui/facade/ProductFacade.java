@@ -4,6 +4,7 @@ import cz.filipklimes.diploma.framework.example.ui.business.Product;
 import cz.filipklimes.diploma.framework.example.ui.client.ProductClient;
 import cz.filipklimes.diploma.framework.example.ui.exception.CouldNotChangePriceException;
 import cz.filipklimes.diploma.framework.example.ui.exception.CouldNotChangeStockException;
+import cz.filipklimes.diploma.framework.example.ui.exception.CouldNotCreateProductException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,6 +26,11 @@ public class ProductFacade
     public Product changeStock(final Integer productId, final String stockCount) throws CouldNotChangeStockException
     {
         return productClient.changeStock(productId, stockCount);
+    }
+
+    public Product createProduct(final String name, final String description, final String stockCount) throws CouldNotCreateProductException
+    {
+        return productClient.createProduct(name, description, stockCount);
     }
 
 }

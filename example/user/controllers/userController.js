@@ -32,3 +32,13 @@ exports.createEmployee = (req, res) => {
             res.status(422).json({message: err})
         })
 }
+
+exports.deleteUser = (req, res) => {
+    const userId = req.get('X-User-Id') || ""
+    const userRole = req.get('X-User-Role') || ""
+    users.deleteUser(req.params.userId, {id: userId, role: userRole.toUpperCase()})
+        .then(_ => res.json({ok: true}))
+        .catch(err => {
+            res.status(422).json({message: err})
+        })
+}
