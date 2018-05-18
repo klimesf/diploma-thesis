@@ -60,7 +60,7 @@ public class Application
 
         List<InputStream> streams = new ArrayList<>();
         streams.add(Application.class.getResourceAsStream("/business-contexts/addToShoppingCart.xml"));
-        streams.add(Application.class.getResourceAsStream("/business-contexts/changeState.xml"));
+        streams.add(Application.class.getResourceAsStream("/business-contexts/changeStatus.xml"));
         streams.add(Application.class.getResourceAsStream("/business-contexts/create.xml"));
         streams.add(Application.class.getResourceAsStream("/business-contexts/listAll.xml"));
         streams.add(Application.class.getResourceAsStream("/business-contexts/valid.xml"));

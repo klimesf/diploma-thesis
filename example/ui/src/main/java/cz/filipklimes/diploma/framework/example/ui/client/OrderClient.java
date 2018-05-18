@@ -7,6 +7,7 @@ import cz.filipklimes.diploma.framework.example.ui.controller.response.ErrorResp
 import cz.filipklimes.diploma.framework.example.ui.exception.CouldNotAddShoppingCartItemException;
 import cz.filipklimes.diploma.framework.example.ui.exception.CouldNotCreateOrderException;
 import cz.filipklimes.diploma.framework.example.ui.exception.CouldNotListOrdersException;
+import cz.filipklimes.diploma.framework.example.ui.exception.CouldNotMarkDeliveredException;
 import cz.filipklimes.diploma.framework.example.ui.facade.SignedUser;
 import lombok.Getter;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -172,6 +173,42 @@ public class OrderClient
 
         } catch (IOException e) {
             throw new RuntimeException("Could not create order", e);
+        }
+    }
+
+    public void markDelivered(final Integer id) throws CouldNotMarkDeliveredException
+    {
+        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+            HttpPost request = new HttpPost(String.format("http://order:5501/orders/%d/status", id));
+            if (signedUser.isAnyoneSignedIn()) {
+                request.addHeader("X-User-Id", String.valueOf(signedUser.getCurrentlyLoggedUser().getId()));
+                request.addHeader("X-User-Role", signedUser.getCurrentlyLoggedUser().getRole());
+            }
+
+            String json = String.format(
+                "{\"status\":%s}",
+                ClientHelper.jsonField("DELIVERED")
+            );
+            request.setEntity(new StringEntity(json));
+            request.setHeader("Content-type", "application/json");
+
+            try (CloseableHttpResponse response = client.execute(request)) {
+                int statusCode = response.getStatusLine().getStatusCode();
+                log.debug(String.format("Could not mark order as delivered, HTTP status %d", statusCode));
+
+                ObjectMapper objectMapper = new ObjectMapper();
+                if (statusCode == HttpStatus.UNPROCESSABLE_ENTITY.value()) {
+                    ErrorResponse errorResponse = objectMapper.readValue(response.getEntity().getContent(), ErrorResponse.class);
+                    throw new CouldNotMarkDeliveredException(errorResponse.getMessage());
+                }
+
+                if (statusCode != HttpStatus.ACCEPTED.value()) {
+                    throw new RuntimeException(String.format("Could not mark order as delivered: status code %d", statusCode));
+                }
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException("Could not mark order as delivered", e);
         }
     }
 

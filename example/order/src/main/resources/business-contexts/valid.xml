@@ -14,7 +14,7 @@
                             <left>
                                 <logicalEquals>
                                     <left>
-                                        <objectPropertyReference propertyName="status" objectName="order" type="string"/>
+                                        <variableReference name="status" type="string"/>
                                     </left>
                                     <right>
                                         <constant type="string" value="ACCEPTED"/>
@@ -24,7 +24,7 @@
                             <right>
                                 <logicalEquals>
                                     <left>
-                                        <objectPropertyReference propertyName="status" objectName="order" type="string"/>
+                                        <variableReference name="status" type="string"/>
                                     </left>
                                     <right>
                                         <constant type="string" value="SENT"/>
@@ -36,7 +36,7 @@
                     <right>
                         <logicalEquals>
                             <left>
-                                <objectPropertyReference propertyName="status" objectName="order" type="string"/>
+                                <variableReference name="status" type="string"/>
                             </left>
                             <right>
                                 <constant type="string" value="DELIVERED"/>

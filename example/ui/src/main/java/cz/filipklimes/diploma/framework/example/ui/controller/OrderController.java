@@ -7,6 +7,7 @@ import cz.filipklimes.diploma.framework.example.ui.client.OrderClient;
 import cz.filipklimes.diploma.framework.example.ui.exception.CouldNotCreateInvoiceException;
 import cz.filipklimes.diploma.framework.example.ui.exception.CouldNotCreateOrderException;
 import cz.filipklimes.diploma.framework.example.ui.exception.CouldNotListOrdersException;
+import cz.filipklimes.diploma.framework.example.ui.exception.CouldNotMarkDeliveredException;
 import cz.filipklimes.diploma.framework.example.ui.facade.SignedUser;
 import lombok.Getter;
 import lombok.Setter;
@@ -104,13 +105,39 @@ public class OrderController
                 }
             }
             if (order == null) {
-                attributes.addFlashAttribute("error", String.format("invoice with id %s not found", orderId));
+                attributes.addFlashAttribute("error", String.format("Order with id %s not found", orderId));
                 return new RedirectView("/orders");
             }
             invoiceClient.createInvoice(order.getBillingAddress());
             attributes.addFlashAttribute("success", "Your invoice has been created!");
 
         } catch (CouldNotListOrdersException | CouldNotCreateInvoiceException e) {
+            attributes.addFlashAttribute("error", e.getMessage());
+        }
+
+        return new RedirectView("/orders");
+    }
+
+    @GetMapping("/mark-delivered/{orderId}")
+    public RedirectView handleMarkDelivered(@PathVariable Integer orderId, RedirectAttributes attributes)
+    {
+        try {
+            List<Order> orders = orderClient.listOrders();
+            Order order = null;
+            for (Order o : orders) {
+                if (o.getId().equals(orderId)) {
+                    order = o;
+                    break;
+                }
+            }
+            if (order == null) {
+                attributes.addFlashAttribute("error", String.format("Order with id %s not found", orderId));
+                return new RedirectView("/orders");
+            }
+            orderClient.markDelivered(order.getId());
+            attributes.addFlashAttribute("success", "The order has been marked as delivered!");
+
+        } catch (CouldNotListOrdersException | CouldNotMarkDeliveredException e) {
             attributes.addFlashAttribute("error", e.getMessage());
         }
 

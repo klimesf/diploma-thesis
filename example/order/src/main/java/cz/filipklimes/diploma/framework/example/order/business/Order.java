@@ -23,12 +23,12 @@ public class Order
     @Setter
     private String status;
 
-    public Order(final User user, final Address billingAddress, final Address shippingAddress)
+    public Order(final User user, final Address billingAddress, final Address shippingAddress, final String status)
     {
         this.user = user;
         this.billingAddress = billingAddress;
         this.shippingAddress = shippingAddress;
-        this.status = "ACCEPTED";
+        this.status = status;
     }
 
 }

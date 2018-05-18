@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<businessContext prefix="order" name="changeState">
+<businessContext prefix="order" name="changeStatus">
     <includedContexts>
-        <includedContext prefix="order" name="valid"/>
         <includedContext prefix="auth" name="employeeLoggedIn"/>
+        <includedContext prefix="order" name="valid"/>
     </includedContexts>
     <preconditions/>
     <postConditions/>

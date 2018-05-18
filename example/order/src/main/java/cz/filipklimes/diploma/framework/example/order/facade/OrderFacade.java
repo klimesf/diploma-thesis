@@ -43,13 +43,34 @@ public class OrderFacade
             user,
             Optional.ofNullable(user).map(User::getEmail).orElse(null),
             shippingAddress,
-            billingAddres
+            billingAddres,
+            "ACCEPTED"
         );
         orders.add(order);
         order.setId(orderIdCounter);
         orderIdCounter++;
         shoppingCartFacade.clearCart();
         log.info(String.format("Created a new order with id %d", order.getId()));
+    }
+
+    public void changeStatus(final User user, final Integer orderId, final String status)
+    {
+        Order order = null;
+        for (Order o : orders) {
+            if (o.getId().equals(orderId)) {
+                order = o;
+                break;
+            }
+        }
+        if (order == null) {
+            return;
+        }
+        orderService.changeStatus(
+            user,
+            order,
+            status
+        );
+        log.info(String.format("Changed status of order id %d to %s", orderId, status));
     }
 
 }

@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -81,6 +82,31 @@ public class OrderController
         }
     }
 
+    @PostMapping("/orders/{orderId}/status")
+    public ResponseEntity<?> changeStatus(
+        @PathVariable Integer orderId,
+        @RequestHeader(value = "X-User-Id", required = false) String userId,
+        @RequestBody ChangeStatusRequest request
+    )
+    {
+        try {
+            User user = userId != null ? userClient.getUser(Integer.valueOf(userId)) : null;
+            orderFacade.changeStatus(user, orderId, request.getStatus());
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+
+        } catch (BusinessRulesCheckFailedException e) {
+            return new ResponseEntity<>(
+                new ErrorResponse(String.format(
+                    "Could not change status: %s",
+                    e.getFailedRules().stream()
+                        .map(Precondition::getName)
+                        .collect(Collectors.joining(", "))
+                )),
+                HttpStatus.UNPROCESSABLE_ENTITY
+            );
+        }
+    }
+
     private static final class CreateOrderRequest
     {
 
@@ -91,6 +117,15 @@ public class OrderController
         @Getter
         @Setter
         private Address billing;
+
+    }
+
+    private static final class ChangeStatusRequest
+    {
+
+        @Getter
+        @Setter
+        private String status;
 
     }
 

@@ -72,6 +72,8 @@
             <td th:text="${item.status}"></td>
             <td>
                 <a th:href="@{/create-invoice/{orderId}(orderId=${item.id})}" th:if="${isUserLoggedIn && (user.role == 'ADMINISTRATOR' || user.role == 'EMPLOYEE')}">Create invoice</a>
+                <span th:if="${isUserLoggedIn && (user.role == 'ADMINISTRATOR' || user.role == 'EMPLOYEE')}">&nbsp;|&nbsp;</span>
+                <a th:href="@{/mark-delivered/{orderId}(orderId=${item.id})}" th:if="${isUserLoggedIn && (user.role == 'ADMINISTRATOR' || user.role == 'EMPLOYEE')}">Mark as delivered</a>
             </td>
         </tr>
         </tbody>

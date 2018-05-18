@@ -27,10 +27,21 @@ public class OrderService
         @BusinessOperationParameter("user") final User user,
         @BusinessOperationParameter("email") final String email,
         @BusinessOperationParameter("shippingAddress") final Address shippingAddress,
-        @BusinessOperationParameter("billingAddress") final Address billingAddress
+        @BusinessOperationParameter("billingAddress") final Address billingAddress,
+        @BusinessOperationParameter("status") final String status
     )
     {
-        return new Order(user, billingAddress, shippingAddress);
+        return new Order(user, billingAddress, shippingAddress, status);
+    }
+
+    @BusinessOperation("order.changeStatus")
+    public void changeStatus(
+        @BusinessOperationParameter("user") final User user,
+        @BusinessOperationParameter("order") final Order order,
+        @BusinessOperationParameter("status") final String status
+    )
+    {
+        order.setStatus(status);
     }
 
 }
