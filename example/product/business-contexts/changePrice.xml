@@ -3,6 +3,19 @@
     <includedContexts>
         <includedContext prefix="auth" name="adminLoggedIn" />
     </includedContexts>
-    <preconditions />
+    <preconditions>
+        <precondition name="Sell price must be greater than cost price">
+            <condition>
+                <numericGreaterThan>
+                    <left>
+                        <objectPropertyReference objectName="product" propertyName="sellPrice" type="number" />
+                    </left>
+                    <right>
+                        <objectPropertyReference objectName="product" propertyName="costPrice" type="number" />
+                    </right>
+                </numericGreaterThan>
+            </condition>
+        </precondition>
+    </preconditions>
     <postConditions />
 </businessContext>

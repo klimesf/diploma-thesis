@@ -3,6 +3,7 @@ package cz.filipklimes.diploma.framework.example.ui.controller;
 import cz.filipklimes.diploma.framework.example.ui.business.Product;
 import cz.filipklimes.diploma.framework.example.ui.client.OrderClient;
 import cz.filipklimes.diploma.framework.example.ui.exception.CouldNotChangePriceException;
+import cz.filipklimes.diploma.framework.example.ui.exception.CouldNotChangeStockException;
 import cz.filipklimes.diploma.framework.example.ui.facade.ProductFacade;
 import cz.filipklimes.diploma.framework.example.ui.facade.SignedUser;
 import lombok.Getter;
@@ -40,7 +41,7 @@ public class ProductController
     }
 
     @GetMapping("/change-price/{productId}")
-    public String createEmployee(@PathVariable Integer productId, Model model)
+    public String changePrice(@PathVariable Integer productId, Model model)
     {
         // Header info
         model.addAttribute("cartCount", orderClient.listCartItems().size());
@@ -53,7 +54,7 @@ public class ProductController
     }
 
     @PostMapping("/change-price/{productId}")
-    public RedirectView handleCreateEmployee(@PathVariable Integer productId, @ModelAttribute ChangePriceForm changePriceForm, RedirectAttributes attributes)
+    public RedirectView handleChangePrice(@PathVariable Integer productId, @ModelAttribute ChangePriceForm changePriceForm, RedirectAttributes attributes)
     {
         try {
             Product product = productFacade.changePrice(
@@ -69,6 +70,36 @@ public class ProductController
         return new RedirectView("/");
     }
 
+    @GetMapping("/change-stock/{productId}")
+    public String changeStock(@PathVariable Integer productId, Model model)
+    {
+        // Header info
+        model.addAttribute("cartCount", orderClient.listCartItems().size());
+        model.addAttribute("isUserLoggedIn", signedUser.isAnyoneSignedIn());
+        model.addAttribute("user", signedUser.getCurrentlyLoggedUser());
+        model.addAttribute("changeStockForm", new ChangeStockForm());
+        model.addAttribute("productId", productId);
+
+        return "change-stock";
+    }
+
+    @PostMapping("/change-stock/{productId}")
+    public RedirectView handleChangeStock(@PathVariable Integer productId, @ModelAttribute ChangeStockForm changeStockForm, RedirectAttributes attributes)
+    {
+        try {
+            Product product = productFacade.changeStock(
+                productId,
+                Optional.of(changeStockForm.getStockCount()).filter(s -> !s.isEmpty()).orElse(null)
+            );
+            attributes.addFlashAttribute("success", String.format("Changed stock for product %s", product.getName()));
+
+        } catch (CouldNotChangeStockException e) {
+            attributes.addFlashAttribute("error", e.getMessage());
+        }
+        return new RedirectView("/");
+    }
+
+
     public static class ChangePriceForm
     {
 
@@ -79,6 +110,16 @@ public class ProductController
         @Getter
         @Setter
         private String sellPrice;
+
+    }
+
+
+    public static class ChangeStockForm
+    {
+
+        @Getter
+        @Setter
+        private String stockCount;
 
     }
 

@@ -8,7 +8,7 @@
             <condition>
                 <numericGreaterThan>
                     <left>
-                        <objectPropertyReference propertyName="product" objectName="stock" type="number" />
+                        <objectPropertyReference objectName="product" propertyName="stockCount" type="number" />
                     </left>
                     <right>
                         <constant type="number" value="0" />

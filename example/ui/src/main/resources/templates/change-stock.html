@@ -8,7 +8,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <title>Example e-commerce system</title>
+    <title>Change stock | Example e-commerce system</title>
 </head>
 <body>
 <nav class="navbar navbar-dark bg-dark navbar-expand-lg" style="margin-bottom: 0;">
@@ -30,12 +30,14 @@
                 <!--<li class="nav-item"><a class="nav-link disabled" href="#">Disabled</a></li>-->
             </ul>
             <div class="form-inline my-2 my-lg-0 text-light">
-                <a href="/users" th:if="${isUserLoggedIn}" style="color: white;" th:text="'User: ' + ${user.name} + '&nbsp;|&nbsp;'"></a>
-                <a href="/users" th:if="${!isUserLoggedIn}" style="color: white;">Sign in</a>
-                <span th:if="${!isUserLoggedIn}">&nbsp;or&nbsp;</span>
-                <a href="/register" th:if="${!isUserLoggedIn}" style="color: white;">register</a>
-                <span th:if="${!isUserLoggedIn}">&nbsp;|&nbsp;</span>
-                <a href="/shopping-cart" style="color: white;">Shopping cart has&nbsp;<span th:text="${cartCount}"></span>&nbsp;items</a>
+                <div class="form-inline my-2 my-lg-0 text-light">
+                    <a href="/users" th:if="${isUserLoggedIn}" style="color: white;" th:text="'User: ' + ${user.name} + '&nbsp;|&nbsp;'"></a>
+                    <a href="/users" th:if="${!isUserLoggedIn}" style="color: white;">Sign in</a>
+                    <span th:if="${!isUserLoggedIn}">&nbsp;or&nbsp;</span>
+                    <a href="/register" th:if="${!isUserLoggedIn}" style="color: white;">register</a>
+                    <span th:if="${!isUserLoggedIn}">&nbsp;|&nbsp;</span>
+                    <a href="/shopping-cart" style="color: white;">Shopping cart has&nbsp;<span th:text="${cartCount}"></span>&nbsp;items</a>
+                </div>
             </div>
         </div>
     </div>
@@ -43,28 +45,18 @@
 
 <div class="jumbotron text-center">
     <h1>Example e-commerce system</h1>
-    <p>Buy everything you need!</p>
-</div>
-
-<div class="container" th:if="${successMessage != null || errorMessage != null || infoMessage != null}">
-    <div th:if="${successMessage != null}" th:text="${successMessage}" class="alert alert-success"></div>
-    <div th:if="${infoMessage != null}" th:text="${infoMessage}" class="alert alert-info"></div>
-    <div th:if="${errorMessage != null}" th:text="${errorMessage}" class="alert alert-danger"></div>
+    <p>Product management</p>
 </div>
 
 <div class="container">
-    <div class="row">
-        <div th:each="product : ${products}" class="col-sm-4" style="margin-bottom: 30px;">
-            <!--/*@thymesVar id="product" type="cz.filipklimes.diploma.framework.example.ui.business.Product"*/-->
-            <h3 th:text="${product.name}"></h3>
-            <p th:text="${#numbers.formatDecimal(product.sellPrice, 0, 'COMMA', 2, 'POINT')} + ' €'"></p>
-            <p th:text="${product.description}"></p>
-            <p th:text="${'Stock count: ' + product.stockCount}"></p>
-            <a th:href="@{/add-to-cart/{productId}(productId=${product.id})}" style="display: block">Add to cart</a>
-            <a th:href="@{/change-price/{productId}(productId=${product.id})}" th:if="${isUserLoggedIn && (user.role == 'ADMINISTRATOR')}" style="display: block">Change price</a>
-            <a th:href="@{/change-stock/{productId}(productId=${product.id})}" th:if="${isUserLoggedIn && (user.role == 'ADMINISTRATOR' || user.role == 'EMPLOYEE')}" style="display: block">Change stock</a>
+    <h2>Change product stock</h2>
+    <form action="#" th:action="@{/change-stock/{productId}(productId=${productId})}" th:object="${changeStockForm}" method="post">
+        <div class="form-group">
+            <label for="stockCount">Stock count:</label>
+            <input class="form-control" id="stockCount" type="number" th:field="*{stockCount}"/>
         </div>
-    </div>
+        <input class="btn btn-primary" type="submit" value="Submit"/>
+    </form>
 </div>
 
 <!-- Optional JavaScript -->

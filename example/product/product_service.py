@@ -71,20 +71,33 @@ class ProductRepository:
         self.products[id].sellPrice = int(sellPrice)
         return self.products[id]
 
+    @business_operation("product.changeStock", weaver)
+    def change_stock(self, id, stockCount, user) -> Optional[Product]:
+        if id not in self.products:
+            return None
+        self.products[id].stockCount = int(stockCount)
+        return self.products[id]
+
 
 product_repository = ProductRepository()
+
+
+def create_product_response(product):
+    return {
+        'id': product.id,
+        'costPrice': product.costPrice,
+        'sellPrice': product.sellPrice,
+        'stockCount': product.stockCount,
+        'name': product.name,
+        'description': product.description
+    }
 
 
 @app.route("/")
 def list_all_products():
     result = []
     for product in product_repository.get_all():
-        result.append({
-            'id': product.id,
-            'sellPrice': product.sellPrice,
-            'name': product.name,
-            'description': product.description
-        })
+        result.append(create_product_response(product))
     return jsonify(result)
 
 
@@ -92,20 +105,12 @@ def list_all_products():
 def get_product(id: int):
     product = product_repository.get(id)
     if product is None: abort(404)
-    return jsonify({
-        'id': product.id,
-        'costPrice': product.costPrice,
-        'sellPrice': product.sellPrice,
-        'name': product.name,
-        'description': product.description
-    })
+    return jsonify(create_product_response(product))
 
 
 @app.route("/<int:id>/price", methods=['POST'])
 def change_price(id: int):
     content = request.get_json()
-    product = product_repository.get(id)
-    if product is None: abort(404)
     try:
         product = product_repository.change_price(
             id,
@@ -113,16 +118,30 @@ def change_price(id: int):
             content['sellPrice'],
             User(request.headers.get('X-User-Id'), request.headers.get('X-User-Role'))
         )
+        if product is None: abort(404)
         print("Changed price of product " + str(id))
-        return jsonify({
-            'id': product.id,
-            'costPrice': product.costPrice,
-            'sellPrice': product.sellPrice,
-            'name': product.name,
-            'description': product.description
-        })
+        return jsonify(create_product_response(product))
     except BusinessRulesCheckFailed as e:
         print("Could not change price of product: " + e.get_message())
+        return jsonify({
+            'message': e.get_message()
+        }), 422
+
+
+@app.route("/<int:id>/stock", methods=['POST'])
+def change_stock(id: int):
+    content = request.get_json()
+    try:
+        product = product_repository.change_stock(
+            id,
+            content['stockCount'],
+            User(request.headers.get('X-User-Id'), request.headers.get('X-User-Role'))
+        )
+        if product is None: abort(404)
+        print("Changed stock count of product " + str(id))
+        return jsonify(create_product_response(product))
+    except BusinessRulesCheckFailed as e:
+        print("Could not change stock count of product: " + e.get_message())
         return jsonify({
             'message': e.get_message()
         }), 422
