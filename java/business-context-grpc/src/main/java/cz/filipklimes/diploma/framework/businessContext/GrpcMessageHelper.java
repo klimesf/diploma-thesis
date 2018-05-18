@@ -186,7 +186,10 @@ public class GrpcMessageHelper
                 return (Expression<T>) new FunctionCall<>(
                     findPropertyByName("methodName", message),
                     ExpressionType.of(findPropertyByName("type", message)),
-                    (Expression<?>[]) message.getArgumentsList().stream().map(GrpcMessageHelper::buildExpression).toArray()
+                    message.getArgumentsList().stream()
+                        .map(GrpcMessageHelper::buildExpression)
+                        .collect(Collectors.toList())
+                        .toArray(new Expression[message.getArgumentsCount()])
                 );
             case "is-not-null":
                 return (Expression<T>) new IsNotNull<>(buildExpression(message.getArguments(0)));

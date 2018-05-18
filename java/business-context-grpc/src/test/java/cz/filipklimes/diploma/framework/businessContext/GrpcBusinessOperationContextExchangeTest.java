@@ -2,10 +2,12 @@ package cz.filipklimes.diploma.framework.businessContext;
 
 import cz.filipklimes.diploma.framework.businessContext.expression.Constant;
 import cz.filipklimes.diploma.framework.businessContext.expression.ExpressionType;
+import cz.filipklimes.diploma.framework.businessContext.expression.FunctionCall;
 import cz.filipklimes.diploma.framework.businessContext.expression.IsNotNull;
 import cz.filipklimes.diploma.framework.businessContext.expression.ObjectPropertyReference;
 import cz.filipklimes.diploma.framework.businessContext.expression.VariableReference;
 import cz.filipklimes.diploma.framework.businessContext.expression.logical.Equals;
+import cz.filipklimes.diploma.framework.businessContext.expression.numeric.GreaterOrEqualTo;
 import cz.filipklimes.diploma.framework.businessContext.loader.LocalBusinessContextLoader;
 import cz.filipklimes.diploma.framework.businessContext.loader.RemoteBusinessContextLoader;
 import cz.filipklimes.diploma.framework.businessContext.loader.remote.RemoteLoader;
@@ -15,11 +17,12 @@ import cz.filipklimes.diploma.framework.businessContext.provider.server.grpc.Grp
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static cz.filipklimes.diploma.framework.businessContext.expression.ExpressionType.BOOL;
+import static cz.filipklimes.diploma.framework.businessContext.expression.ExpressionType.*;
 
 public class GrpcBusinessOperationContextExchangeTest
 {
@@ -46,7 +49,7 @@ public class GrpcBusinessOperationContextExchangeTest
         Assert.assertEquals(1, contexts.size());
 
         BusinessContext context = contexts.iterator().next();
-        Assert.assertEquals(2, context.getPreconditions().size());
+        Assert.assertEquals(3, context.getPreconditions().size());
 
         Map<String, Precondition> preconditionMap = context.getPreconditions().stream()
             .collect(Collectors.toMap(
@@ -62,15 +65,20 @@ public class GrpcBusinessOperationContextExchangeTest
         Precondition rule2 = preconditionMap.get("userNotLoggedIn");
         Assert.assertTrue(rule2.getCondition() instanceof Equals);
 
+        Precondition rule3 = preconditionMap.get("userEmailLength");
+        Assert.assertTrue(rule3.getCondition() instanceof GreaterOrEqualTo);
+        GreaterOrEqualTo condition3 = (GreaterOrEqualTo) rule3.getCondition();
+        Assert.assertTrue(condition3.getLeft() instanceof FunctionCall);
+
         Map<String, PostCondition> postConditionMap = context.getPostConditions().stream()
             .collect(Collectors.toMap(
                 PostCondition::getName,
                 Function.identity()
             ));
 
-        PostCondition rule3 = postConditionMap.get("hideUserEmail");
-        Assert.assertTrue(rule3.getCondition() instanceof Constant);
-        Assert.assertEquals("email", rule3.getReferenceName());
+        PostCondition rule4 = postConditionMap.get("hideUserEmail");
+        Assert.assertTrue(rule4.getCondition() instanceof Constant);
+        Assert.assertEquals("email", rule4.getReferenceName());
 
         Set<BusinessContext> allContexts = client.loadAllContexts();
 
@@ -102,6 +110,15 @@ public class GrpcBusinessOperationContextExchangeTest
                                 .withCondition(new Equals<>(
                                     new VariableReference<>("loggedIn", BOOL),
                                     new Constant<>(false, BOOL)
+                                ))
+                                .build()
+                        )
+                        .withPrecondition(
+                            Precondition.builder()
+                                .withName("userEmailLength")
+                                .withCondition(new GreaterOrEqualTo(
+                                    new FunctionCall<>("length", NUMBER, new VariableReference<>("email", STRING)),
+                                    new Constant<>(new BigDecimal("5"), NUMBER)
                                 ))
                                 .build()
                         )
