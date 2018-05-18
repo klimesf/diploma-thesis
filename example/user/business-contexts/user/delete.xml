@@ -10,7 +10,7 @@
                     <argument>
                         <logicalEquals>
                             <left>
-                                <objectPropertyReference objectName="user" propertyName="role" type="string"/>
+                                <objectPropertyReference objectName="deletedUser" propertyName="role" type="string"/>
                             </left>
                             <right>
                                 <constant value="ADMINISTRATOR" type="string"/>

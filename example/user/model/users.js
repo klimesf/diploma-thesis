@@ -102,7 +102,7 @@ exports.init = (registry) => {
     const deleteUser = exports.deleteUser
     exports.deleteUser = (id, user) => {
         const context = new BusinessOperationContext('user.delete')
-        context.setInputParameter('id', id)
+        context.setInputParameter('deletedUser', users[id])
         context.setInputParameter('user', user)
         return wrapCall(context, () => deleteUser(id))
     }
