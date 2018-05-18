@@ -16,7 +16,10 @@ exports.getUser = (req, res) => {
 }
 
 exports.register = (req, res) => {
-    users.register(req.body.name, req.body.email)
+    const userId = req.get('X-User-Id') || null
+    const userRole = req.get('X-User-Role') || null
+    const user = userId !== null ? {id: userId, role: userRole} : null
+    users.register(req.body.name, req.body.email, user)
         .then(user => res.json(user))
         .catch(err => {
             res.status(422).json({message: err})

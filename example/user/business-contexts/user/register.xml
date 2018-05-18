@@ -1,18 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <businessContext prefix="user" name="register">
     <includedContexts>
-        <includedContext prefix="user" name="validEmail" />
+        <includedContext prefix="user" name="validEmail"/>
     </includedContexts>
     <preconditions>
         <precondition name="Name must not be blank">
             <condition>
                 <isNotBlank>
                     <argument>
-                        <variableReference name="name" type="string" />
+                        <variableReference name="name" type="string"/>
                     </argument>
                 </isNotBlank>
             </condition>
         </precondition>
+        <precondition name="User must not be logged in">
+            <condition>
+                <logicalNegate>
+                    <argument>
+                        <isNotNull>
+                            <argument>
+                                <variableReference name="user" type="object"/>
+                            </argument>
+                        </isNotNull>
+                    </argument>
+                </logicalNegate>
+            </condition>
+        </precondition>
     </preconditions>
-    <postConditions />
+    <postConditions/>
 </businessContext>

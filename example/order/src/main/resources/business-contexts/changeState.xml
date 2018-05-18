@@ -4,47 +4,6 @@
         <includedContext prefix="order" name="valid"/>
         <includedContext prefix="auth" name="employeeLoggedIn"/>
     </includedContexts>
-    <preconditions>
-        <precondition name="Order status must be 'accepted', 'sent' or 'delivered'">
-            <condition>
-                <logicalOr>
-                    <left>
-                        <logicalOr>
-                            <left>
-                                <logicalEquals>
-                                    <left>
-                                        <objectPropertyReference propertyName="status" objectName="order" type="string"/>
-                                    </left>
-                                    <right>
-                                        <constant type="string" value="ACCEPTED"/>
-                                    </right>
-                                </logicalEquals>
-                            </left>
-                            <right>
-                                <logicalEquals>
-                                    <left>
-                                        <objectPropertyReference propertyName="status" objectName="order" type="string"/>
-                                    </left>
-                                    <right>
-                                        <constant type="string" value="SENT"/>
-                                    </right>
-                                </logicalEquals>
-                            </right>
-                        </logicalOr>
-                    </left>
-                    <right>
-                        <logicalEquals>
-                            <left>
-                                <objectPropertyReference propertyName="status" objectName="order" type="string"/>
-                            </left>
-                            <right>
-                                <constant type="string" value="DELIVERED"/>
-                            </right>
-                        </logicalEquals>
-                    </right>
-                </logicalOr>
-            </condition>
-        </precondition>
-    </preconditions>
+    <preconditions/>
     <postConditions/>
 </businessContext>

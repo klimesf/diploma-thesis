@@ -1,8 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <businessContext prefix="user" name="delete">
     <includedContexts>
-        <includedContext prefix="auth" name="adminLoggedIn" />
+        <includedContext prefix="auth" name="adminLoggedIn"/>
     </includedContexts>
-    <preconditions />
-    <postConditions />
+    <preconditions>
+        <precondition name="Deleted user must not be administrator">
+            <condition>
+                <logicalNegate>
+                    <argument>
+                        <logicalEquals>
+                            <left>
+                                <objectPropertyReference objectName="user" propertyName="role" type="string"/>
+                            </left>
+                            <right>
+                                <constant value="ADMINISTRATOR" type="string"/>
+                            </right>
+                        </logicalEquals>
+                    </argument>
+                </logicalNegate>
+            </condition>
+        </precondition>
+    </preconditions>
+    <postConditions/>
 </businessContext>

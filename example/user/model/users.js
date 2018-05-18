@@ -2,7 +2,7 @@
 
 // Prototype fixtures
 let nextId = 4;
-const users = {
+let users = {
     1: {id: 1, name: 'John Doe', email: 'john.doe@example.com', role: 'CUSTOMER'},
     2: {id: 2, name: 'Jane Doe', email: 'jane.doe@example.com', role: 'EMPLOYEE'},
     3: {id: 3, name: 'Dr. Faust', email: 'faust@example.com', role: 'ADMINISTRATOR'},
@@ -76,10 +76,11 @@ exports.init = (registry) => {
 
     // Decorate exports AOP style
     const register = exports.register
-    exports.register = (name, email) => {
+    exports.register = (name, email, user) => {
         const context = new BusinessOperationContext('user.register')
         context.setInputParameter('name', name)
         context.setInputParameter('email', email)
+        context.setInputParameter('user', user)
         return wrapCall(context, () => register(name, email))
     }
 
@@ -103,7 +104,7 @@ exports.init = (registry) => {
         const context = new BusinessOperationContext('user.delete')
         context.setInputParameter('id', id)
         context.setInputParameter('user', user)
-        return wrapCall(context, deleteUser)
+        return wrapCall(context, () => deleteUser(id))
     }
 
 }
